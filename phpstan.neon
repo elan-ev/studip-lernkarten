@@ -1,0 +1,12 @@
+parameters:
+    level: 8
+    scanFiles:
+        - LernkartenPlugin.php
+    scanDirectories:
+        - lib
+        - vendor
+        - ../../studip/trunk/
+    ignoreErrors:
+        - '#StandardPlugin not found.#'
+        - '#StudipPlugin not found.#'
+    checkMissingIterableValueType: false
