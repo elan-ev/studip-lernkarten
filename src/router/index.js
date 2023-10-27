@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
+import DashboardView from '../views/DashboardView.vue';
 
 const absoluteUriStudip = new URL(window.STUDIP.ABSOLUTE_URI_STUDIP);
 const router = createRouter({
@@ -8,7 +8,7 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: HomeView
+            component: DashboardView
         }
     ]
 });
