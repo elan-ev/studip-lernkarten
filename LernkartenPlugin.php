@@ -10,24 +10,55 @@ require_once __DIR__ . '/vendor/autoload.php';
 /**
  * @SuppressWarnings(StaticAccess)
  */
-class LernkartenPlugin extends StudIPPlugin implements StandardPlugin, JsonApiPlugin
+class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlugin, JsonApiPlugin
 {
     use Routes;
     use Schemas;
     use Datenschutz;
+
+    private const GETTEXT_DOMAIN = 'lernkarten';
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->initializeGettext();
+        $this->addContentsNavigation();
+    }
+
+    /**
+     * Plugin localization for a single string.
+     * This method supports sprintf()-like execution if you pass additional
+     * parameters.
+     *
+     * @param String $string String to translate
+     * @return translated string
+     * @SuppressWarnings(CamelCaseMethodName)
+     * @SuppressWarnings(ShortMethodName)
+     */
+    public function _($string)
+    {
+        $result =
+            static::GETTEXT_DOMAIN === null
+                ? $string
+                : dcgettext(static::GETTEXT_DOMAIN, $string, LC_MESSAGES);
+        if ($result === $string) {
+            $result = _($string);
+        }
+
+        if (func_num_args() > 1) {
+            $arguments = array_slice(func_get_args(), 1);
+            $result = vsprintf($result, $arguments);
+        }
+
+        return $result;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function getTabNavigation($courseId)
     {
-        $navigation = new Navigation(
-            'Lernkarten',
-            PluginEngine::getURL($this, ['cid' => $courseId], '', true)
-        );
-        $navigation->addSubnavigation('lernkarten', clone $navigation);
-
-        return ['lernkarten' => $navigation];
+        return ['lernkarten' => $this->createNavigation($courseId)];
     }
 
     /**
@@ -36,15 +67,10 @@ class LernkartenPlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
     public function getIconNavigation($courseId, $lastVisit, $userId)
     {
         $icon = new AutoNavigation(
-            'Lernkarten',
-            PluginEngine::getURL(
-                $this,
-                ['cid' => $courseId, 'iconnav' => 'true'],
-                'lernkarten',
-                true
-            )
+            $this->_('Lernkarten'),
+            PluginEngine::getURL($this, ['cid' => $courseId, 'iconnav' => 'true'], '', true)
         );
-        $icon->setImage(Icon::create('group3', 'inactive', ['title' => 'Lernkarten']));
+        $icon->setImage(Icon::create('dialog-cards', 'inactive', ['title' => 'Lernkarten']));
 
         return $icon;
     }
@@ -67,22 +93,32 @@ class LernkartenPlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
      */
     public function perform($unconsumedPath)
     {
-        if (!$this->isActivated(\Context::getId()) && $_SERVER['REQUEST_METHOD'] === 'GET') {
-            throw new AccessDeniedException('This plugin not activated for this course.');
+        $cid = \Context::getId();
+        if ($cid) {
+            if (!$this->isActivated($cid) && $_SERVER['REQUEST_METHOD'] === 'GET') {
+                throw new AccessDeniedException('This plugin not activated for this course.');
+            }
+            Navigation::activateItem('/course/lernkarten/index');
+        } else {
+            Navigation::activateItem('/contents/lernkarten/index');
         }
 
         PageLayout::setHelpKeyword('Lernkarten.Introduction');
-        \Navigation::activateItem('/course/lernkarten/lernkarten');
 
-        $PLGNURL = $this->getPluginURL();
-        PageLayout::addStylesheet($PLGNURL . '/dist/style.css');
-        PageLayout::addScript($PLGNURL . '/dist/lernkarten.js', ['type' => 'module']);
+        $pluginUrl = $this->getPluginURL();
+        PageLayout::addStylesheet($pluginUrl . '/dist/style.css');
+        PageLayout::addScript($pluginUrl . '/dist/lernkarten.js', ['type' => 'module']);
 
         $initialState = [];
 
         echo $GLOBALS['template_factory']->render('layouts/base', [
             'content_for_layout' => $this->bootstrapHtml($initialState),
         ]);
+    }
+
+    private function addContentsNavigation(): void
+    {
+        Navigation::addItem('/contents/lernkarten', $this->createNavigation());
     }
 
     /**
@@ -106,5 +142,32 @@ class LernkartenPlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
             )
         </script>
         <?php return ob_get_clean() ?: '';
+    }
+
+    private function createNavigation(string $cid = null): Navigation
+    {
+        $params = $cid ? ['cid' => $cid] : [];
+        $navigation = new Navigation($this->_('Lernkarten'));
+        $navigation->setDescription(
+            $this->_('Lorem ipsum dolor sit amet, consectetur adipisicing elit.')
+        );
+        $navigation->setImage(Icon::create('dialog-cards', 'navigation'));
+        $navigation->setURL(PluginEngine::getURL($this, $params, '', true));
+
+        // subnavigation
+        $navigation->addSubnavigation('index', clone $navigation);
+        // TODO: Das dürfen abhängig vom Kontext wohl nicht alle sehen?
+        $folders = new Navigation($this->_('Ordnerverwaltung'));
+        $folders->setImage(Icon::create('folder-full', 'navigation'));
+        $folders->setURL(PluginEngine::getURL($this, $params, 'folders', true));
+        $navigation->addSubnavigation('folders', $folders);
+
+        return $navigation;
+    }
+
+    private function initializeGettext(): void
+    {
+        bindtextdomain(static::GETTEXT_DOMAIN, $this->getPluginPath() . '/lib/locales');
+        bind_textdomain_codeset(static::GETTEXT_DOMAIN, 'UTF-8');
     }
 }
