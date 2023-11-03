@@ -12,7 +12,7 @@ export default defineConfig({
             fileName: 'lernkarten'
         }
     },
-    define: { 'process.env.NODE_ENV': '"production"' },
+    define: { 'process.env.NODE_ENV': '"development"' },
     plugins: [vue()],
     resolve: {
         alias: {

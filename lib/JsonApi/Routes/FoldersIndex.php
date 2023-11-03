@@ -30,7 +30,7 @@ class FoldersIndex extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $resources = Folder::findBySql(1);
+        $resources = Folder::findBySql("1");
         return $this->getPaginatedContentResponse(
             array_slice($resources, ...$this->getOffsetAndLimit()),
             count($resources)

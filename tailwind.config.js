@@ -2,7 +2,8 @@
 export default {
     content: [],
     plugins: [],
-    purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+    prefix: 'tw-',
+    content: ['./src/**/*.{vue,js,ts}'],
     theme: {
         extend: {}
     }

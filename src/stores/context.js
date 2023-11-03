@@ -12,7 +12,9 @@ export const useContextStore = defineStore(
             return isCourse.value ? window.STUDIP.URLHelper.parameters.cid : window.STUDIP.USER_ID;
         });
 
-        return { id, isCourse };
+        const type = computed(() => isCourse.value ? 'courses' : 'users');
+
+        return { id, isCourse, type };
     },
     {
         persist: true

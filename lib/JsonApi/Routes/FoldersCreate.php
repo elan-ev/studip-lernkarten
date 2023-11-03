@@ -14,6 +14,7 @@ use Lernkarten\JsonApi\Schemas\Folder as FolderSchema;
 use Lernkarten\Models\Folder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use RuntimeException;
 use User;
 
 /**
@@ -83,7 +84,9 @@ class FoldersCreate extends JsonApiController
 
         // rel parent
         if (self::arrayHas($json, 'data.relationships.parent')) {
-            if (!$this->getParentFromJson($json)) {
+            try {
+                $this->getParentFromJson($json);
+            } catch (RecordNotFoundException $exception) {
                 return 'Invalid `parent` relationship.';
             }
         }
@@ -91,16 +94,21 @@ class FoldersCreate extends JsonApiController
 
     private function create(array $json): Folder
     {
+        /** @var Course|User */
         $context = $this->getContextFromJson($json);
         $parent = $this->getParentFromJson($json);
         $name = trim(self::arrayGet($json, 'data.attributes.name'));
 
         $folder = Folder::create([
             'parent_id' => $parent ? $parent->id : null,
-            'context_id' => $context->id,
+            'context_id' => $context->getId(),
             'context_type' => get_class($context),
             'name' => $name,
         ]);
+
+        if (!$folder) {
+            throw new RuntimeException('Could not create folder.');
+        }
 
         return $folder;
     }
@@ -110,8 +118,8 @@ class FoldersCreate extends JsonApiController
      */
     private function getContextFromJson(array $json)
     {
-        $relation = 'data.relationships.' . FolderSchema::REL_CONTEXT;
-        $resourceId = self::arrayGet($json, $relation . '.data.id');
+        $relation = 'data.relationships.' . FolderSchema::REL_CONTEXT . '.data';
+        $resourceId = self::arrayGet($json, $relation . '.id');
         if ($this->validateResourceObject($json, $relation, CourseSchema::TYPE)) {
             return Course::find($resourceId);
         }
@@ -128,15 +136,19 @@ class FoldersCreate extends JsonApiController
      */
     private function getParentFromJson(array $json)
     {
-        $relation = 'data.relationships.' . FolderSchema::REL_PARENT;
-        $resourceId = self::arrayGet($json, $relation . '.data.id');
-        if ($this->validateResourceObject($json, $relation, FolderSchema::TYPE)) {
-            if (!Folder::exists($resourceId)) {
-                throw new RecordNotFoundException('Invalid `parent` relationship.');
-            }
-            return Folder::find($resourceId);
+        $relation = 'data.relationships.' . FolderSchema::REL_PARENT . '.data';
+        if (self::arrayGet($json, $relation) === null) {
+            return null;
         }
 
-        return null;
+        $resourceId = self::arrayGet($json, $relation . '.id');
+        if (
+            !$this->validateResourceObject($json, $relation, FolderSchema::TYPE) ||
+            !Folder::exists($resourceId)
+        ) {
+            throw new RecordNotFoundException('Invalid `parent` relationship.');
+        }
+
+        return Folder::find($resourceId);
     }
 }

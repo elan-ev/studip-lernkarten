@@ -5,8 +5,5 @@ parameters:
     scanDirectories:
         - lib
         - vendor
-        - ../../studip/trunk/
-    ignoreErrors:
-        - '#StandardPlugin not found.#'
-        - '#StudipPlugin not found.#'
+        - ../../studip/studip53/
     checkMissingIterableValueType: false

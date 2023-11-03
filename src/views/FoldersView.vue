@@ -2,16 +2,46 @@
 import { computed } from 'vue';
 import { useContextStore } from '../stores/context.js';
 import { useFoldersStore } from '../stores/folders.js';
+import DialogCreateFolder from '../components/DialogCreateFolder.vue';
+import FolderTree from '../components/FolderTree.vue';
 
 const contextStore = useContextStore();
 const foldersStore = useFoldersStore();
 foldersStore.fetch();
 
+const folders = computed(() => {
+    return foldersStore.byContext(contextStore.id);
+});
+
+const parents = computed(() =>
+    folders.value.reduce((map, folder) => {
+        const parentId = folder.parent.data?.id ?? null;
+        if (!map.has(parentId)) {
+            map.set(parentId, []);
+        }
+        map.get(parentId).push(folder);
+        return map;
+    }, new Map())
+);
+
 const topFolders = computed(() => {
-    return foldersStore.folders.filter((folder) => {
+    return folders.value.filter((folder) => {
         return !folder.parent.data && folder.context.data.id === contextStore.id;
     });
 });
+
+const addTopFolder = (folder) => {
+    console.debug('addTopFolder', folder);
+    foldersStore.createFolder('Ein Top Folder', null);
+};
+const addChildFolder = (folder) => {
+    console.debug('addChildFolder', folder);
+    foldersStore.createFolder('Ein Child Folder', folder);
+};
+const deleteFolder = (folder) => {
+    console.debug('deleteFolder', folder);
+    foldersStore.deleteFolder(folder);
+};
 </script>
 
 <template>
@@ -23,16 +53,18 @@ const topFolders = computed(() => {
         <section>
             <article>
                 <pre>{{ foldersStore.isLoading }}</pre>
-                <pre>{{ foldersStore.folders }}</pre>
-                <pre>{{ topFolders }}</pre>
             </article>
 
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enimad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
+            <FolderTree
+                :folders="topFolders"
+                :parents="parents"
+                @add-child="addChildFolder"
+                @delete-folder="deleteFolder"
+            />
+
+            <button type="button" class="button add" @click="addTopFolder">Neuer Top-Ordner</button>
         </section>
     </main>
+
+    <DialogCreateFolder />
 </template>

@@ -16,41 +16,10 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
     use Schemas;
     use Datenschutz;
 
-    private const GETTEXT_DOMAIN = 'lernkarten';
-
     public function __construct()
     {
         parent::__construct();
-        $this->initializeGettext();
         $this->addContentsNavigation();
-    }
-
-    /**
-     * Plugin localization for a single string.
-     * This method supports sprintf()-like execution if you pass additional
-     * parameters.
-     *
-     * @param String $string String to translate
-     * @return translated string
-     * @SuppressWarnings(CamelCaseMethodName)
-     * @SuppressWarnings(ShortMethodName)
-     */
-    public function _($string)
-    {
-        $result =
-            static::GETTEXT_DOMAIN === null
-                ? $string
-                : dcgettext(static::GETTEXT_DOMAIN, $string, LC_MESSAGES);
-        if ($result === $string) {
-            $result = _($string);
-        }
-
-        if (func_num_args() > 1) {
-            $arguments = array_slice(func_get_args(), 1);
-            $result = vsprintf($result, $arguments);
-        }
-
-        return $result;
     }
 
     /**
@@ -163,11 +132,5 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
         $navigation->addSubnavigation('folders', $folders);
 
         return $navigation;
-    }
-
-    private function initializeGettext(): void
-    {
-        bindtextdomain(static::GETTEXT_DOMAIN, $this->getPluginPath() . '/lib/locales');
-        bind_textdomain_codeset(static::GETTEXT_DOMAIN, 'UTF-8');
     }
 }

@@ -34,16 +34,16 @@ import StudipIcon from '../components/base/StudipIcon.vue';
 
         <section>
             <article>
-                <div class="kartensatz-block border h-[100-px] flex">
-                    <div class="stats-area w-[100px] h-[100px] bg-slate-300">
-                        <div class="kartensatz-block-prozent px-4">0%</div>
+                <div class="kartensatz-block tw-border tw-h-[100-px] tw-flex">
+                    <div class="stats-area tw-w-[100px] tw-h-[100px] tw-bg-slate-300">
+                        <div class="kartensatz-block-prozent tw-px-4">0%</div>
                     </div>
 
-                    <div class="text-area grow flex flex-col">
+                    <div class="text-area tw-grow tw-flex tw-flex-col">
                         <p class="title">XXX</p>
                         <p class="sub-title ellipsis">&nbsp;</p>
 
-                        <div class="sub-info flex flex-row">
+                        <div class="sub-info tw-flex tw-flex-row">
                             <div class="wrapper">
                                 <StudipIcon shape="dialog-cards" role="info" />
                                 <span>5</span>

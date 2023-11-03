@@ -3,6 +3,7 @@
 namespace Lernkarten\JsonApi\Schemas;
 
 use JsonApi\Schemas\SchemaProvider;
+use Lernkarten\Models\Folder as FolderModel;
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Schema\Link;
 
@@ -14,22 +15,24 @@ class Folder extends SchemaProvider
 
     /**
      * {@inheritdoc}
+     * @param FolderModel $resource
      */
     public function getId($resource): ?string
     {
-        return $resource->id;
+        return (string) $resource->id;
     }
 
     /**
      * {@inheritdoc}
+     * @param FolderModel $resource
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
-            'name' => (string) $resource['name'],
-            'mkdate' => date('c', $resource['mkdate']),
-            'chdate' => date('c', $resource['chdate']),
+            'name' => (string) $resource->name,
+            'mkdate' => date('c', $resource->mkdate),
+            'chdate' => date('c', $resource->chdate),
         ];
     }
 
