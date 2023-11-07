@@ -1,70 +1,75 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { useContextStore } from '../stores/context.js';
+import { useDecksStore } from '../stores/decks.js';
 import { useFoldersStore } from '../stores/folders.js';
+import DeckCard from '../components/DeckCard.vue';
 import DialogCreateFolder from '../components/DialogCreateFolder.vue';
+import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
+import FolderList from '../components/FolderList.vue';
 import FolderTree from '../components/FolderTree.vue';
+import Ribbon from '../components/Ribbon.vue';
+
+const createDialogOpen = ref(false);
+const confirmDeleteDialogOpen = ref(false);
+const selectedFolder = ref(null);
 
 const contextStore = useContextStore();
+const decksStore = useDecksStore();
 const foldersStore = useFoldersStore();
 foldersStore.fetch();
+decksStore.fetchContext();
 
-const folders = computed(() => {
-    return foldersStore.byContext(contextStore.id);
-});
+const topFolders = computed(() => foldersStore.topFolders);
 
-const parents = computed(() =>
-    folders.value.reduce((map, folder) => {
-        const parentId = folder.parent.data?.id ?? null;
-        if (!map.has(parentId)) {
-            map.set(parentId, []);
-        }
-        map.get(parentId).push(folder);
-        return map;
-    }, new Map())
-);
+const decks = computed(() => decksStore.byContext.filter((deck) => !deck.folder.data));
 
-const topFolders = computed(() => {
-    return folders.value.filter((folder) => {
-        return !folder.parent.data && folder.context.data.id === contextStore.id;
-    });
-});
-
-const addTopFolder = (folder) => {
-    console.debug('addTopFolder', folder);
-    foldersStore.createFolder('Ein Top Folder', null);
+const addTopFolder = () => {
+    createDialogOpen.value = true;
 };
-const addChildFolder = (folder) => {
-    console.debug('addChildFolder', folder);
-    foldersStore.createFolder('Ein Child Folder', folder);
+const onCreateDialog = (name) => {
+    createDialogOpen.value = false;
+    foldersStore.createFolder(name, null);
 };
+
 const deleteFolder = (folder) => {
-    console.debug('deleteFolder', folder);
-    foldersStore.deleteFolder(folder);
+    confirmDeleteDialogOpen.value = true;
+    selectedFolder.value = folder;
+};
+const onConfirmDeleteDialog = () => {
+    confirmDeleteDialogOpen.value = false;
+    foldersStore.deleteFolder(selectedFolder.value);
 };
 </script>
 
 <template>
-    <main>
+    <Ribbon>
+        <li>
+            <RouterLink :to="{ name: 'folders' }"> Home </RouterLink>
+        </li>
+    </Ribbon>
+
+    <section class="tw-mt-8">
+        <FolderList :folders="topFolders" @delete-folder="deleteFolder" />
+
+        <button type="button" class="button add" @click="addTopFolder">Neuer Ordner</button>
+    </section>
+
+    <section class="tw-mt-12">
         <header>
-            <h2>{{ $gettext('Ordnerverwaltung') }}</h2>
+            <h3>Decks ohne Ordner</h3>
         </header>
+        <article v-for="deck in decks" :key="deck.id">
+            <RouterLink :to="{ name: 'deck', params: { id: deck.id } }">
+                <DeckCard :deck="deck" />
+            </RouterLink>
+        </article>
+    </section>
 
-        <section>
-            <article>
-                <pre>{{ foldersStore.isLoading }}</pre>
-            </article>
-
-            <FolderTree
-                :folders="topFolders"
-                :parents="parents"
-                @add-child="addChildFolder"
-                @delete-folder="deleteFolder"
-            />
-
-            <button type="button" class="button add" @click="addTopFolder">Neuer Top-Ordner</button>
-        </section>
-    </main>
-
-    <DialogCreateFolder />
+    <DialogCreateFolder v-model:open="createDialogOpen" @confirm="onCreateDialog" />
+    <DialogConfirmDeleteFolder
+        v-model:open="confirmDeleteDialogOpen"
+        @confirm="onConfirmDeleteDialog"
+    />
 </template>

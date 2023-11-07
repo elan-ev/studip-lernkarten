@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DashboardView from '../views/DashboardView.vue';
+import DeckView from '../views/DeckView.vue';
+import FolderView from '../views/FolderView.vue';
 import FoldersView from '../views/FoldersView.vue';
 
 const absoluteUriStudip = new URL(window.STUDIP.ABSOLUTE_URI_STUDIP);
@@ -18,6 +20,18 @@ const router = createRouter({
             path: '/folders',
             name: 'folders',
             component: FoldersView
+        },
+        {
+            path: '/folders/:id',
+            name: 'folder',
+            component: FolderView,
+            props: true,
+        },
+        {
+            path: '/decks/:id',
+            name: 'deck',
+            component: DeckView,
+            props: true,
         }
     ]
 });
