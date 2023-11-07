@@ -9,8 +9,8 @@ export default defineConfig({
         lib: {
             entry: resolve(__dirname, 'src/main.js'),
             name: 'StudIPLernkarten',
-            fileName: 'lernkarten'
-        }
+        },
+        sourcemap: "inline",
     },
     define: { 'process.env.NODE_ENV': '"development"' },
     plugins: [vue()],
