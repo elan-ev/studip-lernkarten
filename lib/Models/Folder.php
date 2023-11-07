@@ -17,6 +17,7 @@ use User;
  * @property int $chdate database column
  * @property this $parent database relationship
  * @property this[] $children database relationship
+ * @property Deck[] $decks database relationship
  */
 class Folder extends SimpleORMap
 {
@@ -32,6 +33,14 @@ class Folder extends SimpleORMap
         $config['has_many']['children'] = [
             'class_name' => Folder::class,
             'assoc_foreign_key' => 'parent_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+            'order_by' => 'ORDER BY mkdate',
+        ];
+
+        $config['has_many']['decks'] = [
+            'class_name' => Deck::class,
+            'assoc_foreign_key' => 'folder_id',
             'on_delete' => 'delete',
             'on_store' => 'store',
             'order_by' => 'ORDER BY mkdate',

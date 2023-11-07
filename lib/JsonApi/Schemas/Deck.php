@@ -3,21 +3,20 @@
 namespace Lernkarten\JsonApi\Schemas;
 
 use JsonApi\Schemas\SchemaProvider;
-use Lernkarten\Models\Folder as FolderModel;
+use Lernkarten\Models\Deck as DeckModel;
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Schema\Link;
 
-class Folder extends SchemaProvider
+class Deck extends SchemaProvider
 {
-    public const TYPE = 'lernkarten-folders';
-    public const REL_CHILDREN = 'children';
+    public const TYPE = 'lernkarten-decks';
     public const REL_CONTEXT = 'context';
-    public const REL_DECKS = 'decks';
-    public const REL_PARENT = 'parent';
+    public const REL_FOLDER = 'folder';
+    public const REL_OWNER = 'owner';
 
     /**
      * {@inheritdoc}
-     * @param FolderModel $resource
+     * @param DeckModel $resource
      */
     public function getId($resource): ?string
     {
@@ -26,13 +25,14 @@ class Folder extends SchemaProvider
 
     /**
      * {@inheritdoc}
-     * @param FolderModel $resource
+     * @param DeckModel $resource
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
             'name' => (string) $resource->name,
+            'description' => (string) $resource->description,
             'mkdate' => date('c', $resource->mkdate),
             'chdate' => date('c', $resource->chdate),
         ];
@@ -46,14 +46,6 @@ class Folder extends SchemaProvider
     {
         $relationships = [];
 
-        $children = $resource->children;
-        $relationships[self::REL_CHILDREN] = [
-            self::RELATIONSHIP_LINKS => [
-                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_CHILDREN),
-            ],
-            self::RELATIONSHIP_DATA => $children,
-        ];
-
         $context = $resource->getContext();
         $relationships[self::REL_CONTEXT] = [
             self::RELATIONSHIP_LINKS => [
@@ -62,22 +54,22 @@ class Folder extends SchemaProvider
             self::RELATIONSHIP_DATA => $context,
         ];
 
-        $decks = $resource->decks;
-        $relationships[self::REL_DECKS] = [
-            self::RELATIONSHIP_LINKS => [
-                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_DECKS),
-            ],
-            self::RELATIONSHIP_DATA => $decks,
-        ];
-
-        $parent = $resource->parent;
-        $relationships[self::REL_PARENT] = [
-            self::RELATIONSHIP_LINKS => $parent
+        $folder = $resource->folder;
+        $relationships[self::REL_FOLDER] = [
+            self::RELATIONSHIP_LINKS => $folder
                 ? [
-                    Link::RELATED => $this->createLinkToResource($parent),
+                    Link::RELATED => $this->createLinkToResource($folder),
                 ]
                 : [],
-            self::RELATIONSHIP_DATA => $parent,
+            self::RELATIONSHIP_DATA => $folder,
+        ];
+
+        $owner = $resource->owner;
+        $relationships[self::REL_OWNER] = [
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->createLinkToResource($owner),
+            ],
+            self::RELATIONSHIP_DATA => $owner,
         ];
 
         return $relationships;
