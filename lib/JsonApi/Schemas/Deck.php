@@ -10,6 +10,7 @@ use Neomerx\JsonApi\Schema\Link;
 class Deck extends SchemaProvider
 {
     public const TYPE = 'lernkarten-decks';
+    public const REL_CARDS = 'cards';
     public const REL_CONTEXT = 'context';
     public const REL_FOLDER = 'folder';
     public const REL_OWNER = 'owner';
@@ -45,6 +46,14 @@ class Deck extends SchemaProvider
     public function getRelationships($resource, ContextInterface $context): iterable
     {
         $relationships = [];
+
+        $cards = $resource->cards;
+        $relationships[self::REL_CARDS] = [
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_CARDS),
+            ],
+            self::RELATIONSHIP_DATA => $cards,
+        ];
 
         $context = $resource->getContext();
         $relationships[self::REL_CONTEXT] = [

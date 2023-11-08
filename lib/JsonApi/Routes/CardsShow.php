@@ -5,21 +5,18 @@ namespace Lernkarten\JsonApi\Routes;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
-use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
-use Lernkarten\Models\Deck;
+use Lernkarten\JsonApi\Schemas\Card as CardSchema;
+use Lernkarten\Models\Card;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Display one Deck.
+ * Display one Card.
  */
-class DecksShow extends JsonApiController
+class CardsShow extends JsonApiController
 {
     protected $allowedIncludePaths = [
-        DeckSchema::REL_CARDS,
-        DeckSchema::REL_CONTEXT,
-        DeckSchema::REL_FOLDER,
-        DeckSchema::REL_OWNER,
+        CardSchema::REL_DECK,
     ];
 
     /**
@@ -31,7 +28,7 @@ class DecksShow extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $resource = Deck::find($args['id']);
+        $resource = Card::find($args['id']);
         if (!$resource) {
             throw new RecordNotFoundException();
         }

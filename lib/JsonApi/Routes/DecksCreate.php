@@ -96,7 +96,7 @@ class DecksCreate extends JsonApiController
         }
     }
 
-    private function create(User $user, array $json): Folder
+    private function create(User $user, array $json): Deck
     {
         /** @var Course|User */
         $context = $this->getContextFromJson($json);
@@ -104,13 +104,13 @@ class DecksCreate extends JsonApiController
         $name = trim(self::arrayGet($json, 'data.attributes.name'));
         $description = trim(self::arrayGet($json, 'data.attributes.description'));
 
-        $resource = Folder::create([
-            'folder_id' => $parent ? $parent->id : null,
+        $resource = Deck::create([
+            'folder_id' => $folder ? $folder->id : null,
             'context_id' => $context->getId(),
             'context_type' => get_class($context),
             'name' => $name,
             'description' => $description,
-            'owner' => $user->id,
+            'owner_id' => $user->id,
         ]);
 
         if (!$resource) {

@@ -18,6 +18,14 @@ class Note extends SimpleORMap
             'order_by' => 'ORDER BY mkdate',
         ];
 
+        $config['registered_callbacks']['before_create'][] = function ($note) {
+            do {
+                $guid = sha1(uniqid(__CLASS__, true));
+            } while (self::exists($guid));
+
+            $note->guid = $guid;
+        };
+
         parent::configure($config);
     }
 }
