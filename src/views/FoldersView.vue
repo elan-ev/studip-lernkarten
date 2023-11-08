@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
 import { useFoldersStore } from '../stores/folders.js';
-import DeckCard from '../components/DeckCard.vue';
+import CardDeck from '../components/CardDeck.vue';
 import DialogCreateFolder from '../components/DialogCreateFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
@@ -62,7 +62,7 @@ const onConfirmDeleteDialog = () => {
         </header>
         <article v-for="deck in decks" :key="deck.id">
             <RouterLink :to="{ name: 'deck', params: { id: deck.id } }">
-                <DeckCard :deck="deck" />
+                <CardDeck :deck="deck" />
             </RouterLink>
         </article>
     </section>
