@@ -141,7 +141,7 @@ const confirmDialog = () => emit('confirm');
 </script>
 
 <template>
-    <Dialog :open="open" class="studip-dialog">
+    <Dialog :open="open" :initial-focus="initialFocus" class="studip-dialog">
         <div class="studip-dialog-backdrop" aria-hidden="true">
             <VueResizable
                 class="resizable"
