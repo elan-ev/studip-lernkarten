@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
-import Sidebar from './components/Sidebar.vue';
+import LernkartenSidebar from './components/LernkartenSidebar.vue';
 
 onMounted(hideOriginalSidebarNavigation);
 
@@ -17,6 +17,6 @@ function hideOriginalSidebarNavigation() {
     <RouterView />
 
     <Teleport to="#sidebar-navigation form">
-        <Sidebar />
+        <LernkartenSidebar />
     </Teleport>
 </template>
