@@ -4,13 +4,14 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const matchedName = computed(() => route?.matched?.[0]?.name ?? '');
+const unmatched = computed(() => (!['home', 'folders'].includes(matchedName.value)));
 </script>
 <template>
     <ul
         class="widget-list widget-links sidebar-navigation navigation-level-3"
         :aria-label="$gettext('Dritte Navigationsebene')"
     >
-        <li :class="{ active: matchedName === 'home' }">
+        <li :class="{ active: matchedName === 'home' || unmatched }">
             <RouterLink
                 to="/"
                 id="nav_lernkarten_index"
