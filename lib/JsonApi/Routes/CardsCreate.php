@@ -92,7 +92,7 @@ class CardsCreate extends JsonApiController
             return 'Missing attribute `fields`.';
         }
         if (!$this->validFields($json)) {
-            return 'Invalid attribute `model`.';
+            return 'Invalid attribute `fields`.';
         }
     }
 

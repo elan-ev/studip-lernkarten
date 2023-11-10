@@ -18,6 +18,7 @@ trait Routes
 
         $group->post('/lernkarten-cards', Routes\CardsCreate::class);
         $group->get('/lernkarten-cards/{id}', Routes\CardsShow::class);
+        $group->patch('/lernkarten-cards/{id}', Routes\CardsUpdate::class);
 
         $group->get('/lernkarten-folders/{id}/decks', Routes\DecksOfFoldersShow::class);
         $group->get('/lernkarten-decks/{id}/cards', Routes\CardsOfDecksShow::class);

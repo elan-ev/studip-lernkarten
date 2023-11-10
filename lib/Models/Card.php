@@ -4,6 +4,9 @@ namespace Lernkarten\Models;
 
 use SimpleORMap;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class Card extends SimpleORMap
 {
     protected static function configure($config = [])
@@ -19,6 +22,17 @@ class Card extends SimpleORMap
             'foreign_key' => 'note_id',
         ];
 
+        $config['registered_callbacks']['after_delete'][] = function () {
+            Note::prune();
+        };
+
         parent::configure($config);
+    }
+
+    public function updateFields(array $fields): void
+    {
+        $this->note = $this->note->cloneWithFields($fields);
+        $this->store();
+        Note::prune();
     }
 }
