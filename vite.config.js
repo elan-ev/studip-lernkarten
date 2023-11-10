@@ -1,22 +1,24 @@
-import { resolve } from 'node:path'
-import { fileURLToPath, URL } from 'node:url'
+import { resolve } from 'node:path';
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
 
-export default defineConfig({
-    build: {
-        lib: {
-            entry: resolve(__dirname, 'src/main.js'),
-            name: 'StudIPLernkarten',
+export default defineConfig(({ command, mode }) => {
+    return {
+        build: {
+            lib: {
+                entry: resolve(__dirname, 'src/main.js'),
+                name: 'StudIPLernkarten',
+            },
+            sourcemap: mode === 'development' ? 'inline' : false,
         },
-        sourcemap: "inline",
-    },
-    define: { 'process.env.NODE_ENV': '"development"' },
-    plugins: [vue()],
-    resolve: {
-        alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
-        }
-    }
-})
+        define: { 'process.env.NODE_ENV': mode },
+        plugins: [vue()],
+        resolve: {
+            alias: {
+                '@': fileURLToPath(new URL('./src', import.meta.url)),
+            },
+        },
+    };
+});
