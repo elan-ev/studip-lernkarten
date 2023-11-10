@@ -1,5 +1,14 @@
 <script setup>
+import { computed } from 'vue';
+import { RouterLink } from 'vue-router';
+import DeckList from '../components/DeckList.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
+import { useDecksStore } from '../stores/decks.js';
+
+const decksStore = useDecksStore();
+decksStore.fetchContext();
+
+const allDecks = computed(() => decksStore.byContext);
 </script>
 
 <template>
@@ -17,9 +26,9 @@ import StudipIcon from '../components/base/StudipIcon.vue';
             </div>
 
             <div class="formpart">
-                <button type="button" class="button">
-                    <StudipIcon shape="add" />{{ $gettext('Neuer Kartensatz') }}
-                </button>
+                <RouterLink :to="{ name: 'decks-create' }" class="button add">
+                    {{ $gettext('Neuer Kartensatz') }}
+                </RouterLink>
             </div>
 
             <div class="formpart">
@@ -32,45 +41,8 @@ import StudipIcon from '../components/base/StudipIcon.vue';
             </div>
         </form>
 
-        <section>
-            <article>
-                <div class="kartensatz-block tw-border tw-h-[100-px] tw-flex">
-                    <div class="stats-area tw-w-[100px] tw-h-[100px] tw-bg-slate-300">
-                        <div class="kartensatz-block-prozent tw-px-4">0%</div>
-                    </div>
-
-                    <div class="text-area tw-grow tw-flex tw-flex-col">
-                        <p class="title">XXX</p>
-                        <p class="sub-title ellipsis">&nbsp;</p>
-
-                        <div class="sub-info tw-flex tw-flex-row">
-                            <div class="wrapper">
-                                <StudipIcon shape="dialog-cards" role="info" />
-                                <span>5</span>
-                            </div>
-
-                            <button
-                                id="lernenmobil-2426807"
-                                class="bright-link learn-btn"
-                                type="button"
-                            >
-                                <StudipIcon shape="refresh" role="info" />
-                                <span class="show-for-tablet-up-inline">Lernen</span>
-                            </button>
-                            <div class="settings-btn-container">
-                                <button
-                                    style="width: 20px"
-                                    title="Einstellungen"
-                                    class="settings-btn"
-                                    id="settings-2426807"
-                                >
-                                    <StudipIcon shape="menu-more" role="info" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
+        <section class="tw-mt-12">
+            <DeckList :decks="allDecks" />
         </section>
     </main>
 </template>

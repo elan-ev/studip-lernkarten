@@ -1,0 +1,69 @@
+import { ref, computed } from 'vue';
+import { defineStore } from 'pinia';
+import { api } from '../api.js';
+import { useContextStore } from './context.js';
+
+export const useCardsStore = defineStore(
+    'cards',
+    () => {
+        const records = ref(new Map());
+        const isLoading = ref(false);
+        const errors = ref(false);
+
+        function storeRecord(newRecord) {
+            if (records.value.has(newRecord.id)) {
+                const existingRecord = records.value.get(newRecord.id);
+                Object.assign(existingRecord, newRecord);
+            } else {
+                records.value.set(newRecord.id, newRecord);
+            }
+        }
+
+        const all = computed(() => {
+            return [...records.value.values()];
+        });
+
+        const byDeck = (deck) => {
+            return all.value.filter((card) => card.deck.data.id === deck.id);
+        };
+
+        async function fetchByDeck(deck) {
+            isLoading.value = true;
+            const { data } = await api.fetch(`lernkarten-decks/${deck.id}/cards`);
+            isLoading.value = false;
+            data.forEach(storeRecord);
+        }
+
+        async function createCard(deck, card) {
+            const { data } = await api.create('lernkarten-cards', {
+                deck: { data: { id: deck.id, type: 'lernkarten-decks' } },
+                ...card,
+            });
+            storeRecord(data);
+
+            return data;
+        }
+
+        async function updateFields(card, fields) {
+            try {
+                const { data } = await api.patch('lernkarten-cards', { id: card.id, fields });
+                storeRecord(data);
+            } catch (errors) {
+                error.value = errors;
+                console.error("Could not update fields", errors);
+            }
+        }
+
+        return {
+            all,
+            byDeck,
+            createCard,
+            errors,
+            fetchByDeck,
+            updateFields,
+        };
+    },
+    {
+        persist: true,
+    }
+);
