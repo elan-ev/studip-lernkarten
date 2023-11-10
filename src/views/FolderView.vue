@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import CardDeck from '../components/CardDeck.vue';
+import DeckList from '../components/DeckList.vue';
 import DialogCreateFolder from '../components/DialogCreateFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
@@ -80,11 +81,7 @@ const deleteFolder = () => {
         <header>
             <h3 class="tw-mt-12">Decks im Ordner</h3>
         </header>
-        <article v-for="deck in decks" :key="deck.id">
-            <RouterLink :to="{ name: 'deck', params: { id: deck.id } }">
-                <CardDeck :deck="deck" />
-            </RouterLink>
-        </article>
+        <DeckList :decks="decks" />
     </section>
 
     <DialogCreateFolder v-model:open="createDialogOpen" @confirm="createChild" />
