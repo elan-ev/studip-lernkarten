@@ -13,7 +13,7 @@ export default defineConfig(({ command, mode }) => {
             },
             sourcemap: mode === 'development' ? 'inline' : false,
         },
-        define: { 'process.env.NODE_ENV': mode },
+        define: { 'process.env.NODE_ENV': `"${mode}"` },
         plugins: [vue()],
         resolve: {
             alias: {
