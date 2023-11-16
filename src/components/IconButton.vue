@@ -1,11 +1,11 @@
 <script setup>
 import StudipIcon from './base/StudipIcon.vue';
 
-const props = defineProps(['icon']);
+const props = defineProps(['icon', 'variant']);
 </script>
 
 <template>
-    <button class="button">
+    <button class="button" :class="{ 'button-link': variant === 'link' }">
         <span>
             <StudipIcon :shape="icon" role="clickable" />
             <StudipIcon :shape="icon" role="info_alt" />
@@ -41,5 +41,10 @@ button:hover:not(:disabled) > span > img:nth-child(1) {
 button:disabled > span > img:nth-child(2),
 button:not(:hover) > span > img:nth-child(2) {
     display: none;
+}
+
+.button-link {
+    background: transparent;
+    border: none;
 }
 </style>

@@ -6,9 +6,11 @@ const props = defineProps(['decks']);
 </script>
 
 <template>
-    <article v-for="deck in decks" :key="deck.id">
-        <RouterLink :to="{ name: 'deck', params: { id: deck.id } }">
-            <CardDeck :deck="deck" />
-        </RouterLink>
-    </article>
+    <section class="tw-flex tw-flex-col tw-gap-2">
+        <article v-for="deck in decks" :key="deck.id">
+            <RouterLink :to="{ name: 'deck', params: { id: deck.id } }">
+                <CardDeck :deck="deck" />
+            </RouterLink>
+        </article>
+    </section>
 </template>

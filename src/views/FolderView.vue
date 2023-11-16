@@ -7,6 +7,7 @@ import DialogCreateFolder from '../components/DialogCreateFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
 import Ribbon from '../components/Ribbon.vue';
+import StudipIcon from '../components/base/StudipIcon.vue';
 import { useDecksStore } from '../stores/decks.js';
 import { useFoldersStore } from '../stores/folders.js';
 
@@ -58,7 +59,10 @@ const deleteFolder = () => {
 <template>
     <Ribbon v-if="folder">
         <li>
-            <RouterLink :to="{ name: 'folders' }"> Home </RouterLink>
+            <RouterLink :to="{ name: 'folders' }">
+                <StudipIcon shape="folder-home-empty" :height="18" :width="18" class="tw-align-middle" />
+                <span class="sr-only">{{ $gettext("Home") }}</span>
+            </RouterLink>
         </li>
         <li v-for="ancestor in foldersStore.ancestors(folder)" :key="ancestor.id">
             <RouterLink
@@ -77,7 +81,7 @@ const deleteFolder = () => {
         <button type="button" class="button add" @click="onAddChild">Unterordner erstellen</button>
     </section>
 
-    <section class="tw-mt-12">
+    <section class="tw-mt-12" v-if="decks.length">
         <header>
             <h3 class="tw-mt-12">Decks im Ordner</h3>
         </header>

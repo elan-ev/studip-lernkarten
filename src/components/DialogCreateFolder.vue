@@ -34,7 +34,7 @@ const onConfirm = () => {
         :open="open"
         @update:open="setIsOpen"
         @confirm="onConfirm"
-        title="Lorem ipsum"
+        :title="$gettext('Ordner erstellen')"
         :confirm-text="$gettext('Erstellen')"
         :close-text="$gettext('Abbrechen')"
     >

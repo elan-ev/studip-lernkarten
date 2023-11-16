@@ -54,13 +54,26 @@ export const useCardsStore = defineStore(
             }
         }
 
+        async function updateLearningStats(card, stats) {
+            try {
+                // const { data } = await api.patch('lernkarten-cards', { id: card.id, ...stats });
+                Object.assign(card, stats);
+                storeRecord(card);
+            } catch (errors) {
+                error.value = errors;
+                console.error("Could not update stats", errors);
+            }
+        }
+
         return {
             all,
             byDeck,
             createCard,
             errors,
             fetchByDeck,
+            isLoading,
             updateFields,
+            updateLearningStats,
         };
     },
     {

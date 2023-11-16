@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const matchedName = computed(() => route?.matched?.[0]?.name ?? '');
-const unmatched = computed(() => (!['home', 'folders'].includes(matchedName.value)));
+const unmatched = computed(() => (!['home', 'folders', 'folder'].includes(matchedName.value)));
 </script>
 <template>
     <ul
@@ -21,7 +21,7 @@ const unmatched = computed(() => (!['home', 'folders'].includes(matchedName.valu
                 {{ $gettext('Lernkarten') }}
             </RouterLink>
         </li>
-        <li :class="{ active: matchedName === 'folders' }">
+        <li :class="{ active: ['folder', 'folders'].includes(matchedName) }">
             <RouterLink
                 to="/folders"
                 id="nav_lernkarten_folders"

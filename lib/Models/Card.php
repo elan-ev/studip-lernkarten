@@ -22,6 +22,12 @@ class Card extends SimpleORMap
             'foreign_key' => 'note_id',
         ];
 
+        $config['registered_callbacks']['before_create'][] = function ($card) {
+            $now = time();
+            $card->due = $now;
+            $card->last_review = $now;
+        };
+
         $config['registered_callbacks']['after_delete'][] = function () {
             Note::prune();
         };

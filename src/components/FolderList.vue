@@ -9,7 +9,7 @@ const deleteFolder = (folder) => emit('delete-folder', folder);
 </script>
 
 <template>
-    <article class="studip toggle tw-my-2" v-for="folder in folders" :key="folder.id">
+    <article v-if="folders.length > 0" class="studip toggle tw-my-2" v-for="folder in folders" :key="folder.id">
         <header>
             <h1>
                 <RouterLink :to="{ name: 'folder', params: { id: folder.id } }">{{ folder.name }}</RouterLink>
@@ -21,5 +21,8 @@ const deleteFolder = (folder) => emit('delete-folder', folder);
                 </button>
             </nav>
         </header>
+    </article>
+    <article v-else>
+        <slot name="empty"></slot>
     </article>
 </template>

@@ -9,7 +9,10 @@ import DialogCreateFolder from '../components/DialogCreateFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
 import FolderTree from '../components/FolderTree.vue';
+import IconButton from '../components/IconButton.vue';
 import Ribbon from '../components/Ribbon.vue';
+import StudipCompanion from '../components/base/StudipCompanion.vue';
+import StudipIcon from '../components/base/StudipIcon.vue';
 
 const createDialogOpen = ref(false);
 const confirmDeleteDialogOpen = ref(false);
@@ -46,17 +49,30 @@ const onConfirmDeleteDialog = () => {
 <template>
     <Ribbon>
         <li>
-            <RouterLink :to="{ name: 'folders' }"> Home </RouterLink>
+            <RouterLink :to="{ name: 'folders' }" disabled>
+                <StudipIcon shape="folder-home-empty" role="info" :height="18" :width="18" class="tw-align-middle" />
+                <span class="sr-only">{{ $gettext("Home") }}</span>
+            </RouterLink>
         </li>
     </Ribbon>
 
     <section class="tw-mt-8">
-        <FolderList :folders="topFolders" @delete-folder="deleteFolder" />
+        <FolderList :folders="topFolders" @delete-folder="deleteFolder">
+            <template #empty>
+                <StudipCompanion :msgCompanion="$gettext('Es gibt noch keinen Ordner.')">
+                    <template #companionActions>
+                        <IconButton icon="add">
+                            {{ $gettext("Ordner anlegen") }}
+                        </IconButton>
+                    </template>
+                </StudipCompanion>
+            </template>
+        </FolderList>
 
-        <button type="button" class="button add" @click="addTopFolder">Neuer Ordner</button>
+        <button type="button" class="button add" @click="addTopFolder">Ordner anlegen</button>
     </section>
 
-    <section class="tw-mt-12">
+    <section class="tw-mt-12" v-if="decks.length">
         <header>
             <h3>Decks ohne Ordner</h3>
         </header>

@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue";
+import { RouterLink } from "vue-router";
 import RadialProgress from './RadialProgress.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipIcon from './base/StudipIcon.vue';
@@ -20,10 +21,10 @@ const formattedName = computed(() => props.deck.owner.data['formatted-name']);
             <div class="tw-flex tw-items-end tw-justify-between">
                 <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName"/>
                 <div class="tw-px-4">
-                    <a href="#" class="tw-flex tw-items-center tw-gap-1">
+                    <RouterLink :to="{ name: 'study', params: { id: deck.id } }" class="tw-flex tw-items-center tw-gap-1">
                         <StudipIcon shape="refresh" role="info" />
                         {{ $gettext("Lernen") }}
-                    </a>
+                    </RouterLink>
                 </div>
             </div>
         </div>
