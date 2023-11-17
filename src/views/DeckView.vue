@@ -5,6 +5,7 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
 import Button from '../components/IconButton.vue';
 import DeckCardsPanel from '../components/DeckCardsPanel.vue';
 import DeckInfoPanel from '../components/DeckInfoPanel.vue';
+import DeckStatisticsPanel from '../components/DeckStatisticsPanel.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import MessageBox from '../components/base/StudipMessageBox.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
@@ -105,7 +106,9 @@ const onLearn = (options) => {
                 <TabPanel>
                     <DeckCardsPanel :deck="deck" />
                 </TabPanel>
-                <TabPanel>Content 3 (Statistiken)</TabPanel>
+                <TabPanel>
+                    <DeckStatisticsPanel :deck="deck" />
+                </TabPanel>
                 <TabPanel>Content 4 (Einstellungen)</TabPanel>
             </TabPanels>
         </TabGroup>

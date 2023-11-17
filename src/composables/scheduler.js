@@ -46,7 +46,14 @@ export function useScheduler({ id }) {
             throw new Error('Invalid rating.');
         }
         const card = queuedCard.value;
-        cardsStore.updateLearningStats(card, repeatWithRating(card, rating));
+
+        const countAttr = `${Rating[rating].toLowerCase()}-count`;
+        const stats = {
+            ...repeatWithRating(card, rating),
+            [countAttr]: card[countAttr] + 1,
+        };
+
+        cardsStore.updateLearningStats(card, stats);
         return card;
     };
 

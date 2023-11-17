@@ -6,10 +6,12 @@ import CardBasicEdit from './cards/BasicEdit.vue';
 import CardBasicShow from './cards/BasicShow.vue';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipIcon from './base/StudipIcon.vue';
+import { useFsrs } from '../composables/fsrs.js';
 import { useCardsStore } from '../stores/cards.js';
 
 const cardsStore = useCardsStore();
 const { $gettext } = useGettext();
+const { translatedStates } = useFsrs();
 
 const cardViews = {
     show: CardBasicShow,
@@ -23,6 +25,7 @@ const initialFocus = ref(null);
 const cardViewMode = ref('show');
 
 const cardView = computed(() => cardViews[cardViewMode.value]);
+const readableState = computed(() => translatedStates[props.card.state]);
 
 const reset = () => {};
 const setIsOpen = (value) => {
@@ -89,12 +92,38 @@ const onDelete = () => {
                     </div>
                     <div>
                         <div class="tw-flex tw-gap-2">
-                            <div class="tw-grow tw-p-2 tw-bg-slate-100">Lernstufe 0</div>
-                            <div class="tw-grow tw-p-2 tw-bg-slate-100">0 mal gewusst</div>
-                            <div class="tw-grow tw-p-2 tw-bg-slate-100">
-                                0 mal teilweise gewusst
+                            <div class="tw-grow tw-p-2 tw-text-[#00A279]">
+                                <StudipIcon shape="accept" />
+                                {{
+                                    $gettext('%{ count } genau gewusst', {
+                                        count: card['easy-count'],
+                                    })
+                                }}
                             </div>
-                            <div class="tw-grow tw-p-2 tw-bg-slate-100">0 mal nicht gewusst</div>
+                            <div class="tw-grow tw-p-2 tw-text-[#ADC447]">
+                                {{
+                                    $gettext('%{ count } gewusst', {
+                                        count: card['good-count'],
+                                    })
+                                }}
+                            </div>
+                            <div class="tw-grow tw-p-2 tw-text-[#e79e3d]">
+                                {{
+                                    $gettext('%{ count } kaum gewusst', {
+                                        count: card['hard-count'],
+                                    })
+                                }}
+                            </div>
+                            <div class="tw-grow tw-p-2 tw-text-[#db4646]">
+                                {{
+                                    $gettext('%{ count } nicht gewusst', {
+                                        count: card['again-count'],
+                                    })
+                                }}
+                            </div>
+                            <div class="tw-grow tw-p-2 tw-bg-slate-100">
+                                {{ readableState }}
+                            </div>
                         </div>
 
                         <component

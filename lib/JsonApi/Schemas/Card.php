@@ -42,6 +42,10 @@ class Card extends SchemaProvider
             'lapses' => (int) $resource->lapses,
             'state' => (int) $resource->state,
             'last-review' => date('c', $resource->last_review),
+            'again-count' => (int) $resource->again_count,
+            'hard-count' => (int) $resource->hard_count,
+            'good-count' => (int) $resource->good_count,
+            'easy-count' => (int) $resource->easy_count,
             'mkdate' => date('c', $resource->mkdate),
             'chdate' => date('c', $resource->chdate),
         ];

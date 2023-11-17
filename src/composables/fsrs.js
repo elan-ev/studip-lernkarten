@@ -1,4 +1,5 @@
 import { State, Rating, Card, FSRS } from 'fsrs.js';
+import { useGettext } from 'vue3-gettext';
 
 export function useFsrs() {
     const createCard = (flashCard) => {
@@ -31,11 +32,21 @@ export function useFsrs() {
         return schedulingInfos[rating].card;
     };
 
+    const { $gettext } = useGettext();
+
+    const translatedStates = {
+        [State.New]: $gettext('Neue Karte'),
+        [State.Learning]: $gettext('Zu lernende Karte'),
+        [State.Review]: $gettext('Gelernte Karte'),
+        [State.Relearning]: $gettext('Erneut zu lernende Karte'),
+    };
+
     return {
         State,
         Rating,
         createCard,
         repeat,
         repeatWithRating,
+        translatedStates,
     };
 }
