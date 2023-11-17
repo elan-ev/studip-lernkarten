@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
 import BasicBack from '../components/cards/BasicBack.vue';
 import BasicFront from '../components/cards/BasicFront.vue';
@@ -14,13 +14,11 @@ const props = defineProps(['id']);
 
 const { $gettext } = useGettext();
 const router = useRouter();
-const { cards, cardStates, deck, queuedCard, repeat } = useScheduler({ id: props.id });
+const { cards, cardStates, deck, dueCards, queuedCard, repeat } = useScheduler({ id: props.id });
 
 const showAnswer = ref(false);
 
-onMounted(() => {
-    STUDIP.Vue.emit('toggle-compact-navigation', true);
-});
+onMounted(enableCompactNavigation);
 
 // const cardsLeft = computed(() => orderedCards.value.length - (currentIndex.value + 1));
 const cardsLeft = computed(() => 17);
@@ -42,7 +40,15 @@ const onRepeat = (rating) => {
 };
 const onCancel = () => {
     router.push({ name: 'deck', params: { id: props.id } });
+    disableCompactNavigation();
 };
+
+function disableCompactNavigation() {
+    STUDIP.Vue.emit('toggle-compact-navigation', false);
+}
+function enableCompactNavigation() {
+    STUDIP.Vue.emit('toggle-compact-navigation', true);
+}
 </script>
 
 <template>
@@ -51,9 +57,12 @@ const onCancel = () => {
             {{ $gettext('Lade Kartensatz') }}
         </div>
         <div v-if="deck" class="tw-max-w-[700px] tw-w-full">
-            <pre>{{ cardStates }}</pre>
             <div v-if="queuedCard">
-                <StudyViewStatistics class="tw-mb-8" :cards="cards" :index="currentIndex" />
+                <StudyViewStatistics
+                    class="tw-mb-8"
+                    :card-states="cardStates"
+                    :due-cards="dueCards"
+                />
                 <div class="tw-flex tw-items-center tw-gap-2 tw-mb-2">
                     <StudipIcon shape="folder-empty" role="info" height="32" width="32" />
                     <span>{{ folderName }}</span>
@@ -90,6 +99,14 @@ const onCancel = () => {
                     fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
                     culpa qui officia deserunt mollit anim id est laborum.
                 </p>
+                <div>
+                    <RouterLink
+                        :to="{ name: 'deck', params: { id } }"
+                        @click="disableCompactNavigation"
+                    >
+                        Zurück zum Kartensatz
+                    </RouterLink>
+                </div>
             </article>
         </div>
     </div>

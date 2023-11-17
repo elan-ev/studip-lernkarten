@@ -30,13 +30,15 @@ export function useScheduler({ id }) {
         );
     });
 
-    const queuedCard = computed(() => {
+    const dueCards = computed(() => {
         const now = new Date();
         // now.setMinutes(now.getMinutes() + );
 
-        const dueCards = cards.value.filter((card) => new Date(card.due) < now);
+        return cards.value.filter((card) => new Date(card.due) < now);
+    });
 
-        return dueCards.length ? _.sample(dueCards) : null;
+    const queuedCard = computed(() => {
+        return dueCards.value.length ? _.sample(dueCards.value) : null;
     });
 
     const repeat = (rating) => {
@@ -57,6 +59,7 @@ export function useScheduler({ id }) {
         cards,
         cardStates,
         deck,
+        dueCards,
         errors,
         isLoading,
         queuedCard,

@@ -1,17 +1,18 @@
 <script setup>
 import { computed } from 'vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
+import { useFsrs } from '../composables/fsrs.js';
 
-const props = defineProps(['cards', 'index']);
+const { State } = useFsrs();
 
-const cardsLeft = computed(() => props.cards.length - (props.index + 1));
-const progress = computed(() =>
-    toPercent(props.cards.length ? props.index / props.cards.length : 0)
-);
+const props = defineProps(['cardStates', 'dueCards']);
 
-function toPercent(num) {
-    return Math.floor(num * 100);
-}
+const cardsLeft = computed(() => props.dueCards.length);
+
+const newCards = computed(() => props.cardStates.get(State.New));
+const learningCards = computed(() => props.cardStates.get(State.Learning));
+const reviewCards = computed(() => props.cardStates.get(State.Review));
+const relearningCards = computed(() => props.cardStates.get(State.Relearning));
 </script>
 
 <template>
@@ -22,10 +23,12 @@ function toPercent(num) {
                     <StudipIcon class="tw-align-middle tw-mr-1" shape="dialog-cards" role="info" />
                     <span>Alle Karten</span>
                 </span>
-                –
-                <span> Karte {{ index + 1 }} von {{ cards.length }} </span>
-                –
-                <span> Fortschritt: {{ progress }}% </span>
+                <span>
+                    <span class="tw-bg-[new]">{{ newCards }}</span>
+                    <span class="tw-bg-[red]">{{ learningCards }}</span>
+                    <span class="tw-bg-[green]">{{ reviewCards }}</span>
+                    <span class="tw-bg-[purple]">{{ relearningCards }}</span>
+                </span>
             </span>
             <span>
                 Verbleibende Karten:
