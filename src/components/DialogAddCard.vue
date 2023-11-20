@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { watch, ref, toRaw, nextTick } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipMessageBox from './base/StudipMessageBox.vue';
@@ -11,35 +11,72 @@ const { $gettext } = useGettext();
 const props = defineProps(['open', 'deck']);
 const emit = defineEmits(['update:open']);
 
-const back = ref('');
 const cardType = ref('basic');
 const cardTypes = ref([{ text: $gettext('Einfach'), value: 'basic' }]);
-const front = ref('');
-const initialFocus = ref(null);
+const front = ref(null);
+const back = ref(null);
+const wysiwyg_editor = ref({});
 
 const reset = () => {
     back.value = '';
     front.value = '';
 };
+
 const setIsOpen = (value) => {
     emit('update:open', value);
     reset();
 };
 const createOne = () => {
-    const card = { model: cardType.value, fields: { front: front.value, back: back.value } };
+    const card = { model: cardType.value, fields: { front: front.value.value, back: back.value.value } };
     cardsStore.createCard(props.deck, card).then(() => setIsOpen(false));
 };
 const createMore = () => {
-    const card = { model: cardType.value, fields: { front: front.value, back: back.value } };
+    const card = { model: cardType.value, fields: { front: front.value.value, back: back.value.value } };
     cardsStore.createCard(props.deck, card).then(reset);
 };
+
+const checkEditor = (ref, focus) => {
+
+    nextTick(() => {
+        let textarea = ref.value;
+        let id = textarea.id;
+
+        window.STUDIP.wysiwyg.replace(textarea);
+
+        if (!window.STUDIP.wysiwyg.getEditor(textarea)) {
+            setTimeout(() => {
+                checkEditor(ref, focus)
+            }, 300);
+            return;
+        }
+
+        wysiwyg_editor[id] = window.STUDIP.wysiwyg.getEditor(textarea);
+
+        if (focus) {
+            toRaw(wysiwyg_editor[id]).editing.view.focus();
+        }
+        // using toRaw to remove Vue proxys. They do not work well with CKEditor
+        toRaw(wysiwyg_editor[id]).ui.focusTracker.on( 'change:isFocused', () => {
+            textarea.value = toRaw(wysiwyg_editor[id]).getData();
+        });
+    });
+};
+
+watch(() => props.open, (newValue) => {
+    if (newValue == true) {
+        checkEditor(front, true);
+        checkEditor(back, false);
+    } else {
+        wysiwyg_editor.value = {};
+    }
+});
+
 </script>
 
 <template>
     <StudipDialog
         :close-text="$gettext('Abbrechen')"
         :height="600"
-        :initial-focus="initialFocus"
         :open="open"
         :title="$gettext('Karten erstellen')"
         :width="600"
@@ -67,7 +104,7 @@ const createMore = () => {
                 </div>
 
                 <div class="formpart">
-                    <label class="studiprequired">
+                    <label class="studiprequired" for="card-text-front">
                         <span class="textlabel">
                             {{ $gettext('Vorderseite') }}
                         </span>
@@ -77,17 +114,18 @@ const createMore = () => {
                             aria-hidden="true"
                             >*</span
                         >
-                        <textarea
-                            v-model="front"
-                            ref="initialFocus"
-                            required
-                            aria-required="true"
-                        />
                     </label>
+
+                    <textarea
+                        id="card-text-front"
+                        ref="front"
+                        required
+                        aria-required="true"
+                    />
                 </div>
 
                 <div class="formpart">
-                    <label class="studiprequired">
+                    <label class="studiprequired" for="card-text-back">
                         <span class="textlabel">
                             {{ $gettext('Rückseite') }}
                         </span>
@@ -97,8 +135,14 @@ const createMore = () => {
                             aria-hidden="true"
                             >*</span
                         >
-                        <textarea v-model="back" required aria-required="true" />
                     </label>
+
+                    <textarea
+                        id="card-text-back"
+                        ref="back"
+                        required
+                        aria-required="true"
+                    />
                 </div>
             </form>
         </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, nextTick, reactive, ref, toRaw } from 'vue';
 import Button from '../IconButton.vue';
 import { useCardsStore } from '../../stores/cards.js';
 
@@ -8,12 +8,15 @@ const cardsStore = useCardsStore();
 const props = defineProps(['card', 'mode']);
 const emit = defineEmits(['update:mode']);
 
-const initialFocus = ref(null);
 const isStoring = ref(false);
 const localCard = reactive({
     front: props.card.fields.front,
     back: props.card.fields.back,
 });
+
+const front = ref(null);
+const back = ref(null);
+const wysiwyg_editor = ref({});
 
 const onStore = () => {
     if (isStoring.value) {
@@ -30,11 +33,43 @@ const onCancel = () => {
     emit('update:mode', 'show');
 };
 
-onMounted(() => initialFocus.value.focus());
+const checkEditor = (ref, focus) => {
+    nextTick(() => {
+        let textarea = ref.value;
+        let id = textarea.id;
+
+        window.STUDIP.wysiwyg.replace(textarea);
+
+        if (!window.STUDIP.wysiwyg.getEditor(textarea)) {
+            setTimeout(() => {
+                checkEditor(ref, focus)
+            }, 300);
+            return;
+        }
+
+        wysiwyg_editor[id] = window.STUDIP.wysiwyg.getEditor(textarea);
+
+        if (focus) {
+            toRaw(wysiwyg_editor[id]).editing.view.focus();
+        }
+        // using toRaw to remove Vue proxys. They do not work well with CKEditor
+        toRaw(wysiwyg_editor[id]).ui.focusTracker.on( 'change:isFocused', () => {
+            console.log('value changed', toRaw(wysiwyg_editor[id]).getData(), id, localCard);
+            localCard[id] = toRaw(wysiwyg_editor[id]).getData();
+        });
+    });
+};
+
+onMounted(() => {
+    checkEditor(front, true);
+    checkEditor(back, false);
+})
+
 </script>
 <template>
     <section>
         <article>
+            {{  mode  }}
             <form class="default studipform" @submit.prevent="">
                 <div class="formpart">
                     <label class="studiprequired">
@@ -50,9 +85,10 @@ onMounted(() => initialFocus.value.focus());
 
                         <div class="tw-text-lg">
                             <textarea
+                                id="front"
                                 v-model="localCard.front"
                                 class="tw-w-full tw-box-border"
-                                ref="initialFocus"
+                                ref="front"
                             />
                         </div>
                     </label>
@@ -70,7 +106,12 @@ onMounted(() => initialFocus.value.focus());
                             >*</span
                         >
                         <div class="tw-text-lg">
-                            <textarea v-model="localCard.back" class="tw-w-full tw-box-border" />
+                            <textarea
+                                id="back"
+                                v-model="localCard.back"
+                                class="tw-w-full tw-box-border"
+                                ref="back"
+                            />
                         </div>
                     </label>
                 </div>

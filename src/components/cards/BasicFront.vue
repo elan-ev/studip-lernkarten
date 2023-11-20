@@ -7,13 +7,7 @@ const answer = ref('');
 const textarea = ref(null);
 
 watch(
-    () => answer.value,
-    () => {
-        textarea.value.style.height = 'auto';
-        nextTick(() => {
-            textarea.value.style.height = textarea.value.scrollHeight + 'px';
-        });
-    }
+    () => answer.value
 );
 </script>
 
