@@ -10,6 +10,7 @@ trait Schemas
             \Lernkarten\Models\Card::class => Schemas\Card::class,
             \Lernkarten\Models\Deck::class => Schemas\Deck::class,
             \Lernkarten\Models\Folder::class => Schemas\Folder::class,
+            \Lernkarten\Models\Instance::class => Schemas\Instance::class,
         ];
     }
 }

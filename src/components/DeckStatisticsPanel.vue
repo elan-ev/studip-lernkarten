@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import BarChart from './BarChart.vue';
 import Button from './IconButton.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipDate from '../components/base/StudipDate.vue';
@@ -41,15 +42,30 @@ const cardsByState = computed(() => {
                 <tbody>
                     <tr v-for="(bucket, index) in cardsByState.reverse()">
                         <td>{{ bucket.name }}</td>
-                        <td>Balkendiagramm in der richtigen Farbe für den State</td>
+                        <td class="tw-w-32">
+                            <BarChart :percent="Math.floor((100 * bucket.count) / cards.length)" />
+                        </td>
                         <td>
-                            <StudipIcon shape="dialog-cards" role="info" />
+                            <StudipIcon
+                                shape="dialog-cards"
+                                role="info"
+                                class="tw-align-baseline"
+                            />
                             {{ bucket.count }}
                         </td>
-                        <td>{{ Math.floor((100 * bucket.count) / cards.length) }}%</td>
+                        <td class="tw-text-right">
+                            {{ Math.floor((100 * bucket.count) / cards.length) }}%
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </section>
     </article>
 </template>
+
+<style scoped>
+td + td {
+    padding-block: 0.25rem;
+    padding-inline-start: 1rem;
+}
+</style>

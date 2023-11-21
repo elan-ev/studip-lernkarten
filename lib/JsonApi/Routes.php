@@ -20,11 +20,21 @@ trait Routes
         $group->get('/lernkarten-cards/{id}', Routes\CardsShow::class);
         $group->patch('/lernkarten-cards/{id}', Routes\CardsUpdate::class);
 
+        $group->get('/lernkarten-shared-decks', Routes\SharedDecksIndex::class);
+        $group->post('/lernkarten-shared-decks', Routes\SharedDecksCreate::class);
+        $group->get('/lernkarten-shared-decks/{id}', Routes\SharedDecksShow::class);
+        $group->delete('/lernkarten-shared-decks/{id}', Routes\SharedDecksDelete::class);
+
         $group->get('/lernkarten-folders/{id}/decks', Routes\DecksOfFoldersShow::class);
         $group->get('/lernkarten-decks/{id}/cards', Routes\CardsOfDecksShow::class);
 
         $group->get('/courses/{id}/lernkarten-decks', Routes\DecksOfCoursesIndex::class);
         $group->get('/users/{id}/lernkarten-decks', Routes\DecksOfUsersIndex::class);
+
+        $group->get('/users/{id}/lernkarten-instances', Routes\InstancesOfUsersIndex::class);
+
+        // $group->get('/users/{id}/lernkarten-shared-decks', Routes\SharedDecksOfUsersIndex::class);
+        $group->get('/courses/{id}/lernkarten-shared-decks', Routes\SharedDecksOfCoursesIndex::class);
     }
 
     public function registerUnauthenticatedRoutes(\Slim\Routing\RouteCollectorProxy $group)

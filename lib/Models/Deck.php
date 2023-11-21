@@ -21,6 +21,14 @@ class Deck extends SimpleORMap
             'order_by' => 'ORDER BY mkdate',
         ];
 
+        $config['has_many']['shared_decks'] = [
+            'class_name' => SharedDeck::class,
+            'assoc_foreign_key' => 'deck_id',
+            'on_delete' => 'delete',
+            'on_store' => 'store',
+            'order_by' => 'ORDER BY mkdate',
+        ];
+
         $config['belongs_to']['folder'] = [
             'class_name' => Folder::class,
             'foreign_key' => 'folder_id',

@@ -7,6 +7,7 @@ import DeckCardsPanel from '../components/DeckCardsPanel.vue';
 import DeckInfoPanel from '../components/DeckInfoPanel.vue';
 import DeckStatisticsPanel from '../components/DeckStatisticsPanel.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
+import DialogShareDeck from '../components/DialogShareDeck.vue';
 import MessageBox from '../components/base/StudipMessageBox.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import { useCardsStore } from '../stores/cards.js';
@@ -19,6 +20,7 @@ const router = useRouter();
 const props = defineProps(['id']);
 
 const showLearnDialog = ref(false);
+const showShareDialog = ref(true);
 
 decksStore.fetchById(props.id);
 cardsStore.fetchByDeck({ id: props.id });
@@ -27,7 +29,7 @@ const deck = computed(() => decksStore.byId(props.id));
 const cards = computed(() => cardsStore.byDeck({ id: props.id }));
 const folder = computed(() => deck.value?.folder.data ?? null);
 
-const onAdjustLearn = (options) => {
+const onAdjustLearn = () => {
     showLearnDialog.value = true;
 };
 
@@ -35,6 +37,14 @@ const onLearn = (options) => {
     console.debug('onLearn', options);
     showLearnDialog.value = false;
     router.push({ name: 'study', params: { id: deck.value.id } });
+};
+
+const onShowShareDialog = () => {
+    showShareDialog.value = true;
+};
+
+const onShare = (options) => {
+    console.debug("sharing", options);
 };
 </script>
 
@@ -68,6 +78,9 @@ const onLearn = (options) => {
             <div>
                 <Button icon="refresh" type="button" @click="onAdjustLearn">
                     {{ $gettext('Lernen') }}
+                </Button>
+                <Button icon="share" type="button" @click="onShowShareDialog">
+                    {{ $gettext('Teilen') }}
                 </Button>
             </div>
         </div>
@@ -114,4 +127,5 @@ const onLearn = (options) => {
         </TabGroup>
     </div>
     <DialogAdjustLearningOptions v-model:open="showLearnDialog" :deck="deck" @confirm="onLearn" />
+    <DialogShareDeck v-model:open="showShareDialog" :deck="deck" @confirm="onShare" />
 </template>
