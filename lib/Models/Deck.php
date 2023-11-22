@@ -3,6 +3,7 @@
 namespace Lernkarten\Models;
 
 use Course;
+use DBManager;
 use RuntimeException;
 use SimpleORMap;
 use User;
@@ -17,6 +18,19 @@ class Deck extends SimpleORMap
             'class_name' => Card::class,
             'assoc_foreign_key' => 'deck_id',
             'on_delete' => 'delete',
+            'on_store' => 'store',
+            'order_by' => 'ORDER BY mkdate',
+        ];
+
+        $config['has_many']['copies'] = [
+            'class_name' => Deck::class,
+            'assoc_foreign_key' => 'template_id',
+            'on_delete' => function ($template) {
+                DBManager::get()->execute(
+                    'UPDATE lernkarten_decks SET template_id = NULL WHERE template_id = ?',
+                    [$template->id]
+                );
+            },
             'on_store' => 'store',
             'order_by' => 'ORDER BY mkdate',
         ];
@@ -37,6 +51,11 @@ class Deck extends SimpleORMap
         $config['belongs_to']['owner'] = [
             'class_name' => User::class,
             'foreign_key' => 'owner_id',
+        ];
+
+        $config['belongs_to']['template'] = [
+            'class_name' => Deck::class,
+            'foreign_key' => 'template_id',
         ];
 
         parent::configure($config);
