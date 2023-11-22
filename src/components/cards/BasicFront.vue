@@ -13,8 +13,7 @@ watch(
 
 <template>
     <section v-if="card">
-        <div>
-            {{ card.fields.front }}
+        <div v-html="card.fields.front">
         </div>
         <div>
             <textarea ref="textarea" v-model="answer" :placeholder="$gettext('Antwort')" />
