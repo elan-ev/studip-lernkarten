@@ -20,7 +20,7 @@ const router = useRouter();
 const props = defineProps(['id']);
 
 const showLearnDialog = ref(false);
-const showShareDialog = ref(true);
+const showShareDialog = ref(false);
 
 decksStore.fetchById(props.id);
 cardsStore.fetchByDeck({ id: props.id });
