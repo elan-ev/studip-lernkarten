@@ -38,7 +38,7 @@ export const useDecksStore = defineStore(
             isLoading.value = true;
             try {
                 const { data } = await api.fetch(`lernkarten-decks/${id}`, {
-                    params: { include: 'folder,owner' },
+                    params: { include: 'folder,owner,shared-with' },
                 });
                 storeRecord(data);
             } catch (error) {

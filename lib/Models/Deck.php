@@ -79,4 +79,11 @@ class Deck extends SimpleORMap
 
         throw new RuntimeException('Unknown context_type.');
     }
+
+    public function getSharedWith(): iterable
+    {
+        return $this->shared_decks->map(function ($sharedDeck) {
+            return $sharedDeck->getRecipient();
+        });
+    }
 }

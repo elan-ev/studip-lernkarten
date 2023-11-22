@@ -27,6 +27,18 @@ class SharedDeck extends SimpleORMap
     }
 
     /**
+     * @param User|Course|null $recipient
+     */
+    public static function isShared(Deck $deck, $recipient): bool
+    {
+        return !!self::findOneBySql('deck_id = ? AND recipient_id = ? AND recipient_type = ?', [
+            $deck->id,
+            $recipient->getId(),
+            get_class($recipient),
+        ]);
+    }
+
+    /**
      * @return User|Course|null
      *
      * @SuppressWarnings(PHPMD.StaticAccess)

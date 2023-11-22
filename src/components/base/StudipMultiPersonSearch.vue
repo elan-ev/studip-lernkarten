@@ -6,6 +6,10 @@ import StudipIcon from './StudipIcon.vue';
 const { $gettext } = useGettext();
 
 const props = defineProps({
+    disabledIds: {
+        type: Array,
+        default: [],
+    },
     name: String,
     withDetail: {
         type: Boolean,
@@ -78,9 +82,9 @@ function search() {
         ),
         function (data) {
             removeAllNotSelected();
-            var searchcount = 0;
-            window.$.each(data, function (i, item) {
-                searchcount += append(item.id, item.avatar + ' -- ' + item.text, item.selected);
+            let searchcount = 0;
+            data.forEach(function (item) {
+                searchcount += append(item.id, item.avatar + ' -- ' + item.text, item.selected || props.disabledIds.includes(item.id));
                 delete item.selected;
                 users.value.push(item);
             });

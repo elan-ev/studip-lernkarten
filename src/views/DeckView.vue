@@ -8,7 +8,6 @@ import DeckInfoPanel from '../components/DeckInfoPanel.vue';
 import DeckStatisticsPanel from '../components/DeckStatisticsPanel.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import DialogShareDeck from '../components/DialogShareDeck.vue';
-import MessageBox from '../components/base/StudipMessageBox.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import { useCardsStore } from '../stores/cards.js';
 import { useDecksStore } from '../stores/decks.js';
@@ -41,10 +40,6 @@ const onLearn = (options) => {
 
 const onShowShareDialog = () => {
     showShareDialog.value = true;
-};
-
-const onShare = (options) => {
-    console.debug("sharing", options);
 };
 </script>
 
@@ -85,10 +80,6 @@ const onShare = (options) => {
             </div>
         </div>
 
-        <MessageBox v-if="!cards.length" class="!tw-mb-4">{{
-            $gettext('Dein neuer Kartensatz ist bereit!')
-        }}</MessageBox>
-
         <TabGroup as="div" class="cw-tabs" :default-index="0">
             <TabList class="cw-tabs-nav">
                 <Tab as="template" v-slot="{ selected }">
@@ -127,5 +118,5 @@ const onShare = (options) => {
         </TabGroup>
     </div>
     <DialogAdjustLearningOptions v-model:open="showLearnDialog" :deck="deck" @confirm="onLearn" />
-    <DialogShareDeck v-model:open="showShareDialog" :deck="deck" @confirm="onShare" />
+    <DialogShareDeck v-model:open="showShareDialog" :deck="deck" />
 </template>

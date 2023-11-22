@@ -2,28 +2,29 @@
 
 namespace Lernkarten\JsonApi\Routes;
 
+use Course;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
+use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
-use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
-use Lernkarten\Models\Deck;
+use JsonApi\Schemas\Course as CourseSchema;
+use Lernkarten\JsonApi\Schemas\SharedDeck as SharedDeckSchema;
+use Lernkarten\Models\SharedDeck;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Displays all Decks.
+ * Displays all SharedDecks of a Course.
  *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class DecksIndex extends JsonApiController
+class SharedDecksOfCoursesIndex extends JsonApiController
 {
     protected $allowedIncludePaths = [
-        DeckSchema::REL_CARDS,
-        DeckSchema::REL_CONTEXT,
-        DeckSchema::REL_FOLDER,
-        DeckSchema::REL_OWNER,
-        DeckSchema::REL_SHARED_WITH,
+        SharedDeckSchema::REL_DECK,
+        SharedDeckSchema::REL_RECIPIENT,
+        SharedDeckSchema::REL_SHARER,
     ];
     protected $allowedPagingParameters = ['offset', 'limit'];
 
@@ -36,7 +37,12 @@ class DecksIndex extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $resources = Deck::findBySql("1");
+        $resource = Course::find($args['id']);
+        if (!$resource) {
+            throw new RecordNotFoundException();
+        }
+
+        $resources = SharedDeck::findBySql("recipient_id = ? AND recipient_type = ?", [$resource->id, Course::class]);
         return $this->getPaginatedContentResponse(
             array_slice($resources, ...$this->getOffsetAndLimit()),
             count($resources)

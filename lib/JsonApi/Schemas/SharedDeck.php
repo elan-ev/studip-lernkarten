@@ -11,7 +11,7 @@ use Neomerx\JsonApi\Schema\Link;
 class SharedDeck extends SchemaProvider
 {
     public const TYPE = 'lernkarten-shared-decks';
-    public const REL_CARDS = 'cards';
+    public const REL_DECK = 'deck';
     public const REL_RECIPIENT = 'recipient';
     public const REL_SHARER = 'sharer';
 
