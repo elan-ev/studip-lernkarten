@@ -7,26 +7,23 @@ export const useFoldersStore = defineStore(
     'folders',
     () => {
         const contextStore = useContextStore();
+        const context = contextStore.id;
 
-        const allFolders = ref([]);
+        const records = ref(new Map());
         const isLoading = ref(false);
+        const errors = ref(false);
 
-        const parents = computed(() => {
-            const folders = byContext();
-            return folders.value.reduce((map, folder) => {
-                const parentId = folder.parent.data?.id ?? null;
-                if (!map.has(parentId)) {
-                    map.set(parentId, []);
-                }
-                map.get(parentId).push(folder);
-                return map;
-            }, new Map());
+        function storeRecord(newRecord) {
+            records.value.set(newRecord.id, newRecord);
+        }
+
+        const all = computed(() => {
+            return [...records.value.values()];
         });
 
         const topFolders = computed(() => {
-            const context = contextStore.id;
             return _.sortBy(
-                allFolders.value.filter(
+                all.value.filter(
                     (folder) => !folder.parent.data && folder.context.data.id === context
                 ),
                 'name'
@@ -34,15 +31,19 @@ export const useFoldersStore = defineStore(
         });
 
         const byContext = computed(() => {
-            const context = contextStore.id;
-            return allFolders.value.filter((folder) => folder.context.data.id === context);
+            return all.value.filter((folder) => folder.context.data.id === context);
         });
 
         async function fetch() {
             isLoading.value = true;
-            const { data } = await api.fetch('lernkarten-folders');
+            try {
+                const { data } = await api.fetch('lernkarten-folders');
+                data.forEach(storeRecord);
+            } catch (errors) {
+                console.error('fetching folders', errors);
+                errors.value = errors;
+            }
             isLoading.value = false;
-            allFolders.value = data;
         }
 
         function ancestors(folder, path = []) {
@@ -54,11 +55,11 @@ export const useFoldersStore = defineStore(
         }
 
         function byId(id) {
-            return allFolders.value.find((folder) => folder.id === id);
+            return records.value.get(id);
         }
 
         function children(id) {
-            return allFolders.value.filter((folder) => folder.parent.data?.id === id);
+            return all.value.filter((folder) => folder.parent.data?.id === id);
         }
 
         function createFolder(name, parent) {
@@ -70,7 +71,7 @@ export const useFoldersStore = defineStore(
                     : { data: null },
             };
             return api.create('lernkarten-folders', data).then(({ data }) => {
-                allFolders.value.push(data);
+                storeRecord(data)
             });
         }
 
@@ -78,21 +79,19 @@ export const useFoldersStore = defineStore(
             return api
                 .delete('lernkarten-folders', folder.id)
                 .then(
-                    () => (allFolders.value = allFolders.value.filter(({ id }) => id !== folder.id))
+                    () => records.value.delete(folder.id)
                 );
         }
 
         return {
-            allFolders,
+            all,
             ancestors,
-            byContext,
             byId,
             children,
             createFolder,
             deleteFolder,
             fetch,
             isLoading,
-            parents,
             topFolders,
         };
     },

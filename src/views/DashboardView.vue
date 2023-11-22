@@ -15,37 +15,6 @@ const allDecks = computed(() => decksStore.byContext);
 
 <template>
     <main>
-        <form class="default tw-bg-[var(--content-color-20)] tw-p-3" @submit.prevent="">
-            <div class="tw-font-bold">
-                <StudipIcon shape="dialog-cards" role="info" class="tw-align-middle" />
-                {{ $gettext('Deine Kartensätze') }}
-            </div>
-
-            <section class="tw-flex tw-gap-3 tw-items-center">
-                <div class="formpart">
-                    <label>
-                        <span class="textlabel">{{ $gettext('Ordner') }}</span>
-                        <select>
-                            <option>Alle Ordner</option>
-                            <option>Ohne Ordner</option>
-                            <!-- TODO: Hier fehlen noch alle Ordner in diesem Context -->
-                        </select>
-                    </label>
-                </div>
-
-                <div class="formpart">
-                    <label>
-                        <span class="textlabel">{{ $gettext('Kartensätze filtern') }}</span>
-                        <input type="text" name="lernkarten-decks-filter" />
-                    </label>
-                </div>
-
-                <IconButton icon="search">
-                    {{ $gettext('Nach Kartensätzen suchen') }}
-                </IconButton>
-            </section>
-        </form>
-
         <RouterLink :to="{ name: 'decks-create' }" class="button add">
             {{ $gettext('Neuer Kartensatz') }}
         </RouterLink>

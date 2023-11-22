@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref, toRaw } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
+import FolderSelector from '../components/FolderSelector.vue';
 import { useDecksStore } from '../stores/decks.js';
 
 const { $gettext } = useGettext();
@@ -12,6 +13,10 @@ const description = ref('');
 const folder = ref(null);
 const name = ref('');
 const nameRef = ref(null);
+
+const onSelectFolder = (selected) => {
+    folder.value = selected;
+};
 
 const onSubmit = () => {
     if (validateName) {
@@ -52,9 +57,7 @@ function validateName() {
                         aria-hidden="true"
                         >*</span
                     >
-                    <select v-model="folder" required aria-required="true">
-                        <option :value="null">{{ $gettext('Kein Ordner ausgewählt') }}</option>
-                    </select>
+                    <FolderSelector @select="onSelectFolder" />
                 </label>
             </div>
 

@@ -8,7 +8,6 @@ import CardDeck from '../components/CardDeck.vue';
 import DialogCreateFolder from '../components/DialogCreateFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
-import FolderTree from '../components/FolderTree.vue';
 import IconButton from '../components/IconButton.vue';
 import Ribbon from '../components/Ribbon.vue';
 import StudipCompanion from '../components/base/StudipCompanion.vue';
@@ -21,7 +20,6 @@ const selectedFolder = ref(null);
 const contextStore = useContextStore();
 const decksStore = useDecksStore();
 const foldersStore = useFoldersStore();
-foldersStore.fetch();
 decksStore.fetchContext();
 
 const topFolders = computed(() => foldersStore.topFolders);

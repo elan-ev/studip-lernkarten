@@ -52,14 +52,15 @@ export const useDecksStore = defineStore(
         }
 
         async function createDeck(folder, name, description) {
-            const { data } = await api.create('lernkarten-decks', {
+            const record = {
                 name,
                 description,
                 context: { data: { id: contextStore.id, type: contextStore.type } },
                 folder: {
-                    data: folder ? { data: { id: folder.id, type: 'lernkarten-folders' } } : null,
+                    data: folder ? { id: folder.id, type: 'lernkarten-folders' } : null,
                 },
-            });
+            };
+            const { data } = await api.create('lernkarten-decks', record);
             storeRecord(data);
 
             return data;

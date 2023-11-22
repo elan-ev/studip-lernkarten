@@ -13,7 +13,6 @@ import { useFoldersStore } from '../stores/folders.js';
 
 const decksStore = useDecksStore();
 const foldersStore = useFoldersStore();
-foldersStore.fetch();
 decksStore.fetchContext();
 
 const createDialogOpen = ref(false);

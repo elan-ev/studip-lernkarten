@@ -1,8 +1,13 @@
 <script setup>
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
+import SidebarActions from './components/SidebarActions.vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
 import SidebarSearch from './components/SidebarSearch.vue';
+import { useFoldersStore } from './stores/folders.js';
+
+const foldersStore = useFoldersStore();
+foldersStore.fetch();
 
 hideOriginalSidebarNavigation();
 
@@ -22,6 +27,7 @@ function hideOriginalSidebarNavigation() {
     </Teleport>
 
     <Teleport to="#sidebar">
+        <SidebarActions />
         <SidebarSearch />
     </Teleport>
 </template>
