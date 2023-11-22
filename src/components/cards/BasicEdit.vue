@@ -69,7 +69,6 @@ onMounted(() => {
 <template>
     <section>
         <article>
-            {{  mode  }}
             <form class="default studipform" @submit.prevent="">
                 <div class="formpart">
                     <label class="studiprequired">
@@ -83,7 +82,7 @@ onMounted(() => {
                             >*</span
                         >
 
-                        <div class="tw-text-lg">
+                        <div class="tw-text">
                             <textarea
                                 id="front"
                                 v-model="localCard.front"
@@ -105,7 +104,7 @@ onMounted(() => {
                             aria-hidden="true"
                             >*</span
                         >
-                        <div class="tw-text-lg">
+                        <div class="tw-text">
                             <textarea
                                 id="back"
                                 v-model="localCard.back"
