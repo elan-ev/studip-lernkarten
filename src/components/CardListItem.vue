@@ -1,12 +1,18 @@
 <script setup>
 const props = defineProps(['card', 'index']);
 const emit = defineEmits(['select']);
+
+const extractContent = (html) => {
+    return new DOMParser()
+        .parseFromString(html, "text/html")
+        .documentElement.textContent;
+}
 </script>
 
 <template>
     <div class="lernkarten-card-list-item" @click="emit('select')">
-        <div>({{ index }}) F: {{ card.fields.front }}</div>
-        <div>A: {{ card.fields.back }}</div>
+        <div>({{ index }}) F: {{ extractContent(card.fields.front) }}</div>
+        <div>A: {{ extractContent(card.fields.back) }}</div>
     </div>
 </template>
 
