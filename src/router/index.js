@@ -4,6 +4,7 @@ import DecksCreateView from '../views/DecksCreateView.vue';
 import DeckView from '../views/DeckView.vue';
 import FolderView from '../views/FolderView.vue';
 import FoldersView from '../views/FoldersView.vue';
+import SearchView from '../views/SearchView.vue';
 import StudyView from '../views/StudyView.vue';
 
 const absoluteUriStudip = new URL(window.STUDIP.ABSOLUTE_URI_STUDIP);
@@ -17,6 +18,12 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: DashboardView,
+        },
+        {
+            path: '/search',
+            name: 'search',
+            component: SearchView,
+            props: (route) => ({ query: route.query.q }),
         },
         {
             path: '/folders',
