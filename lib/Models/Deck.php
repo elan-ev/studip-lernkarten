@@ -61,6 +61,21 @@ class Deck extends SimpleORMap
         parent::configure($config);
     }
 
+    public function importCardsFromDeck(Deck $deck): void
+    {
+        if ($deck->id === $this->id) {
+            return;
+        }
+
+        DBManager::get()->execute(
+            'INSERT INTO lernkarten_cards (note_id, original_note_id, deck_id) ' .
+                'SELECT note_id, node_id, ? as deck_id ' .
+                'FROM `lernkarten_cards` ' .
+                'WHERE deck_id = ?',
+            [$this->id, $deck->id]
+        );
+    }
+
     /**
      * @return User|Course|null
      *

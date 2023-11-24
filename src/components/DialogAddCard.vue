@@ -27,16 +27,21 @@ const setIsOpen = (value) => {
     reset();
 };
 const createOne = () => {
-    const card = { model: cardType.value, fields: { front: front.value.value, back: back.value.value } };
+    const card = {
+        model: cardType.value,
+        fields: { front: front.value.value, back: back.value.value },
+    };
     cardsStore.createCard(props.deck, card).then(() => setIsOpen(false));
 };
 const createMore = () => {
-    const card = { model: cardType.value, fields: { front: front.value.value, back: back.value.value } };
+    const card = {
+        model: cardType.value,
+        fields: { front: front.value.value, back: back.value.value },
+    };
     cardsStore.createCard(props.deck, card).then(reset);
 };
 
 const checkEditor = (ref, focus) => {
-
     nextTick(() => {
         let textarea = ref.value;
         let id = textarea.id;
@@ -45,7 +50,7 @@ const checkEditor = (ref, focus) => {
 
         if (!window.STUDIP.wysiwyg.getEditor(textarea)) {
             setTimeout(() => {
-                checkEditor(ref, focus)
+                checkEditor(ref, focus);
             }, 300);
             return;
         }
@@ -56,21 +61,23 @@ const checkEditor = (ref, focus) => {
             toRaw(wysiwyg_editor[id]).editing.view.focus();
         }
         // using toRaw to remove Vue proxys. They do not work well with CKEditor
-        toRaw(wysiwyg_editor[id]).ui.focusTracker.on( 'change:isFocused', () => {
+        toRaw(wysiwyg_editor[id]).ui.focusTracker.on('change:isFocused', () => {
             textarea.value = toRaw(wysiwyg_editor[id]).getData();
         });
     });
 };
 
-watch(() => props.open, (newValue) => {
-    if (newValue == true) {
-        checkEditor(front, true);
-        checkEditor(back, false);
-    } else {
-        wysiwyg_editor.value = {};
-    }
-});
-
+watch(
+    () => props.open,
+    (newValue) => {
+        if (newValue == true) {
+            checkEditor(front, true);
+            checkEditor(back, false);
+        } else {
+            wysiwyg_editor.value = {};
+        }
+    },
+);
 </script>
 
 <template>
@@ -116,12 +123,7 @@ watch(() => props.open, (newValue) => {
                         >
                     </label>
 
-                    <textarea
-                        id="card-text-front"
-                        ref="front"
-                        required
-                        aria-required="true"
-                    />
+                    <textarea id="card-text-front" ref="front" required aria-required="true" />
                 </div>
 
                 <div class="formpart">
@@ -137,12 +139,7 @@ watch(() => props.open, (newValue) => {
                         >
                     </label>
 
-                    <textarea
-                        id="card-text-back"
-                        ref="back"
-                        required
-                        aria-required="true"
-                    />
+                    <textarea id="card-text-back" ref="back" required aria-required="true" />
                 </div>
             </form>
         </template>

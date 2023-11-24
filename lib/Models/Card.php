@@ -21,6 +21,10 @@ class Card extends SimpleORMap
             'class_name' => Note::class,
             'foreign_key' => 'note_id',
         ];
+        $config['belongs_to']['original_note'] = [
+            'class_name' => Note::class,
+            'foreign_key' => 'original_note_id',
+        ];
 
         $config['registered_callbacks']['before_create'][] = function ($card) {
             $now = time();
@@ -33,6 +37,11 @@ class Card extends SimpleORMap
         };
 
         parent::configure($config);
+    }
+
+    public function isPristine(): bool
+    {
+        return $this->original_note_id === null || $this->original_note_id === $this->note_id;
     }
 
     public function updateFields(array $fields): void

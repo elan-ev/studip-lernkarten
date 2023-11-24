@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import Button from './IconButton.vue';
+import CourseAvatar from './CourseAvatar.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipDate from '../components/base/StudipDate.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
@@ -11,11 +12,16 @@ const avatarUrl = computed(() => props.deck.owner.data.meta.avatar.small);
 const formattedName = computed(() => props.deck.owner.data['formatted-name']);
 
 const sharedWithCourses = computed(() =>
-    props.deck['shared-with'].data.filter(({ type }) => type === 'courses')
+    props.deck['shared-with'].data.filter(({ type }) => type === 'courses'),
 );
 const sharedWithUsers = computed(() =>
-    props.deck['shared-with'].data.filter(({ type }) => type === 'users')
+    props.deck['shared-with'].data.filter(({ type }) => type === 'users'),
 );
+
+const courseUrl = (course) =>
+    window.STUDIP.URLHelper.getURL(`dispatch.php/course/details/index/${course.id}`);
+const userUrl = (user) =>
+    window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username: user.username });
 </script>
 
 <template>
@@ -73,24 +79,18 @@ const sharedWithUsers = computed(() =>
 
     <article class="studip">
         <header>
-            <h1>{{ $gettext('Geteilt') }}</h1>
+            <h1>{{ $gettext('Geteilt mit') }}</h1>
         </header>
-        <section>
-            <ol>
-                <li v-for="recipient in sharedWithCourses" :key="recipient.id">
-                    {{ recipient.type }}
-                    //
-                    {{ recipient.id }}
-                </li>
-            </ol>
-            <ol>
-                <li v-for="recipient in sharedWithUsers" :key="recipient.id">
-                    <StudipAvatar
-                        :avatar-url="recipient.meta.avatar.small"
-                        :formatted-name="recipient['formatted-name']"
-                    />
-                </li>
-            </ol>
+        <section class="tw-flex tw-flex-col tw-gap-2">
+            <a v-for="course in sharedWithCourses" :key="course.id" :href="courseUrl(course)">
+                <CourseAvatar :course="course" />
+            </a>
+            <a v-for="user in sharedWithUsers" :key="user.id" :href="userUrl(user)">
+                <StudipAvatar
+                    :avatar-url="user.meta.avatar.small"
+                    :formatted-name="user['formatted-name']"
+                />
+            </a>
         </section>
     </article>
 </template>

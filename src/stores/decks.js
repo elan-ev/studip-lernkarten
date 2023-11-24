@@ -10,39 +10,46 @@ export const useDecksStore = defineStore(
 
         const records = ref(new Map());
         const isLoading = ref(false);
-        const error = ref(false);
+        const errors = ref(false);
 
-        const allDecks = computed(() => {
+        function storeRecord(newRecord) {
+            records.value.set(newRecord.id, newRecord);
+        }
+
+        const all = computed(() => {
             return [...records.value.values()];
         });
 
         const byContext = computed(() => {
             const context = contextStore.id;
-            return allDecks.value.filter((deck) => deck.context.data.id === context);
+            return all.value.filter((deck) => deck.context.data.id === context);
         });
 
         async function fetchContext() {
             isLoading.value = true;
-
-            const contextType = contextStore.type;
-
-            const { data } = await api.fetch(
-                `${contextStore.type}/${contextStore.id}/lernkarten-decks`,
-                { params: { include: 'owner' } }
-            );
+            try {
+                const { data } = await api.fetch(
+                    `${contextStore.type}/${contextStore.id}/lernkarten-decks`,
+                    { params: { include: 'folder,owner,shared-with,template' } }
+                );
+                data.forEach(storeRecord);
+            } catch (errors) {
+                console.error('fetching decks', errors);
+                errors.value = errors;
+            }
             isLoading.value = false;
-            data.forEach(storeRecord);
         }
 
         async function fetchById(id) {
             isLoading.value = true;
             try {
                 const { data } = await api.fetch(`lernkarten-decks/${id}`, {
-                    params: { include: 'folder,owner,shared-with' },
+                    params: { include: 'folder,owner,shared-with,template' },
                 });
                 storeRecord(data);
-            } catch (error) {
-                error.value = error;
+            } catch (errors) {
+                console.error('fetching decks', errors);
+                errors.value = errors;
             }
             isLoading.value = false;
         }
@@ -66,16 +73,19 @@ export const useDecksStore = defineStore(
             return data;
         }
 
-        function storeRecord(newRecord) {
-            records.value.set(newRecord.id, newRecord);
+        function deleteDeck(deck) {
+            return api
+                .delete('lernkarten-decks', deck.id)
+                .then(() => records.value.delete(deck.id));
         }
 
         return {
-            allDecks,
+            all,
             byContext,
             byId,
             createDeck,
-            error,
+            deleteDeck,
+            errors,
             fetchById,
             fetchContext,
             isLoading,

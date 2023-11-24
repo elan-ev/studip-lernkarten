@@ -222,3 +222,9 @@ const confirmDialog = () => emit('confirm');
         </div>
     </Dialog>
 </template>
+
+<style scoped>
+.studip-dialog-content {
+    flex-direction: column;
+}
+</style>

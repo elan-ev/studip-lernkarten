@@ -21,6 +21,7 @@ class DecksShow extends JsonApiController
         DeckSchema::REL_FOLDER,
         DeckSchema::REL_OWNER,
         DeckSchema::REL_SHARED_WITH,
+        DeckSchema::REL_TEMPLATE,
     ];
 
     /**

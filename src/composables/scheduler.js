@@ -26,7 +26,7 @@ export function useScheduler({ id }) {
                 [State.Learning, 0],
                 [State.Review, 0],
                 [State.Relearning, 0],
-            ])
+            ]),
         );
     });
 

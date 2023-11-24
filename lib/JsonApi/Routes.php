@@ -25,6 +25,9 @@ trait Routes
         $group->get('/lernkarten-shared-decks/{id}', Routes\SharedDecksShow::class);
         $group->delete('/lernkarten-shared-decks/{id}', Routes\SharedDecksDelete::class);
 
+        // not a JSON route
+        $group->post('/lernkarten-shared-decks/{id}/copy', Routes\SharedDecksCopy::class);
+
         $group->get('/lernkarten-folders/{id}/decks', Routes\DecksOfFoldersShow::class);
         $group->get('/lernkarten-decks/{id}/cards', Routes\CardsOfDecksShow::class);
 
@@ -33,7 +36,7 @@ trait Routes
 
         $group->get('/users/{id}/lernkarten-instances', Routes\InstancesOfUsersIndex::class);
 
-        // $group->get('/users/{id}/lernkarten-shared-decks', Routes\SharedDecksOfUsersIndex::class);
+        $group->get('/users/{id}/lernkarten-shared-decks', Routes\SharedDecksOfUsersIndex::class);
         $group->get('/courses/{id}/lernkarten-shared-decks', Routes\SharedDecksOfCoursesIndex::class);
     }
 

@@ -3,10 +3,8 @@ const props = defineProps(['card', 'index']);
 const emit = defineEmits(['select']);
 
 const extractContent = (html) => {
-    return new DOMParser()
-        .parseFromString(html, "text/html")
-        .documentElement.textContent;
-}
+    return new DOMParser().parseFromString(html, 'text/html').documentElement.textContent;
+};
 </script>
 
 <template>

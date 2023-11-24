@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const matchedName = computed(() => route?.matched?.[0]?.name ?? '');
-const unmatched = computed(() => (!['home', 'folders', 'folder'].includes(matchedName.value)));
+const unmatched = computed(() => !['home', 'folders', 'folder'].includes(matchedName.value));
 </script>
 <template>
     <ul

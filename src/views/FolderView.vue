@@ -34,7 +34,7 @@ const children = computed(() => {
 const decks = computed(() =>
     folder.value
         ? decksStore.byContext.filter((deck) => deck.folder.data?.id === folder.value.id)
-        : []
+        : [],
 );
 
 const onAddChild = () => {
@@ -59,8 +59,13 @@ const deleteFolder = () => {
     <Ribbon v-if="folder">
         <li>
             <RouterLink :to="{ name: 'folders' }">
-                <StudipIcon shape="folder-home-empty" :height="18" :width="18" class="tw-align-middle" />
-                <span class="sr-only">{{ $gettext("Home") }}</span>
+                <StudipIcon
+                    shape="folder-home-empty"
+                    :height="18"
+                    :width="18"
+                    class="tw-align-middle"
+                />
+                <span class="sr-only">{{ $gettext('Home') }}</span>
             </RouterLink>
         </li>
         <li v-for="ancestor in foldersStore.ancestors(folder)" :key="ancestor.id">

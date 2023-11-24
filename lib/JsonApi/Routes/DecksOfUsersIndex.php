@@ -22,9 +22,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class DecksOfUsersIndex extends JsonApiController
 {
     protected $allowedIncludePaths = [
+        DeckSchema::REL_CARDS,
         DeckSchema::REL_CONTEXT,
         DeckSchema::REL_FOLDER,
         DeckSchema::REL_OWNER,
+        DeckSchema::REL_SHARED_WITH,
+        DeckSchema::REL_TEMPLATE,
     ];
     protected $allowedPagingParameters = ['offset', 'limit'];
 

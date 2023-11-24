@@ -14,7 +14,7 @@ const props = defineProps({
 <template>
     <div class="tw-items-center tw-flex tw-gap-2">
         <span>
-            <img :src="avatarUrl" />
+            <img class="tw-align-middle" :src="avatarUrl" />
         </span>
         <span>{{ formattedName }}</span>
     </div>

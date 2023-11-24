@@ -6,15 +6,12 @@ const props = defineProps(['card']);
 const answer = ref('');
 const textarea = ref(null);
 
-watch(
-    () => answer.value
-);
+watch(() => answer.value);
 </script>
 
 <template>
     <section v-if="card">
-        <div v-html="card.fields.front">
-        </div>
+        <div v-html="card.fields.front"></div>
         <div>
             <textarea ref="textarea" v-model="answer" :placeholder="$gettext('Antwort')" />
         </div>

@@ -6,17 +6,17 @@ const props = defineProps({
     role: {
         type: String,
         required: false,
-        default: 'clickable'
+        default: 'clickable',
     },
     size: {
         type: Number,
         required: false,
-        default: 16
+        default: 16,
     },
     name: {
         type: String,
-        required: false
-    }
+        required: false,
+    },
 });
 
 const color = computed(() => {
@@ -60,13 +60,6 @@ const url = computed(() => {
 </script>
 
 <template>
-    <input
-        v-if="name"
-        type="image"
-        :name="name"
-        :src="url"
-        :width="size"
-        :height="size"
-    />
+    <input v-if="name" type="image" :name="name" :src="url" :width="size" :height="size" />
     <img v-else :src="url" :width="size" :height="size" />
 </template>

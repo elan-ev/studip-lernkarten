@@ -9,6 +9,7 @@ import DeckStatisticsPanel from '../components/DeckStatisticsPanel.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import DialogShareDeck from '../components/DialogShareDeck.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
+import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
 import { useCardsStore } from '../stores/cards.js';
 import { useDecksStore } from '../stores/decks.js';
 
@@ -44,7 +45,9 @@ const onShowShareDialog = () => {
 </script>
 
 <template>
-    <div v-if="decksStore.isLoading"></div>
+    <div v-if="decksStore.isLoading">
+        <StudipProgressIndicator :description="$gettext('Lade Kartensatz…')" />
+    </div>
     <div v-else>
         <div class="tw-mb-6 tw-flex tw-flex-row tw-items-center">
             <div class="tw-grow">

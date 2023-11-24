@@ -32,7 +32,7 @@ onMounted(() =>
         setTimeout(() => {
             searchInputField.value.focus();
         }, 100);
-    })
+    }),
 );
 
 const count_text_id = computed(() => `${id.value}_count`);
@@ -78,13 +78,17 @@ function search() {
             'dispatch.php/multipersonsearch/ajax_search_vue/' + props.name,
             {
                 s: searchTerm.value,
-            }
+            },
         ),
         function (data) {
             removeAllNotSelected();
             let searchcount = 0;
             data.forEach(function (item) {
-                searchcount += append(item.id, item.avatar + ' -- ' + item.text, item.selected || props.disabledIds.includes(item.id));
+                searchcount += append(
+                    item.id,
+                    item.avatar + ' -- ' + item.text,
+                    item.selected || props.disabledIds.includes(item.id),
+                );
                 delete item.selected;
                 users.value.push(item);
             });
@@ -96,11 +100,11 @@ function search() {
                     $gettext('Es wurden keine neuen Ergebnisse für "%{ needle }" gefunden.', {
                         needle: searchTerm.value,
                     }),
-                    true
+                    true,
                 );
                 refresh();
             }
-        }
+        },
     );
 }
 
@@ -142,7 +146,7 @@ function updateCount() {
     window.$('#' + count_text_id.value).text(
         $gettext('Sie haben %{ count } Personen ausgewählt', {
             count: count.value,
-        })
+        }),
     );
 }
 

@@ -5,7 +5,7 @@ import { useDecksStore } from '../stores/decks.js';
 const decksStore = useDecksStore();
 decksStore.fetchContext();
 
-const props = defineProps(["query"]);
+const props = defineProps(['query']);
 
 const query = ref(props.query);
 

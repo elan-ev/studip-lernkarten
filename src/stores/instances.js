@@ -23,7 +23,9 @@ export const useInstancesStore = defineStore(
             isLoading.value = true;
 
             try {
-                const { data } = await api.fetch(`users/${userId.value}/lernkarten-instances`, { params: {} });
+                const { data } = await api.fetch(`users/${userId.value}/lernkarten-instances`, {
+                    params: {},
+                });
                 data.forEach(storeRecord);
             } catch (errors) {
                 console.error('fetching lernkarten-instances', errors);
@@ -46,5 +48,5 @@ export const useInstancesStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

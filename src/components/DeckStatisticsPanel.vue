@@ -27,7 +27,7 @@ const cardsByState = computed(() => {
             { name: translatedStates[State.Learning], count: 0 },
             { name: translatedStates[State.Review], count: 0 },
             { name: translatedStates[State.Relearning], count: 0 },
-        ]
+        ],
     );
 });
 </script>

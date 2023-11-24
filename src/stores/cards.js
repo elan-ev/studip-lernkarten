@@ -50,7 +50,7 @@ export const useCardsStore = defineStore(
                 storeRecord(data);
             } catch (errors) {
                 error.value = errors;
-                console.error("Could not update fields", errors);
+                console.error('Could not update fields', errors);
             }
         }
 
@@ -63,7 +63,7 @@ export const useCardsStore = defineStore(
                 storeRecord(data);
             } catch (errors) {
                 errors.value = errors;
-                console.error("Could not update stats", errors);
+                console.error('Could not update stats', errors);
             }
         }
 
@@ -80,5 +80,5 @@ export const useCardsStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

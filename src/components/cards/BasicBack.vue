@@ -4,8 +4,7 @@ const props = defineProps(['card']);
 
 <template>
     <section v-if="card">
-        <div v-html="card.fields.back">
-        </div>
+        <div v-html="card.fields.back"></div>
     </section>
 </template>
 

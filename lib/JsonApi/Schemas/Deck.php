@@ -15,6 +15,7 @@ class Deck extends SchemaProvider
     public const REL_FOLDER = 'folder';
     public const REL_OWNER = 'owner';
     public const REL_SHARED_WITH = 'shared-with';
+    public const REL_TEMPLATE = 'template';
 
     /**
      * {@inheritdoc}
@@ -84,9 +85,22 @@ class Deck extends SchemaProvider
 
         $relationships[self::REL_SHARED_WITH] = [
             self::RELATIONSHIP_LINKS => [
-                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_SHARED_WITH),
+                Link::RELATED => $this->getRelationshipRelatedLink(
+                    $resource,
+                    self::REL_SHARED_WITH
+                ),
             ],
             self::RELATIONSHIP_DATA => $resource->getSharedWith(),
+        ];
+
+        $template = $resource->template;
+        $relationships[self::REL_TEMPLATE] = [
+            self::RELATIONSHIP_LINKS => $template
+                ? [
+                    Link::RELATED => $this->createLinkToResource($template),
+                ]
+                : [],
+            self::RELATIONSHIP_DATA => $template,
         ];
 
         return $relationships;

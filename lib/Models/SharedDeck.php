@@ -39,6 +39,26 @@ class SharedDeck extends SimpleORMap
     }
 
     /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public function copyToWorkPlace(User $user): Deck
+    {
+        $resource = Deck::create([
+            'folder_id' => null,
+            'context_id' => $user->id,
+            'context_type' => User::class,
+            'name' => $this->deck->name,
+            'description' => $this->deck->description,
+            'owner_id' => $user->id,
+            'template_id' => $this->deck_id,
+        ]);
+
+        $resource->importCardsFromDeck($this->deck);
+
+        return $resource;
+    }
+
+    /**
      * @return User|Course|null
      *
      * @SuppressWarnings(PHPMD.StaticAccess)

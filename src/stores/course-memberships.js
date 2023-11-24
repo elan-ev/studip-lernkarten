@@ -49,5 +49,5 @@ export const useCourseMembershipsStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

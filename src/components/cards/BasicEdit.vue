@@ -42,7 +42,7 @@ const checkEditor = (ref, focus) => {
 
         if (!window.STUDIP.wysiwyg.getEditor(textarea)) {
             setTimeout(() => {
-                checkEditor(ref, focus)
+                checkEditor(ref, focus);
             }, 300);
             return;
         }
@@ -53,7 +53,7 @@ const checkEditor = (ref, focus) => {
             toRaw(wysiwyg_editor[id]).editing.view.focus();
         }
         // using toRaw to remove Vue proxys. They do not work well with CKEditor
-        toRaw(wysiwyg_editor[id]).ui.focusTracker.on( 'change:isFocused', () => {
+        toRaw(wysiwyg_editor[id]).ui.focusTracker.on('change:isFocused', () => {
             console.log('value changed', toRaw(wysiwyg_editor[id]).getData(), id, localCard);
             localCard[id] = toRaw(wysiwyg_editor[id]).getData();
         });
@@ -63,8 +63,7 @@ const checkEditor = (ref, focus) => {
 onMounted(() => {
     checkEditor(front, true);
     checkEditor(back, false);
-})
-
+});
 </script>
 <template>
     <section>

@@ -14,7 +14,7 @@ const sortedFolders = computed(() => {
             folder,
             path: [..._.reverse(foldersStore.ancestors(folder).map((a) => a.name)), folder.name],
         })),
-        ['path']
+        ['path'],
     );
 });
 </script>

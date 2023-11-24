@@ -2,11 +2,13 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { api } from '../api.js';
 import { useContextStore } from './context.js';
+import { useDecksStore } from './decks.js';
 
 export const useSharedDecksStore = defineStore(
     'sharedDecks',
     () => {
         const contextStore = useContextStore();
+        const decksStore = useDecksStore();
 
         const records = ref(new Map());
         const isLoading = ref(false);
@@ -25,7 +27,7 @@ export const useSharedDecksStore = defineStore(
 
             const { data } = await api.fetch(
                 `${contextStore.type}/${contextStore.id}/lernkarten-shared-decks`,
-                { params: { include: 'sharer' } }
+                { params: { include: 'deck,sharer' } },
             );
             isLoading.value = false;
             data.forEach(storeRecord);
@@ -54,9 +56,22 @@ export const useSharedDecksStore = defineStore(
             return data;
         }
 
+        function coLearn(deck) {}
+
+        async function copy(sharedDeck) {
+            const { data } = await api.post(
+                `lernkarten-shared-decks/${sharedDeck.id}/copy`,
+                sharedDeck,
+            );
+
+            return decksStore.fetchById(data.id);
+        }
+
         return {
             all,
             byId,
+            coLearn,
+            copy,
             errors,
             fetchContext,
             isLoading,
@@ -66,5 +81,5 @@ export const useSharedDecksStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

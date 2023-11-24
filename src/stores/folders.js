@@ -24,9 +24,9 @@ export const useFoldersStore = defineStore(
         const topFolders = computed(() => {
             return _.sortBy(
                 all.value.filter(
-                    (folder) => !folder.parent.data && folder.context.data.id === context
+                    (folder) => !folder.parent.data && folder.context.data.id === context,
                 ),
-                'name'
+                'name',
             );
         });
 
@@ -71,16 +71,14 @@ export const useFoldersStore = defineStore(
                     : { data: null },
             };
             return api.create('lernkarten-folders', data).then(({ data }) => {
-                storeRecord(data)
+                storeRecord(data);
             });
         }
 
         function deleteFolder(folder) {
             return api
                 .delete('lernkarten-folders', folder.id)
-                .then(
-                    () => records.value.delete(folder.id)
-                );
+                .then(() => records.value.delete(folder.id));
         }
 
         return {
@@ -97,5 +95,5 @@ export const useFoldersStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

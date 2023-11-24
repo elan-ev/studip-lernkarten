@@ -45,5 +45,5 @@ export const useSemestersStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

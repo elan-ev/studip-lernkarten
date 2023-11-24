@@ -33,6 +33,7 @@ class Card extends SchemaProvider
             'guid' => (string) $note->guid,
             'model' => (string) $note->model,
             'fields' => json_decode($note->fields, true),
+            'is-pristine' => $resource->isPristine(),
             'due' => date('c', $resource->due),
             'stability' => (float) $resource->stability,
             'difficulty' => (float) $resource->difficulty,

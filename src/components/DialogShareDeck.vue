@@ -37,7 +37,7 @@ const reset = () => {
 };
 
 Promise.all([courseMembershipsStore.fetch(), instancesStore.fetch(), semestersStore.fetch()]).then(
-    () => (isLoading.value = false)
+    () => (isLoading.value = false),
 );
 
 const instanceRangeIds = computed(() => {

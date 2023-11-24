@@ -12,13 +12,13 @@ export const useContextStore = defineStore(
             return 'cid' in window.STUDIP.URLHelper.parameters;
         });
 
-        const type = computed(() => isCourse.value ? 'courses' : 'users');
+        const type = computed(() => (isCourse.value ? 'courses' : 'users'));
 
         const userId = computed(() => window.STUDIP.USER_ID);
 
         return { id, isCourse, type, userId };
     },
     {
-        persist: true
-    }
+        persist: true,
+    },
 );
