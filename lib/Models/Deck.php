@@ -69,7 +69,7 @@ class Deck extends SimpleORMap
 
         DBManager::get()->execute(
             'INSERT INTO lernkarten_cards (note_id, original_note_id, deck_id) ' .
-                'SELECT note_id, node_id, ? as deck_id ' .
+                'SELECT note_id, note_id as original_note_id, ? as deck_id ' .
                 'FROM `lernkarten_cards` ' .
                 'WHERE deck_id = ?',
             [$this->id, $deck->id]

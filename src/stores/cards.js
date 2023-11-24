@@ -49,7 +49,7 @@ export const useCardsStore = defineStore(
                 const { data } = await api.patch('lernkarten-cards', { id: card.id, fields });
                 storeRecord(data);
             } catch (errors) {
-                error.value = errors;
+                errors.value = errors;
                 console.error('Could not update fields', errors);
             }
         }

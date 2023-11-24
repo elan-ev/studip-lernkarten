@@ -2,6 +2,7 @@
 
 namespace Lernkarten\Models;
 
+use DBManager;
 use SimpleORMap;
 
 class Note extends SimpleORMap
