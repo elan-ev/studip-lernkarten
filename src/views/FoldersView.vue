@@ -71,17 +71,18 @@ const onSelectDeck = (deck) => {
             <template #empty>
                 <StudipCompanion :msgCompanion="$gettext('Es gibt noch keinen Ordner.')">
                     <template #companionActions>
-                        <IconButton icon="add">
+                        <IconButton icon="add"  @click="addTopFolder">
                             {{ $gettext('Ordner anlegen') }}
                         </IconButton>
                     </template>
                 </StudipCompanion>
             </template>
         </FolderList>
-
+        <!--
         <button type="button" class="button add" @click="addTopFolder">
             {{ $gettext('Ordner anlegen') }}
         </button>
+    -->
     </section>
 
     <section class="tw-mt-12" v-if="decks.length">
