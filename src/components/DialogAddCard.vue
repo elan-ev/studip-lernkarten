@@ -4,6 +4,7 @@ import { useGettext } from 'vue3-gettext';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipMessageBox from './base/StudipMessageBox.vue';
 import { useCardsStore } from '../stores/cards.js';
+import FileDropzone from "./FileDropzone.vue";
 
 const cardsStore = useCardsStore();
 const { $gettext } = useGettext();
@@ -12,7 +13,10 @@ const props = defineProps(['open', 'deck']);
 const emit = defineEmits(['update:open']);
 
 const cardType = ref('basic');
-const cardTypes = ref([{ text: $gettext('Einfach'), value: 'basic' }]);
+const cardTypes = ref([
+    { text: $gettext('Einfach'), value: 'basic' },
+    { text: $gettext('Bild und optionaler Text'), value: 'image' },
+]);
 const front = ref(null);
 const back = ref(null);
 const wysiwyg_editor = ref({});
@@ -78,6 +82,12 @@ watch(
         }
     },
 );
+
+
+const setImage = (files, fileid) => {
+      console.log(files, fileid);
+}
+
 </script>
 
 <template>
@@ -123,6 +133,10 @@ watch(
                         >
                     </label>
 
+                    <div v-if="cardType == 'image'">
+                        <FileDropzone @update:files="setImage" fileid="front" />
+                    </div>
+
                     <textarea id="card-text-front" ref="front" required aria-required="true" />
                 </div>
 
@@ -138,6 +152,10 @@ watch(
                             >*</span
                         >
                     </label>
+
+                    <div v-if="cardType == 'image'">
+                        <FileDropzone @update:files="setImage" fileid="back"/>
+                    </div>
 
                     <textarea id="card-text-back" ref="back" required aria-required="true" />
                 </div>
