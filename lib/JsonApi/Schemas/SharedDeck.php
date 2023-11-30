@@ -2,7 +2,6 @@
 
 namespace Lernkarten\JsonApi\Schemas;
 
-use JsonApi\Schemas\SchemaProvider;
 use Lernkarten\Models\Deck as DeckModel;
 use Lernkarten\Models\SharedDeck as SharedDeckModel;
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
@@ -11,6 +10,7 @@ use Neomerx\JsonApi\Schema\Link;
 class SharedDeck extends SchemaProvider
 {
     public const TYPE = 'lernkarten-shared-decks';
+    public const REL_COLEARNING_DECK = 'colearning-deck';
     public const REL_DECK = 'deck';
     public const REL_RECIPIENT = 'recipient';
     public const REL_SHARER = 'sharer';
@@ -44,6 +44,16 @@ class SharedDeck extends SchemaProvider
     public function getRelationships($resource, ContextInterface $context): iterable
     {
         $relationships = [];
+
+        $colearningDeck = $resource->getColearningDeck($this->currentUser);
+        $relationships[self::REL_COLEARNING_DECK] = [
+            self::RELATIONSHIP_LINKS => $colearningDeck
+                ? [
+                    Link::RELATED => $this->createLinkToResource($colearningDeck),
+                ]
+                : [],
+            self::RELATIONSHIP_DATA => $colearningDeck,
+        ];
 
         $deck = $resource->deck;
         $relationships[self::REL_DECK] = [

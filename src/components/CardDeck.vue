@@ -6,6 +6,7 @@ import RadialProgress from './RadialProgress.vue';
 import StudipActionMenu from './base/StudipActionMenu.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipIcon from './base/StudipIcon.vue';
+import DialogConfirmCopyDeck from './DialogConfirmCopyDeck.vue';
 import DialogConfirmDeleteDeck from './DialogConfirmDeleteDeck.vue';
 import { useDecksStore } from '../stores/decks.js';
 
@@ -13,22 +14,43 @@ const { $gettext } = useGettext();
 const decksStore = useDecksStore();
 
 const props = defineProps(['deck']);
-const emit = defineEmits(['deleted']);
+const emit = defineEmits(['deleted', 'select']);
 
+const showConfirmCopy = ref(false);
 const showConfirmDelete = ref(false);
 
 const avatarUrl = computed(() => props.deck.owner.data.meta.avatar.small);
 const formattedName = computed(() => props.deck.owner.data['formatted-name']);
+const editable = computed(() => props.deck['is-editable']);
 
-const actionMenuItems = computed(() => [
-    {
-        id: 1,
-        label: $gettext('Kartensatz löschen'),
-        icon: 'trash',
-        emit: 'delete',
-    },
-]);
+const actionMenuItems = computed(() => {
+    return [
+        {
+            id: 'copy',
+            label: $gettext('Kartensatz kopieren'),
+            icon: 'copy',
+            emit: 'copy',
+        },
+        ...(editable.value
+            ? [
+                  {
+                      id: 'delete',
+                      label: $gettext('Kartensatz löschen'),
+                      icon: 'trash',
+                      emit: 'delete',
+                  },
+              ]
+            : []),
+    ];
+});
 
+const progress = computed(() => {
+    const total = props.deck.progress.reduce((sum, n) => sum + n, 0);
+
+    return total ? props.deck.progress[2] / total : 0;
+});
+
+const onCopyDeck = () => (showConfirmCopy.value = true);
 const onDeleteDeck = () => (showConfirmDelete.value = true);
 
 const deleteDeck = () => {
@@ -47,16 +69,21 @@ const deleteDeck = () => {
             class="tw-flex tw-items-center tw-justify-center tw-w-24 tw-aspect-square tw-cursor-pointer"
             @click="$emit('select', deck)"
         >
-            <RadialProgress :percent="17" />
+            <RadialProgress :progress="progress" />
         </div>
         <div class="tw-flex tw-flex-col tw-flex-grow tw-justify-between">
             <div class="tw-cursor-pointer tw-flex-grow" @click="$emit('select', deck)">
                 <span class="tw-text-lg tw-font-bold">{{ deck.name }}</span>
-                <span v-if="deck.template.data"> (Kopie von {{ deck.template.data.name }}) </span>
+                <template v-if="deck.template.data">
+                    <span v-if="deck.colearning">
+                        (Mitlernen von {{ deck.template.data.name }})
+                    </span>
+                    <span v-else> (Kopie von {{ deck.template.data.name }}) </span>
+                </template>
             </div>
             <div class="tw-flex tw-items-end tw-justify-between">
                 <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
-                <div class="tw-pl-4 tw-flex tw-gap-2">
+                <div class="tw-px-4 tw-flex tw-gap-2">
                     <RouterLink
                         :to="{ name: 'study', params: { id: deck.id } }"
                         class="tw-flex tw-items-center tw-gap-1"
@@ -65,13 +92,16 @@ const deleteDeck = () => {
                         {{ $gettext('Lernen') }}
                     </RouterLink>
                     <StudipActionMenu
+                        v-if="actionMenuItems.length"
                         :items="actionMenuItems"
                         :collapseAt="0"
+                        @copy="onCopyDeck"
                         @delete="onDeleteDeck"
                     />
                 </div>
             </div>
         </div>
     </section>
+    <DialogConfirmCopyDeck v-model:open="showConfirmCopy" :deck="deck" />
     <DialogConfirmDeleteDeck v-model:open="showConfirmDelete" @confirm="deleteDeck" />
 </template>

@@ -4,7 +4,6 @@ namespace Lernkarten\JsonApi\Routes;
 
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
-use JsonApi\JsonApiController;
 use JsonApi\Routes\TimestampTrait;
 use JsonApi\Routes\ValidationTrait;
 use Lernkarten\JsonApi\Schemas\Card as CardSchema;

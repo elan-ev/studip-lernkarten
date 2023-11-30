@@ -5,7 +5,6 @@ namespace Lernkarten\JsonApi\Routes;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
-use JsonApi\JsonApiController;
 use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
 use Lernkarten\Models\Deck;
 use Lernkarten\Models\Folder;

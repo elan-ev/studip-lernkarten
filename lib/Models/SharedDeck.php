@@ -7,8 +7,13 @@ use RuntimeException;
 use SimpleORMap;
 use User;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class SharedDeck extends SimpleORMap
 {
+    use HasPolicy;
+
     protected static function configure($config = [])
     {
         $config['db_table'] = 'lernkarten_shared_decks';
@@ -22,6 +27,10 @@ class SharedDeck extends SimpleORMap
             'class_name' => User::class,
             'foreign_key' => 'sharer_id',
         ];
+
+        $config['registered_callbacks']['after_delete'][] = function ($sharedDeck) {
+            Deck::deleteBySql('colearning = 1 AND template_id = ?', [$sharedDeck->deck_id]);
+        };
 
         parent::configure($config);
     }
@@ -38,19 +47,22 @@ class SharedDeck extends SimpleORMap
         ]);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    public function copyToWorkPlace(User $user): Deck
+    public function colearn(User $user): Deck
     {
+        $existing = $this->getColearningDeck($user);
+        if ($existing) {
+            return $existing;
+        }
+
         $resource = Deck::create([
             'folder_id' => null,
-            'context_id' => $user->id,
-            'context_type' => User::class,
+            'context_id' => $this->recipient_id,
+            'context_type' => $this->recipient_type,
             'name' => $this->deck->name,
             'description' => $this->deck->description,
             'owner_id' => $user->id,
             'template_id' => $this->deck_id,
+            'colearning' => 1,
         ]);
 
         $resource->importCardsFromDeck($this->deck);
@@ -58,10 +70,21 @@ class SharedDeck extends SimpleORMap
         return $resource;
     }
 
+    public function copyToWorkPlace(User $user): Deck
+    {
+        return $this->deck->copyToWorkPlace($user);
+    }
+
+    public function getColearningDeck(User $user): ?Deck
+    {
+        return Deck::findOneBySql('template_id = ? AND owner_id = ? AND colearning = 1', [
+            $this->deck_id,
+            $user->id,
+        ]);
+    }
+
     /**
      * @return User|Course|null
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getRecipient()
     {

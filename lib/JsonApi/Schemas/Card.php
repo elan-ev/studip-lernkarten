@@ -2,7 +2,6 @@
 
 namespace Lernkarten\JsonApi\Schemas;
 
-use JsonApi\Schemas\SchemaProvider;
 use Lernkarten\Models\Card as CardModel;
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Schema\Link;

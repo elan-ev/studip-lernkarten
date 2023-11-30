@@ -4,7 +4,6 @@ namespace Lernkarten\JsonApi\Routes;
 
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
-use JsonApi\JsonApiController;
 use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
 use Lernkarten\Models\Deck;
 use Psr\Http\Message\ResponseInterface as Response;

@@ -6,7 +6,6 @@ use User;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
-use JsonApi\JsonApiController;
 use JsonApi\Schemas\User as UserSchema;
 use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
 use Lernkarten\Models\Deck;

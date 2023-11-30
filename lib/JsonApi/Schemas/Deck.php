@@ -2,7 +2,6 @@
 
 namespace Lernkarten\JsonApi\Schemas;
 
-use JsonApi\Schemas\SchemaProvider;
 use Lernkarten\Models\Deck as DeckModel;
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Schema\Link;
@@ -37,6 +36,8 @@ class Deck extends SchemaProvider
             'name' => (string) $resource->name,
             'description' => (string) $resource->description,
             'colearning' => (bool) $resource->colearning,
+            'is-editable' => $this->userCan("update", $resource),
+            'progress' => $resource->getProgress(),
             'mkdate' => date('c', $resource->mkdate),
             'chdate' => date('c', $resource->chdate),
         ];

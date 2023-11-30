@@ -22,6 +22,20 @@ export const useSharedDecksStore = defineStore(
             return [...records.value.values()];
         });
 
+        async function fetchById(id) {
+            isLoading.value = true;
+            try {
+                const { data } = await api.fetch(`lernkarten-shared-decks/${id}`, {
+                    params: { include: 'deck,sharer' },
+                });
+                storeRecord(data);
+            } catch (errors) {
+                console.error('fetching shared deck', errors);
+                errors.value = errors;
+            }
+            isLoading.value = false;
+        }
+
         async function fetchContext() {
             isLoading.value = true;
 
@@ -56,7 +70,14 @@ export const useSharedDecksStore = defineStore(
             return data;
         }
 
-        function coLearn(deck) {}
+        async function colearn(sharedDeck) {
+            const { data } = await api.post(
+                `lernkarten-shared-decks/${sharedDeck.id}/colearn`,
+                sharedDeck,
+            );
+
+            return decksStore.fetchById(data.id).then(() => fetchById(sharedDeck.id));
+        }
 
         async function copy(sharedDeck) {
             const { data } = await api.post(
@@ -70,9 +91,10 @@ export const useSharedDecksStore = defineStore(
         return {
             all,
             byId,
-            coLearn,
+            colearn,
             copy,
             errors,
+            fetchById,
             fetchContext,
             isLoading,
             shareDeckWithCourse,

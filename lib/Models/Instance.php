@@ -9,6 +9,8 @@ use Range;
 
 class Instance
 {
+    use HasPolicy;
+
     /**
      * @param Range $range
      * @return ?static

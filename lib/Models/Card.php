@@ -9,6 +9,8 @@ use SimpleORMap;
  */
 class Card extends SimpleORMap
 {
+    use HasPolicy;
+
     protected static function configure($config = [])
     {
         $config['db_table'] = 'lernkarten_cards';

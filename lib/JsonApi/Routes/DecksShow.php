@@ -4,7 +4,6 @@ namespace Lernkarten\JsonApi\Routes;
 
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
-use JsonApi\JsonApiController;
 use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
 use Lernkarten\Models\Deck;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -37,6 +36,11 @@ class DecksShow extends JsonApiController
         if (!$resource) {
             throw new RecordNotFoundException();
         }
+
+        if ($this->cannot($request, 'view', $resource)) {
+            throw new AuthorizationFailedException();
+        }
+
 
         return $this->getContentResponse($resource);
     }

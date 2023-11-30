@@ -8,8 +8,13 @@ use RuntimeException;
 use SimpleORMap;
 use User;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class Deck extends SimpleORMap
 {
+    use HasPolicy;
+
     protected static function configure($config = [])
     {
         $config['db_table'] = 'lernkarten_decks';
@@ -61,25 +66,25 @@ class Deck extends SimpleORMap
         parent::configure($config);
     }
 
-    public function importCardsFromDeck(Deck $deck): void
+    public function copyToWorkPlace(User $user): Deck
     {
-        if ($deck->id === $this->id) {
-            return;
-        }
+        $resource = self::create([
+            'folder_id' => null,
+            'context_id' => $user->id,
+            'context_type' => User::class,
+            'name' => $this->name,
+            'description' => $this->description,
+            'owner_id' => $user->id,
+            'template_id' => $this->id,
+        ]);
 
-        DBManager::get()->execute(
-            'INSERT INTO lernkarten_cards (note_id, original_note_id, deck_id) ' .
-                'SELECT note_id, note_id as original_note_id, ? as deck_id ' .
-                'FROM `lernkarten_cards` ' .
-                'WHERE deck_id = ?',
-            [$this->id, $deck->id]
-        );
+        $resource->importCardsFromDeck($this);
+
+        return $resource;
     }
 
     /**
      * @return User|Course|null
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getContext()
     {
@@ -95,10 +100,40 @@ class Deck extends SimpleORMap
         throw new RuntimeException('Unknown context_type.');
     }
 
+    /**
+     * @return array{0:int, 1:int, 2:int, 3:int} an array containing the number of cards per state.
+     *                                           The state is encoded as 0-3 and used as the key
+     *                                           to the array.
+     */
+    public function getProgress(): array
+    {
+        $sql =
+            'SELECT IF(state IS NULL, 0, state) as state, COUNT(state) as count FROM `lernkarten_cards` WHERE deck_id = ? GROUP BY state';
+        $results = DBManager::get()->fetchPairs($sql, [$this->id], function ($x) {
+            return (int) $x;
+        });
+        return $results + array_fill(0, 4, 0);
+    }
+
     public function getSharedWith(): iterable
     {
         return $this->shared_decks->map(function ($sharedDeck) {
             return $sharedDeck->getRecipient();
         });
+    }
+
+    public function importCardsFromDeck(Deck $deck): void
+    {
+        if ($deck->id === $this->id) {
+            return;
+        }
+
+        DBManager::get()->execute(
+            'INSERT INTO lernkarten_cards (note_id, original_note_id, deck_id) ' .
+                'SELECT note_id, note_id as original_note_id, ? as deck_id ' .
+                'FROM `lernkarten_cards` ' .
+                'WHERE deck_id = ?',
+            [$this->id, $deck->id]
+        );
     }
 }

@@ -11,10 +11,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
- *
  */
-// TODO: Möglicherweise genügt eigentlich DecksCopy?
-class SharedDecksCopy extends JsonApiController
+class SharedDecksColearn extends JsonApiController
 {
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameters)
@@ -28,9 +26,9 @@ class SharedDecksCopy extends JsonApiController
         }
 
         $user = $this->getUser($request);
-        $deck = $sharedDeck->copyToWorkPlace($user);
+        $deck = $sharedDeck->colearn($user);
         if (!$deck) {
-            throw new BadRequestException('Could not copy SharedDeck to Work Place.');
+            throw new BadRequestException('Could not create a colearning deck.');
         }
 
         return $this->getCreatedResponse($deck);

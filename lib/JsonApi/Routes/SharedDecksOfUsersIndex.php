@@ -3,7 +3,6 @@
 namespace Lernkarten\JsonApi\Routes;
 
 use JsonApi\Errors\RecordNotFoundException;
-use JsonApi\JsonApiController;
 use Lernkarten\JsonApi\Schemas\SharedDeck as SharedDeckSchema;
 use Lernkarten\Models\SharedDeck;
 use Psr\Http\Message\ResponseInterface as Response;

@@ -17,6 +17,8 @@ sharedDecksStore.fetchContext();
 
 const allDecks = computed(() => decksStore.byContext);
 const sharedDecks = computed(() => sharedDecksStore.all);
+
+const allStandardDecks = computed(() => allDecks.value);
 </script>
 
 <template>
@@ -32,7 +34,7 @@ const sharedDecks = computed(() => sharedDecksStore.all);
             <header>
                 <h1>{{ $gettext('Eigene Kartensätze') }}</h1>
             </header>
-            <DeckList :decks="allDecks" />
+            <DeckList :decks="allStandardDecks" />
         </article>
     </main>
 </template>

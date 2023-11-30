@@ -58,6 +58,15 @@ export const useDecksStore = defineStore(
             return records.value.get(id);
         }
 
+        async function copyDeck(deck) {
+            const { data } = await api.post(
+                `lernkarten-decks/${deck.id}/copy`,
+                deck,
+            );
+
+            return fetchById(data.id);
+        }
+
         async function createDeck(folder, name, description) {
             const record = {
                 name,
@@ -83,6 +92,7 @@ export const useDecksStore = defineStore(
             all,
             byContext,
             byId,
+            copyDeck,
             createDeck,
             deleteDeck,
             errors,

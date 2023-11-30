@@ -5,32 +5,29 @@ namespace Lernkarten\JsonApi\Routes;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
 use Lernkarten\Models\Deck;
-use Lernkarten\Models\SharedDeck;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
- *
  */
-// TODO: Möglicherweise genügt eigentlich DecksCopy?
-class SharedDecksCopy extends JsonApiController
+class DecksCopy extends JsonApiController
 {
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameters)
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        /** @var ?\Lernkarten\Models\SharedDeck $sharedDeck */
-        $sharedDeck = SharedDeck::find($args['id']);
-        if (!$sharedDeck) {
-            throw new RecordNotFoundException('Could not find SharedDeck.');
+        /** @var ?\Lernkarten\Models\Deck $deck */
+        $deck = Deck::find($args['id']);
+        if (!$deck) {
+            throw new RecordNotFoundException('Could not find Deck.');
         }
 
         $user = $this->getUser($request);
-        $deck = $sharedDeck->copyToWorkPlace($user);
+        $deck = $deck->copyToWorkPlace($user);
         if (!$deck) {
-            throw new BadRequestException('Could not copy SharedDeck to Work Place.');
+            throw new BadRequestException('Could not copy Deck to Work Place.');
         }
 
         return $this->getCreatedResponse($deck);

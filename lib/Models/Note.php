@@ -7,6 +7,8 @@ use SimpleORMap;
 
 class Note extends SimpleORMap
 {
+    use HasPolicy;
+
     protected static function configure($config = [])
     {
         $config['db_table'] = 'lernkarten_notes';

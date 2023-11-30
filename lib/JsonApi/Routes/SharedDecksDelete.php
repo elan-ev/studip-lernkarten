@@ -4,7 +4,6 @@ namespace Lernkarten\JsonApi\Routes;
 
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
-use JsonApi\JsonApiController;
 use Lernkarten\Models\SharedDeck;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

@@ -4,7 +4,6 @@ namespace Lernkarten\JsonApi\Routes;
 
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
-use JsonApi\JsonApiController;
 use Lernkarten\JsonApi\Schemas\Folder as FolderSchema;
 use Lernkarten\Models\Folder;
 use Psr\Http\Message\ResponseInterface as Response;

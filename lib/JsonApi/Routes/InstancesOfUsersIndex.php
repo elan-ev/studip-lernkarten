@@ -6,7 +6,6 @@ use User;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
-use JsonApi\JsonApiController;
 use Lernkarten\JsonApi\Schemas\Instance as InstanceSchema;
 use Lernkarten\Models\Instance;
 use Psr\Http\Message\ResponseInterface as Response;

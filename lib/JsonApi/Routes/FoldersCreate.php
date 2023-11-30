@@ -6,7 +6,6 @@ use Course;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
-use JsonApi\JsonApiController;
 use JsonApi\Routes\ValidationTrait;
 use JsonApi\Schemas\Course as CourseSchema;
 use JsonApi\Schemas\User as UserSchema;
