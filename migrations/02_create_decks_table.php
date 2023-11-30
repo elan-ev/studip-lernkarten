@@ -21,6 +21,7 @@ class CreateDecksTable extends Migration
               `context_type` varchar(300) NOT NULL,
               `shared_deck_id` int(11) UNSIGNED NULL,
               `template_id` int(11) UNSIGNED,
+              `colearning` tinyint UNSIGNED NOT NULL DEFAULT '0',
               `mkdate` int(11) NOT NULL,
               `chdate` int(11) NOT NULL,
               PRIMARY KEY (`id`),

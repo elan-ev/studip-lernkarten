@@ -36,6 +36,7 @@ class Deck extends SchemaProvider
         return [
             'name' => (string) $resource->name,
             'description' => (string) $resource->description,
+            'colearning' => (bool) $resource->colearning,
             'mkdate' => date('c', $resource->mkdate),
             'chdate' => date('c', $resource->chdate),
         ];
