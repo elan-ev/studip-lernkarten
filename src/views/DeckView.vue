@@ -5,6 +5,7 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
 import Button from '../components/IconButton.vue';
 import DeckCardsPanel from '../components/DeckCardsPanel.vue';
 import DeckInfoPanel from '../components/DeckInfoPanel.vue';
+import DeckSettingsPanel from '../components/DeckSettingsPanel.vue';
 import DeckStatisticsPanel from '../components/DeckStatisticsPanel.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import DialogShareDeck from '../components/DialogShareDeck.vue';
@@ -116,7 +117,9 @@ const onShowShareDialog = () => {
                 <TabPanel>
                     <DeckStatisticsPanel :deck="deck" />
                 </TabPanel>
-                <TabPanel>Content 4 (Einstellungen)</TabPanel>
+                <TabPanel>
+                    <DeckSettingsPanel :deck="deck" />
+                </TabPanel>
             </TabPanels>
         </TabGroup>
     </div>
