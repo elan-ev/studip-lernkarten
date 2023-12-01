@@ -9,8 +9,8 @@ const extractContent = (html) => {
 
 <template>
     <div class="lernkarten-card-list-item" @click="emit('select')">
-        <div>({{ index }}) F: {{ extractContent(card.fields.front) }}</div>
-        <div>A: {{ extractContent(card.fields.back) }}</div>
+        <div>{{ extractContent(card.fields.front) }}</div>
+        <div>{{ extractContent(card.fields.back) }}</div>
     </div>
 </template>
 
@@ -18,7 +18,7 @@ const extractContent = (html) => {
 .lernkarten-card-list-item {
     display: flex;
     cursor: pointer;
-    border: 1px solid var(--light-gray-color-20);
+    border: 1px solid var(--base-color-40);
 }
 .lernkarten-card-list-item + .lernkarten-card-list-item {
     margin-block-start: 0.5rem;
@@ -28,6 +28,7 @@ const extractContent = (html) => {
     padding: 0.5rem;
 }
 .lernkarten-card-list-item > div:last-child {
-    border-left: 1px solid var(--light-gray-color-20);
+    background-color: var(--base-color-20);
+    border-left: 1px solid var(--base-color-40);
 }
 </style>
