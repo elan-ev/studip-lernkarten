@@ -18,7 +18,7 @@ sharedDecksStore.fetchContext();
 const allDecks = computed(() => decksStore.byContext);
 const sharedDecks = computed(() => sharedDecksStore.all);
 
-const allStandardDecks = computed(() => allDecks.value);
+const allStandardDecks = computed(() => allDecks.value.filter(({colearning}) => !colearning));
 </script>
 
 <template>

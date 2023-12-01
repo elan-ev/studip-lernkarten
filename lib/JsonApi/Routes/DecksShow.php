@@ -41,7 +41,6 @@ class DecksShow extends JsonApiController
             throw new AuthorizationFailedException();
         }
 
-
         return $this->getContentResponse($resource);
     }
 }

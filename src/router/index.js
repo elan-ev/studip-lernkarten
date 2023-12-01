@@ -46,7 +46,7 @@ const router = createRouter({
             path: '/decks/create',
             name: 'decks-create',
             component: DecksCreateView,
-            props: true,
+            props: (route) => ({ folder: route.query.f }),
         },
         {
             path: '/study/:id',

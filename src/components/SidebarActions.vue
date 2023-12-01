@@ -5,10 +5,9 @@ import StudipIcon from './base/StudipIcon.vue';
 
 const router = useRouter();
 
-const query = ref('');
-
-const onSubmit = () => {
-    router.push({ name: 'search', query: { q: query.value } });
+const onCreateDeck = () => {
+    const f = 17;
+    router.push({ name: 'decks-create', query: { f } });
 };
 </script>
 
@@ -19,10 +18,10 @@ const onSubmit = () => {
             <form method="post">
                 <ul class="widget-list widget-links" :aria-label="$gettext('Aktionen')">
                     <li class="!tw-pl-0">
-                        <RouterLink :to="{ name: 'decks-create' }" as="button">
+                        <button type="button" @click="onCreateDeck">
                             <StudipIcon shape="add" class="!tw-align-middle" />
                             {{ $gettext('Neuen Kartensatz erstellen') }}
-                        </RouterLink>
+                        </button>
                     </li>
                 </ul>
             </form>

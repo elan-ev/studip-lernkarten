@@ -1,0 +1,14 @@
+{
+    "title": "Payload schema of LernkartenBlock",
+    "type": "object",
+    "properties": {
+        "initialized": {
+            "type": "boolean"
+        },
+        "height": {
+            "type": "number"
+        }
+    },
+    "required": ["initialized"],
+    "additionalProperties": false
+}

@@ -1,12 +1,19 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useFoldersStore } from '../stores/folders.js';
 
 const foldersStore = useFoldersStore();
-
+const props = defineProps(['folder']);
 defineEmits(['select']);
 
-const selectedFolder = ref(null);
+const selectedFolder = ref(props.selected ?? null);
+
+watch(
+    () => props.folder,
+    (newV, oldV) => {
+        selectedFolder.value = props.folder ?? null;
+    }
+);
 
 const sortedFolders = computed(() => {
     return _.sortBy(
@@ -14,7 +21,7 @@ const sortedFolders = computed(() => {
             folder,
             path: [..._.reverse(foldersStore.ancestors(folder).map((a) => a.name)), folder.name],
         })),
-        ['path'],
+        ['path']
     );
 });
 </script>

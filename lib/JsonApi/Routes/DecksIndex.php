@@ -8,6 +8,7 @@ use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
 use Lernkarten\Models\Deck;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use User;
 
 /**
  * Displays all Decks.
@@ -36,10 +37,21 @@ class DecksIndex extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $resources = Deck::findBySql("1");
+        if ($this->cannot($request, 'viewAny', Deck::class)) {
+            throw new AuthorizationFailedException();
+        }
+
+        $resources = $this->findAll($this->getUser($request));
         return $this->getPaginatedContentResponse(
             array_slice($resources, ...$this->getOffsetAndLimit()),
             count($resources)
         );
+    }
+
+    private function findAll(User $user): iterable
+    {
+        $ownedDecks = Deck::findBySql('owner_id = ?', [$user->id]);
+
+        return $ownedDecks;
     }
 }

@@ -1,18 +1,31 @@
 <script setup>
-import { computed, ref, toRaw } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
 import FolderSelector from '../components/FolderSelector.vue';
 import { useDecksStore } from '../stores/decks.js';
+import { useFoldersStore } from '../stores/folders.js';
 
 const { $gettext } = useGettext();
 const router = useRouter();
 const decksStore = useDecksStore();
+const foldersStore = useFoldersStore();
+
+const props = defineProps(['folder']);
 
 const description = ref('');
 const folder = ref(null);
 const name = ref('');
 const nameRef = ref(null);
+
+watch(
+    () => foldersStore.isLoading,
+    (newV, oldV) => {
+        if (oldV && !newV) {
+            onSelectFolder(foldersStore.byId(props.folder));
+        }
+    }
+);
 
 const onSelectFolder = (selected) => {
     folder.value = selected;
@@ -29,7 +42,7 @@ const onSubmit = () => {
 function validateName() {
     if (name.value.trim().length === 0) {
         nameRef.value.setCustomValidity(
-            $gettext('Die Bezeichnung des Kartensatzes darf nicht leer sein.'),
+            $gettext('Die Bezeichnung des Kartensatzes darf nicht leer sein.')
         );
         return false;
     } else {
@@ -57,7 +70,7 @@ function validateName() {
                         aria-hidden="true"
                         >*</span
                     >
-                    <FolderSelector @select="onSelectFolder" />
+                    <FolderSelector :folder="folder" @select="onSelectFolder" />
                 </label>
             </div>
 

@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref, toRaw, nextTick } from 'vue';
+import { nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipMessageBox from './base/StudipMessageBox.vue';
@@ -19,7 +19,6 @@ const cardTypes = ref([
 ]);
 const front = ref(null);
 const back = ref(null);
-const wysiwyg_editor = ref({});
 
 const reset = () => {
     back.value = '';
@@ -50,44 +49,38 @@ const checkEditor = (ref, focus) => {
         let textarea = ref.value;
         let id = textarea.id;
 
-        window.STUDIP.wysiwyg.replace(textarea);
-
-        if (!window.STUDIP.wysiwyg.getEditor(textarea)) {
-            setTimeout(() => {
-                checkEditor(ref, focus);
-            }, 300);
-            return;
-        }
-
-        wysiwyg_editor[id] = window.STUDIP.wysiwyg.getEditor(textarea);
-
-        if (focus) {
-            toRaw(wysiwyg_editor[id]).editing.view.focus();
-        }
-        // using toRaw to remove Vue proxys. They do not work well with CKEditor
-        toRaw(wysiwyg_editor[id]).ui.focusTracker.on('change:isFocused', () => {
-            textarea.value = toRaw(wysiwyg_editor[id]).getData();
+        window.jQuery(textarea).on('load.wysiwyg', () => {
+            const editor = window.STUDIP.wysiwyg.getEditor(textarea);
+            if (focus) {
+                editor.editing.view.focus();
+            }
+            editor.ui.focusTracker.on('change:isFocused', () => {
+                textarea.value = editor.getData();
+            })
         });
+
+        window.STUDIP.wysiwyg.replace(textarea);
     });
 };
 
+onBeforeUnmount(() => {
+    window.jQuery(front.value).off();
+    window.jQuery(back.value).off();
+});
+
 watch(
     () => props.open,
-    (newValue) => {
-        if (newValue == true) {
+    (nowOpen) => {
+        if (nowOpen == true) {
             checkEditor(front, true);
             checkEditor(back, false);
-        } else {
-            wysiwyg_editor.value = {};
         }
     },
 );
 
-
 const setImage = (files, fileid) => {
       console.log(files, fileid);
 }
-
 </script>
 
 <template>

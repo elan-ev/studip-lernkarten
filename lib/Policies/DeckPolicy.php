@@ -15,7 +15,16 @@ class DeckPolicy
      */
     public function viewAny(User $user): bool
     {
+        // The decks will be filtered by this user.
         return true;
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAnyOfUser(User $user, User $observed): bool
+    {
+        return $user->id === $observed->id;
     }
 
     /**
@@ -23,13 +32,16 @@ class DeckPolicy
      */
     public function view(User $user, Deck $deck): bool
     {
-        return true;
+        // TODO: Stimmt das so? Was ist im Veranstaltungskontext?
+        return $deck->owner_id = $user->id;
     }
+
     /**
      * Determine whether the user can create models.
      */
     public function create(User $user): bool
     {
+        // Anyone may create a deck.
         return true;
     }
 
@@ -46,6 +58,14 @@ class DeckPolicy
      */
     public function delete(User $user, Deck $deck): bool
     {
-        return true;
+        return $this->update($user, $deck);
+    }
+
+    /**
+     * Determine whether the user can copy the model.
+     */
+    public function copy(User $user, Deck $deck): bool
+    {
+        return $this->update($user, $deck);
     }
 }

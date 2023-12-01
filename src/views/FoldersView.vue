@@ -59,9 +59,9 @@ const onSelectDeck = (deck) => {
                     role="info"
                     :height="18"
                     :width="18"
-                    class="tw-align-middle"
+                    class="tw-align-middle tw-mr-1"
                 />
-                <span class="sr-only">{{ $gettext('Home') }}</span>
+                <span class="">{{ $gettext('Home') }}</span>
             </RouterLink>
         </li>
     </Ribbon>
@@ -78,17 +78,15 @@ const onSelectDeck = (deck) => {
                 </StudipCompanion>
             </template>
         </FolderList>
-        <!--
         <button type="button" class="button add" @click="addTopFolder">
             {{ $gettext('Ordner anlegen') }}
         </button>
-    -->
     </section>
 
     <section class="tw-mt-12" v-if="decks.length">
         <header>
             <h3>
-                {{ $gettext('Decks ohne Ordner') }}
+                {{ $gettext('Kartensätze ohne Ordner') }}
             </h3>
         </header>
         <article v-for="deck in decks" :key="deck.id">

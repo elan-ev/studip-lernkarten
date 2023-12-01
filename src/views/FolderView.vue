@@ -63,9 +63,9 @@ const deleteFolder = () => {
                     shape="folder-home-empty"
                     :height="18"
                     :width="18"
-                    class="tw-align-middle"
+                    class="tw-align-middle tw-mr-1"
                 />
-                <span class="sr-only">{{ $gettext('Home') }}</span>
+                <span class="">{{ $gettext('Home') }}</span>
             </RouterLink>
         </li>
         <li v-for="ancestor in foldersStore.ancestors(folder)" :key="ancestor.id">
@@ -82,12 +82,16 @@ const deleteFolder = () => {
     <section class="tw-mt-8">
         <FolderList :folders="children" @delete-folder="onDeleteFolder" />
 
-        <button type="button" class="button add" @click="onAddChild">Unterordner erstellen</button>
+        <button type="button" class="button add" @click="onAddChild">
+            {{ $gettext("Unterordner erstellen") }}
+        </button>
     </section>
 
     <section class="tw-mt-12" v-if="decks.length">
         <header>
-            <h3 class="tw-mt-12">Decks im Ordner</h3>
+            <h3 class="tw-mt-12">
+                {{ $gettext("Kartensätze in diesem Ordner") }}
+            </h3>
         </header>
         <DeckList :decks="decks" />
     </section>
