@@ -22,9 +22,13 @@ const back = ref(null);
 const images = ref({});
 
 const reset = () => {
-    back.value = '';
-    front.value = '';
+    window.STUDIP.wysiwyg.getEditor(front.value).setData('');
+    window.STUDIP.wysiwyg.getEditor(back.value).setData('');
+
+    back.value.value = '';
+    front.value.value = '';
     images.value = {};
+
 };
 
 const setIsOpen = (value) => {
@@ -60,6 +64,11 @@ const checkEditor = (ref, focus) => {
             })
         });
 
+        // make sure, wysiwyg is cleared before to force reinitialization
+        if (window.STUDIP.wysiwyg.getEditor(textarea)) {
+            window.STUDIP.wysiwyg.replace(textarea);
+        }
+
         window.STUDIP.wysiwyg.replace(textarea);
     });
 };
@@ -75,6 +84,9 @@ watch(
         if (nowOpen == true) {
             checkEditor(front, true);
             checkEditor(back, false);
+        } else {
+            window.jQuery(front.value).off();
+            window.jQuery(back.value).off();
         }
     },
 );
