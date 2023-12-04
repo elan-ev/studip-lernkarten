@@ -29,7 +29,14 @@ class SharedDeck extends SimpleORMap
         ];
 
         $config['registered_callbacks']['after_delete'][] = function ($sharedDeck) {
-            Deck::deleteBySql('colearning = 1 AND template_id = ?', [$sharedDeck->deck_id]);
+            // delete all colearning decks of this shared deck
+            Deck::deleteBySql('colearning = 1 AND shared_deck_id = ?', [$sharedDeck->id]);
+
+            // disconnect all copies from the shared deck
+            DBManager::get()->execute(
+                'UPDATE lernkarten_decks SET shared_deck_id = NULL, template_id = NULL WHERE shared_deck_id = ?',
+                [$sharedDeck->id]
+            );
         };
 
         parent::configure($config);
@@ -61,6 +68,7 @@ class SharedDeck extends SimpleORMap
             'name' => $this->deck->name,
             'description' => $this->deck->description,
             'owner_id' => $user->id,
+            'shared_deck_id' => $this->id,
             'template_id' => $this->deck_id,
             'colearning' => 1,
         ]);
@@ -72,7 +80,7 @@ class SharedDeck extends SimpleORMap
 
     public function copyToWorkPlace(User $user): Deck
     {
-        return $this->deck->copyToWorkPlace($user);
+        return $this->deck->copyToWorkPlace($user, $this);
     }
 
     public function getColearningDeck(User $user): ?Deck

@@ -63,10 +63,15 @@ class Deck extends SimpleORMap
             'foreign_key' => 'template_id',
         ];
 
+        $config['belongs_to']['shared_deck'] = [
+            'class_name' => SharedDeck::class,
+            'foreign_key' => 'shared_deck_id',
+        ];
+
         parent::configure($config);
     }
 
-    public function copyToWorkPlace(User $user): Deck
+    public function copyToWorkPlace(User $user, SharedDeck $sharedDeck = null): Deck
     {
         $resource = self::create([
             'folder_id' => null,
@@ -76,6 +81,7 @@ class Deck extends SimpleORMap
             'description' => $this->description,
             'owner_id' => $user->id,
             'template_id' => $this->id,
+            'shared_deck_id' => $sharedDeck ? $sharedDeck->id : null,
         ]);
 
         $resource->importCardsFromDeck($this);
