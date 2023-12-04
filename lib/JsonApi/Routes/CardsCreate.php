@@ -137,7 +137,8 @@ class CardsCreate extends JsonApiController
     {
         $model = self::arrayGet($json, 'data.attributes.model');
 
-        return $model === 'basic';
+        return $model === 'basic'
+            || $model === 'image';
     }
 
     private function validFields(array $json): bool
