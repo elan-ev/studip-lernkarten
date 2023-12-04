@@ -19,9 +19,14 @@ const emit = defineEmits(['deleted', 'select']);
 const showConfirmCopy = ref(false);
 const showConfirmDelete = ref(false);
 
-const avatarUrl = computed(() => props.deck.owner.data.meta.avatar.small);
-const formattedName = computed(() => props.deck.owner.data['formatted-name']);
+const deckOwner = computed(() => props.deck.owner.data);
+const avatarUrl = computed(() => deckOwner.value.meta.avatar.small);
+const formattedName = computed(() => deckOwner.value['formatted-name']);
 const editable = computed(() => props.deck['is-editable']);
+
+const templateOwner = computed(() => props.deck.template.data.owner.data);
+const templateAvatarUrl = computed(() => templateOwner.value.meta.avatar.small);
+const templateFormattedName = computed(() => templateOwner.value['formatted-name']);
 
 const actionMenuItems = computed(() => {
     return [
@@ -72,14 +77,19 @@ const deleteDeck = () => {
             <RadialProgress :progress="progress" />
         </div>
         <div class="tw-flex tw-flex-col tw-flex-grow tw-justify-between">
+            <div class="tw-italic tw-flex tw-gap-2 tw-items-center" v-if="deck.template.data">
+                <span v-if="deck.colearning">
+                    {{ $gettext('Mitlernen eines Kartensatzes von') }}
+                </span>
+                <span v-else>{{ $gettext('Kopie eines Kartensatzes von') }}</span>
+                <StudipAvatar
+                    class="tw-inline"
+                    :avatar-url="templateAvatarUrl"
+                    :formatted-name="templateFormattedName"
+                />
+            </div>
             <div class="tw-cursor-pointer tw-flex-grow" @click="$emit('select', deck)">
                 <span class="tw-text-lg tw-font-bold">{{ deck.name }}</span>
-                <template v-if="deck.template.data">
-                    <span v-if="deck.colearning">
-                        (Mitlernen von {{ deck.template.data.name }})
-                    </span>
-                    <span v-else> (Kopie von {{ deck.template.data.name }}) </span>
-                </template>
             </div>
             <div class="tw-flex tw-items-end tw-justify-between">
                 <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />

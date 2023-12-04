@@ -3,6 +3,7 @@
 namespace Lernkarten\JsonApi\Routes;
 
 use JsonApi\Errors\RecordNotFoundException;
+use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
 use Lernkarten\JsonApi\Schemas\SharedDeck as SharedDeckSchema;
 use Lernkarten\Models\SharedDeck;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,6 +19,8 @@ use User;
 class SharedDecksOfUsersIndex extends JsonApiController
 {
     protected $allowedIncludePaths = [
+        SharedDeckSchema::REL_COLEARNING_DECK,
+        SharedDeckSchema::REL_COLEARNING_DECK . '.' . DeckSchema::REL_OWNER,
         SharedDeckSchema::REL_DECK,
         SharedDeckSchema::REL_RECIPIENT,
         SharedDeckSchema::REL_SHARER,

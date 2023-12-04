@@ -26,7 +26,7 @@ decksStore.fetchContext();
 
 const topFolders = computed(() => foldersStore.topFolders);
 
-const decks = computed(() => decksStore.byContext.filter((deck) => !deck.folder.data));
+const decks = computed(() => decksStore.byContext.filter((deck) => !deck.folder.data && !deck.colearning));
 
 const addTopFolder = () => {
     createDialogOpen.value = true;

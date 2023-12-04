@@ -19,6 +19,7 @@ const allDecks = computed(() => decksStore.byContext);
 const sharedDecks = computed(() => sharedDecksStore.all);
 
 const allStandardDecks = computed(() => allDecks.value.filter(({colearning}) => !colearning));
+const doneLoading = computed(() => !decksStore.isLoading && !sharedDecksStore.isLoading);
 </script>
 
 <template>
@@ -27,7 +28,7 @@ const allStandardDecks = computed(() => allDecks.value.filter(({colearning}) => 
             <header>
                 <h1>{{ $gettext('Mit mir geteilte Kartensätze') }}</h1>
             </header>
-            <SharedDeckList :shared-decks="sharedDecks" />
+            <SharedDeckList v-if="doneLoading" :shared-decks="sharedDecks" />
         </article>
 
         <article class="studip tw-mt-12">

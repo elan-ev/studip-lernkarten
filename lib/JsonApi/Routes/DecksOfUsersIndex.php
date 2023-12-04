@@ -28,6 +28,7 @@ class DecksOfUsersIndex extends JsonApiController
         DeckSchema::REL_SHARED_DECK,
         DeckSchema::REL_SHARED_WITH,
         DeckSchema::REL_TEMPLATE,
+        DeckSchema::REL_TEMPLATE . '.' . DeckSchema::REL_OWNER,
     ];
     protected $allowedPagingParameters = ['offset', 'limit'];
 

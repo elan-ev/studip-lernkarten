@@ -11,12 +11,7 @@ const router = useRouter();
 const props = defineProps(['sharedDeck']);
 
 const colearningDeck = computed(() => {
-    const deck = props.sharedDeck['colearning-deck'].data;
-    if (!deck) {
-        return null;
-    }
-
-    return decksStore.byId(deck.id);
+    return props.sharedDeck['colearning-deck'].data;
 });
 
 const onSelect = (deck) => {

@@ -30,7 +30,7 @@ export const useDecksStore = defineStore(
             try {
                 const { data } = await api.fetch(
                     `${contextStore.type}/${contextStore.id}/lernkarten-decks`,
-                    { params: { include: 'folder,owner,shared-with,template' } }
+                    { params: { include: 'folder,owner,shared-with,template.owner' } }
                 );
                 data.forEach(storeRecord);
             } catch (errors) {
@@ -44,7 +44,7 @@ export const useDecksStore = defineStore(
             isLoading.value = true;
             try {
                 const { data } = await api.fetch(`lernkarten-decks/${id}`, {
-                    params: { include: 'folder,owner,shared-with,template' },
+                    params: { include: 'folder,owner,shared-with,template.owner' },
                 });
                 storeRecord(data);
             } catch (errors) {
