@@ -4,6 +4,8 @@ import { RouterLink, useRouter } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
 import BasicBack from '../components/cards/BasicBack.vue';
 import BasicFront from '../components/cards/BasicFront.vue';
+import ImageBack from '../components/cards/ImageBack.vue';
+import ImageFront from '../components/cards/ImageFront.vue';
 import IconButton from '../components/IconButton.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import StudyViewRepeatButtons from '../components/StudyViewRepeatButtons.vue';
@@ -28,8 +30,18 @@ const folderName = computed(() => {
     return deck.value.folder?.name ?? $gettext('Kein Ordner');
 });
 
-const cardFront = computed(() => BasicFront);
-const cardBack = computed(() => BasicBack);
+const cardFront = computed(() => {
+    switch (queuedCard.value.model) {
+        case 'image': return ImageFront;
+        default:      return BasicFront;
+    }
+});
+const cardBack = computed(() => {
+    switch (queuedCard.value.model) {
+        case 'image': return ImageBack;
+        default:      return BasicBack;
+    }
+});
 
 const onShowAnswer = () => (showAnswer.value = true);
 
