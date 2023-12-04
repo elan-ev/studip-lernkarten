@@ -8,8 +8,13 @@ import DeckList from '../components/DeckList.vue';
 
 import { computed, ref } from 'vue';
 import { useDecksStore } from '../stores/decks.js';
+import { useFoldersStore } from '../stores/folders.js';
 
 const decksStore = useDecksStore();
+const foldersStore = useFoldersStore();
+
+//foldersStore.fetchContext();
+const topFolders = computed(() => foldersStore.topFolders);
 decksStore.fetchContext().then(() => {
     doSearch();
 });
@@ -17,19 +22,28 @@ decksStore.fetchContext().then(() => {
 const props = defineProps(['query']);
 
 const query = ref(props.query);
+const selectedFolder = ref(-1);
 
 const allDecks = computed(() => decksStore.byContext);
 const filteredDecks = ref([]);
 
 const doSearch = () => {
     filteredDecks.value = toRaw(allDecks.value.filter((el) => {
+        // console.log(el);
+        let found = false;
+        /*
+        if (selectedFolder.value != -1) {
+            // if (el.)
+        }
+        */
+
         if (el.name.search(query.value) != -1
             || el.description.search(query.value) != -1
         ) {
-            return true;
+            found = true;
         }
 
-        return false;
+        return found;
     }));
 }
 
@@ -46,6 +60,9 @@ watch(
 
 <template>
     <main>
+        <!--<pre>
+        {{ topFolders }}
+        </pre>-->
         <form class="default tw-bg-[var(--content-color-20)] tw-p-3 tw-mb-2" @submit.prevent="doSearch">
             <div class="tw-font-bold">
                 <StudipIcon shape="dialog-cards" role="info" class="tw-align-middle" />
@@ -56,9 +73,11 @@ watch(
                 <div class="formpart">
                     <label>
                         <span class="textlabel">{{ $gettext('Ordner') }}</span>
-                        <select>
-                            <option>Alle Ordner</option>
-                            <option>Ohne Ordner</option>
+                        <select v-model="selectedFolder">
+                            <option value="-1">Alles</option>
+                            <option v-for="folder in topFolders" v-bind:key="folder.id" :value="folder.id">
+                                {{ folder.name }}
+                            </option>
                             <!-- TODO: Hier fehlen noch alle Ordner in diesem Context -->
                         </select>
                     </label>
