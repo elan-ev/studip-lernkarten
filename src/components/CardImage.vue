@@ -5,7 +5,6 @@ const props = defineProps(['image', 'fileid']);
 const emit = defineEmits(['update:files']);
 
 const deleteImage = () => {
-    console.log('trying to delete image');
     emit('update:files', null, props.fileid);
 }
 
