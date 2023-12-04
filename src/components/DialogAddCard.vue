@@ -24,6 +24,7 @@ const images = ref({});
 const reset = () => {
     back.value = '';
     front.value = '';
+    images.value = {};
 };
 
 const setIsOpen = (value) => {
@@ -127,7 +128,8 @@ const setImage = (base64, fileid) => {
                     </label>
 
                     <div v-if="cardType == 'image'">
-                        <CardImage v-if="images['front']" :image="images['front']" fileid="front" @update:files="setImage"/>
+                        <CardImage v-if="images['front']" :edit="true"
+                            :image="images['front']" fileid="front" @update:files="setImage"/>
                         <FileDropzone v-else @update:files="setImage" fileid="front"/>
                     </div>
 
@@ -148,7 +150,8 @@ const setImage = (base64, fileid) => {
                     </label>
 
                     <div v-if="cardType == 'image'">
-                        <CardImage v-if="images['back']" :image="images['back']" fileid="back" @update:files="setImage"/>
+                        <CardImage v-if="images['back']" :edit="true"
+                            :image="images['back']" fileid="back" @update:files="setImage"/>
                         <FileDropzone v-else @update:files="setImage" fileid="back"/>
                     </div>
 

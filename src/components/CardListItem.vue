@@ -1,4 +1,6 @@
 <script setup>
+import CardSmallImage from "./CardSmallImage.vue";
+
 const props = defineProps(['card', 'index']);
 const emit = defineEmits(['select']);
 
@@ -9,8 +11,14 @@ const extractContent = (html) => {
 
 <template>
     <div class="lernkarten-card-list-item" @click="emit('select')">
-        <div>{{ extractContent(card.fields.front) }}</div>
-        <div>{{ extractContent(card.fields.back) }}</div>
+        <div>
+            <CardSmallImage v-if="card.fields.images?.front" :image="card.fields.images['front']" />
+            {{ extractContent(card.fields.front) }}
+        </div>
+        <div>
+            <CardSmallImage v-if="card.fields.images?.back" :image="card.fields.images['back']" />
+            {{ extractContent(card.fields.back) }}
+        </div>
     </div>
 </template>
 

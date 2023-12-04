@@ -1,18 +1,20 @@
 <script setup>
 import Button from './IconButton.vue';
 
-const props = defineProps(['image', 'fileid']);
+const props = defineProps({ image: String, fileid: { default: null }, edit: { default: false }});
 const emit = defineEmits(['update:files']);
 
 const deleteImage = () => {
-    emit('update:files', null, props.fileid);
+    if (props.edit) {
+        emit('update:files', null, props.fileid);
+    }
 }
 
 </script>
 <template>
     <div>
         <img :src="props.image">
-        <Button icon="trash" type="button" @click="deleteImage">
+        <Button v-if="props.edit" icon="trash" type="button" @click="deleteImage">
             {{ $gettext('Bild löschen') }}
         </Button>
     </div>

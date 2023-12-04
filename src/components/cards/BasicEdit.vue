@@ -90,7 +90,8 @@ onMounted(() => {
                     </label>
 
                     <div v-if="localCard.model == 'image'">
-                        <CardImage v-if="localCard.images['front']" :image="localCard.images['front']" fileid="front" @update:files="setImage"/>
+                        <CardImage v-if="localCard.images['front']" :edit="true"
+                            :image="localCard.images['front']" fileid="front" @update:files="setImage"/>
                         <FileDropzone v-else @update:files="setImage" fileid="front"/>
                     </div>
 
@@ -118,7 +119,8 @@ onMounted(() => {
                     </label>
 
                     <div v-if="localCard.model == 'image'">
-                        <CardImage v-if="localCard.images['back']" :image="localCard.images['back']" fileid="back" @update:files="setImage"/>
+                        <CardImage v-if="localCard.images['back']" :edit="true"
+                            :image="localCard.images['back']" fileid="back" @update:files="setImage"/>
                         <FileDropzone v-else @update:files="setImage" fileid="back" />
                     </div>
 
