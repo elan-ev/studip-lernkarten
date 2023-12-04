@@ -44,6 +44,12 @@ export const useCardsStore = defineStore(
             return data;
         }
 
+        async function deleteCard(card) {
+            return api
+                .delete('lernkarten-cards', card.id)
+                .then(() => records.value.delete(card.id));
+        }
+
         async function importCards(deck, cards) {
             for (const card of cards) {
                 await createCard(deck, card);
@@ -77,6 +83,7 @@ export const useCardsStore = defineStore(
             all,
             byDeck,
             createCard,
+            deleteCard,
             errors,
             fetchByDeck,
             importCards,

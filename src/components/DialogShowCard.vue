@@ -8,6 +8,7 @@ import StudipDialog from './base/StudipDialog.vue';
 import StudipIcon from './base/StudipIcon.vue';
 import { useFsrs } from '../composables/fsrs.js';
 import { useCardsStore } from '../stores/cards.js';
+import DialogConfirmDeleteCard from './DialogConfirmDeleteCard.vue';
 
 const cardsStore = useCardsStore();
 const { $gettext } = useGettext();
@@ -19,10 +20,11 @@ const cardViews = {
 };
 
 const props = defineProps(['open', 'card', 'cardIndex', 'deck', 'number-of-cards']);
-const emit = defineEmits(['update:open', 'show-next', 'show-prev']);
+const emit = defineEmits(['update:open', 'show-next', 'show-prev', 'delete']);
 
 const initialFocus = ref(null);
 const cardViewMode = ref('show');
+const showConfirmDelete = ref(false);
 
 const cardView = computed(() => cardViews[cardViewMode.value]);
 const readableState = computed(() => translatedStates[props.card.state]);
@@ -45,7 +47,17 @@ const onReverse = () => {
 };
 const onDelete = () => {
     console.debug('onDelete', props.card);
+    showConfirmDelete.value = true;
 };
+
+const deleteCard = () => {
+    showConfirmDelete.value = false;
+    emit('show-next');
+
+    cardsStore.deleteCard(props.card).then(() => {
+        emit('delete');
+    });
+}
 </script>
 
 <template>
@@ -81,7 +93,7 @@ const onDelete = () => {
                             <Button disabled icon="refresh" type="button" @click="onReverse">
                                 {{ $gettext('Umdrehen') }}
                             </Button>
-                            <Button disabled icon="trash" type="button" @click="onDelete">
+                            <Button icon="trash" type="button" @click="onDelete">
                                 {{ $gettext('Löschen') }}
                             </Button>
                         </div>
@@ -146,4 +158,5 @@ const onDelete = () => {
             </div>
         </template>
     </StudipDialog>
+    <DialogConfirmDeleteCard v-model:open="showConfirmDelete" @confirm="deleteCard" />
 </template>

@@ -43,6 +43,12 @@ const onShowPrev = () => {
     const prevCard = cards.value[prevIndex];
     selectedCard.value = prevCard;
 };
+
+const onCheckCardLength = () => {
+    if (cards.value.length == 0) {
+        showCardDialog.value = false;
+    }
+}
 </script>
 
 <template>
@@ -63,5 +69,6 @@ const onShowPrev = () => {
         :number-of-cards="cards.length"
         @show-next="onShowNext"
         @show-prev="onShowPrev"
+        @delete="onCheckCardLength"
     />
 </template>

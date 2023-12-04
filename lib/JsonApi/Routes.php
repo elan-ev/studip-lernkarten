@@ -22,6 +22,7 @@ trait Routes
         $group->post('/lernkarten-cards', Routes\CardsCreate::class);
         $group->get('/lernkarten-cards/{id}', Routes\CardsShow::class);
         $group->patch('/lernkarten-cards/{id}', Routes\CardsUpdate::class);
+        $group->delete('/lernkarten-cards/{id}', Routes\CardsDelete::class);
 
         $group->get('/lernkarten-shared-decks', Routes\SharedDecksIndex::class);
         $group->post('/lernkarten-shared-decks', Routes\SharedDecksCreate::class);
