@@ -9,7 +9,16 @@ const hover = ref(false);
 const reject = ref('');
 
 const onDrop = (acceptFiles, rejectReasons) => {
-    emit('update:files', acceptFiles, props.fileid);
+
+    if (acceptFiles.length) {
+        let reader = new FileReader();
+        reader.onload = function(event) {
+            // event.target.result contains base64 encoded image
+            var base64String = event.target.result;
+            emit('update:files', base64String, props.fileid);
+        };
+        reader.readAsDataURL(acceptFiles[0]);
+    }
 
     reject.value = '';
 
@@ -64,7 +73,8 @@ const { getRootProps, getInputProps, open, ...rest } = useDropzone({
         <div v-bind="getRootProps()">
             <input v-bind="getInputProps()" />
             <slot name="dropzoneText">
-                {{ $gettext('Ziehen sie eine Bilddatei hierhin oder klicken Sie, um ein Bild von ihrem Rechner auszuwählen.') }}
+                <span>{{ $gettext('Titelbild') }}</span>
+                {{ $gettext('Ziehen sie eine Datei hierhin oder klicken Sie, um eine Datei von ihrem Rechner auszuwählen.') }}
             </slot>
         </div>
 
@@ -80,9 +90,13 @@ section {
     display: block;
     border: 1px solid grey;
     text-align: center;
-    font-weight: 900;
-    font-size: 1.2em;
+    font-size: 1.1em;
     padding-bottom: 0.5em;
+}
+
+section span {
+    font-size: 1.2em;
+    display: block;
 }
 
 section.hover {

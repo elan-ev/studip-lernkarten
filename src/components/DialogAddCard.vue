@@ -2,9 +2,9 @@
 import { nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import StudipDialog from './base/StudipDialog.vue';
-import StudipMessageBox from './base/StudipMessageBox.vue';
 import { useCardsStore } from '../stores/cards.js';
 import FileDropzone from "./FileDropzone.vue";
+import CardImage from "./CardImage.vue";
 
 const cardsStore = useCardsStore();
 const { $gettext } = useGettext();
@@ -19,6 +19,7 @@ const cardTypes = ref([
 ]);
 const front = ref(null);
 const back = ref(null);
+const images = ref({});
 
 const reset = () => {
     back.value = '';
@@ -32,14 +33,14 @@ const setIsOpen = (value) => {
 const createOne = () => {
     const card = {
         model: cardType.value,
-        fields: { front: front.value.value, back: back.value.value },
+        fields: { front: front.value.value, back: back.value.value, images: images.value },
     };
     cardsStore.createCard(props.deck, card).then(() => setIsOpen(false));
 };
 const createMore = () => {
     const card = {
         model: cardType.value,
-        fields: { front: front.value.value, back: back.value.value },
+        fields: { front: front.value.value, back: back.value.value, images: images.value },
     };
     cardsStore.createCard(props.deck, card).then(reset);
 };
@@ -47,7 +48,6 @@ const createMore = () => {
 const checkEditor = (ref, focus) => {
     nextTick(() => {
         let textarea = ref.value;
-        let id = textarea.id;
 
         window.jQuery(textarea).on('load.wysiwyg', () => {
             const editor = window.STUDIP.wysiwyg.getEditor(textarea);
@@ -78,8 +78,8 @@ watch(
     },
 );
 
-const setImage = (files, fileid) => {
-      console.log(files, fileid);
+const setImage = (base64, fileid) => {
+    images.value[fileid] = base64;
 }
 </script>
 
@@ -127,7 +127,8 @@ const setImage = (files, fileid) => {
                     </label>
 
                     <div v-if="cardType == 'image'">
-                        <FileDropzone @update:files="setImage" fileid="front" />
+                        <CardImage v-if="images['front']" :image="images['front']" fileid="front" @update:files="setImage"/>
+                        <FileDropzone v-else @update:files="setImage" fileid="front"/>
                     </div>
 
                     <textarea id="card-text-front" ref="front" required aria-required="true" />
@@ -147,7 +148,8 @@ const setImage = (files, fileid) => {
                     </label>
 
                     <div v-if="cardType == 'image'">
-                        <FileDropzone @update:files="setImage" fileid="back"/>
+                        <CardImage v-if="images['back']" :image="images['back']" fileid="back" @update:files="setImage"/>
+                        <FileDropzone v-else @update:files="setImage" fileid="back"/>
                     </div>
 
                     <textarea id="card-text-back" ref="back" required aria-required="true" />
