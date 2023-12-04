@@ -44,6 +44,12 @@ export const useCardsStore = defineStore(
             return data;
         }
 
+        async function importCards(deck, cards) {
+            for (const card of cards) {
+                await createCard(deck, card);
+            }
+        }
+
         async function updateFields(card, fields) {
             try {
                 const { data } = await api.patch('lernkarten-cards', { id: card.id, fields });
@@ -73,6 +79,7 @@ export const useCardsStore = defineStore(
             createCard,
             errors,
             fetchByDeck,
+            importCards,
             isLoading,
             updateFields,
             updateLearningStats,

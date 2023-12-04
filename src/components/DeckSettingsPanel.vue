@@ -1,11 +1,15 @@
 <script setup>
-import { computed } from 'vue';
+import Papa from 'papaparse';
+import { computed, ref } from 'vue';
+import DialogImportCards from './DialogImportCards.vue';
 import IconButton from './IconButton.vue';
 import { useCardsStore } from '../stores/cards.js';
 
 const cardsStore = useCardsStore();
 
 const props = defineProps(['deck']);
+
+const showImportDialog = ref(false);
 
 const cards = computed(() => cardsStore.byDeck(props.deck));
 
@@ -26,8 +30,9 @@ const chdate = computed(() => {
 });
 
 const onImport = () => {
-    console.debug('onImport');
+    showImportDialog.value = true;
 };
+
 const onExport = () => {
     const data = cards.value
         .map((card) => {
@@ -39,16 +44,16 @@ const onExport = () => {
                     return null;
             }
         })
-        .filter(Boolean)
-        .map((row) => row.map((v) => `"${String(v).replaceAll('"', '""')}"`).join(','))
-        .join('\r\n');
+        .filter(Boolean);
+
+    const csv = Papa.unparse(data);
 
     const filename = `kartensatz-${props.deck.name}-${chdate.value}.csv`.replace(
         /[\/|\\:*?"<>]/g,
         ''
     );
 
-    download(filename, data);
+    download(filename, csv);
 };
 
 function download(filename, data) {
@@ -88,4 +93,5 @@ function download(filename, data) {
             </IconButton>
         </section>
     </article>
+    <DialogImportCards v-model:open="showImportDialog" :deck="deck" />
 </template>
