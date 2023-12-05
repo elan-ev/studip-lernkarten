@@ -8,7 +8,7 @@ import { useCardsStore } from '../stores/cards.js';
 const cardsStore = useCardsStore();
 
 const props = defineProps(['open', 'deck']);
-const emit = defineEmits(['update:open']);
+const emit = defineEmits(['update:open', 'success']);
 
 const importFile = ref(null);
 const imported = ref(false);
@@ -32,6 +32,8 @@ const onConfirm = (...args) => {
     if (!errorsFound.value.length) {
         cardsStore.importCards(props.deck, records.value).then(() => {
             setIsOpen(false);
+            emit('success', records.value);
+            reset();
         });
     }
 };
@@ -96,6 +98,7 @@ const setImport = (...args) => {
                                 count: records.length,
                             })
                         "
+                        mood="curious"
                     />
                     <StudipCompanion
                         v-else
