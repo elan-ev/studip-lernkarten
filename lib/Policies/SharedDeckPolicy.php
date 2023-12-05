@@ -2,6 +2,7 @@
 
 namespace Lernkarten\Policies;
 
+use Course;
 use Lernkarten\Models\SharedDeck;
 use User;
 
@@ -17,6 +18,24 @@ class SharedDeckPolicy
     {
         // The shared decks will be filtered by this user.
         return true;
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function viewAnyOfCourse(User $user, Course $observed): bool
+    {
+        return $GLOBALS['perm']->have_studip_perm('autor', $observed->id, $user->id);
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAnyOfUser(User $user, User $observed): bool
+    {
+        return $user->id === $observed->id;
     }
 
     /**

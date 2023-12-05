@@ -35,6 +35,10 @@ class FoldersShow extends JsonApiController
             throw new RecordNotFoundException();
         }
 
+        if ($this->cannot($request, 'view', $resource)) {
+            throw new AuthorizationFailedException();
+        }
+
         return $this->getContentResponse($resource);
     }
 }

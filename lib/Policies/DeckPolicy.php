@@ -2,7 +2,9 @@
 
 namespace Lernkarten\Policies;
 
+use Course;
 use Lernkarten\Models\Deck;
+use Lernkarten\Models\Folder;
 use User;
 
 /**
@@ -17,6 +19,24 @@ class DeckPolicy
     {
         // The decks will be filtered by this user.
         return true;
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function viewAnyOfCourse(User $user, Course $observed): bool
+    {
+        return $GLOBALS['perm']->have_studip_perm('autor', $observed->id, $user->id);
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAnyOfFolder(User $user, Folder $observed): bool
+    {
+        return $observed->getContext()->isAccessibleToUser($user);
     }
 
     /**

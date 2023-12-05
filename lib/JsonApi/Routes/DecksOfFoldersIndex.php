@@ -12,12 +12,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Displays all Decks.
+ * Displays all Decks of a folder.
  *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class DecksOfFoldersShow extends JsonApiController
+class DecksOfFoldersIndex extends JsonApiController
 {
     protected $allowedIncludePaths = [
         DeckSchema::REL_CONTEXT,
@@ -38,6 +38,10 @@ class DecksOfFoldersShow extends JsonApiController
         $resource = Folder::find($args['id']);
         if (!$resource) {
             throw new RecordNotFoundException();
+        }
+
+        if ($this->cannot($request, 'viewAnyOfFolder', Deck::class, $resource)) {
+            throw new AuthorizationFailedException();
         }
 
         $resources = Deck::findBySql("folder_id = ?", [$resource->id]);

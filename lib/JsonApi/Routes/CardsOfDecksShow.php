@@ -38,6 +38,10 @@ class CardsOfDecksShow extends JsonApiController
             throw new RecordNotFoundException();
         }
 
+        if ($this->cannot($request, 'viewAnyOfDeck', Card::class, $resource)) {
+            throw new AuthorizationFailedException();
+        }
+
         $resources = Card::findBySql("deck_id = ?", [$resource->id]);
         return $this->getPaginatedContentResponse(
             array_slice($resources, ...$this->getOffsetAndLimit()),

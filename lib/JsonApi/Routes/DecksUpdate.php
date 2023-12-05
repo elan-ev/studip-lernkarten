@@ -2,6 +2,7 @@
 
 namespace Lernkarten\JsonApi\Routes;
 
+use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\Routes\ValidationTrait;
 use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
@@ -31,6 +32,11 @@ class DecksUpdate extends JsonApiController
         if (!$resource) {
             throw new RecordNotFoundException();
         }
+
+        if ($this->cannot($request, 'update', $resource)) {
+            throw new AuthorizationFailedException();
+        }
+
         $json = $this->validate($request, $resource);
         $card = $this->update($resource, $json);
 

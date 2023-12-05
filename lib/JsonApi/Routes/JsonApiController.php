@@ -9,23 +9,23 @@ use User;
 
 class JsonApiController extends StudipJsonApiController
 {
-    public function can(Request $request, string $ability, ...$arguments): bool
+    public function can(Request $request, string $ability, $objectOrClass, ...$arguments): bool
     {
-        $policedArgument = current($arguments);
-        if (is_object($policedArgument)) {
-            $class = get_class($policedArgument);
-        } else if (class_exists($policedArgument)) {
-            $class = $policedArgument;
-        } else {
-            throw new InvalidArgumentException();
-        }
         $user = $this->getUser($request);
+        if (is_object($objectOrClass)) {
+            $class = get_class($objectOrClass);
+            return $class::getPolicy()->$ability($user, $objectOrClass, ...$arguments);
+        }
 
-        return $class::getPolicy()->$ability($user, ...$arguments);
+        if (class_exists($objectOrClass)) {
+            return $objectOrClass::getPolicy()->$ability($user, ...$arguments);
+        }
+
+        throw new InvalidArgumentException();
     }
 
-    public function cannot(Request $request, string $ability, ...$arguments): bool
+    public function cannot(Request $request, string $ability, $objectOrClass, ...$arguments): bool
     {
-        return !$this->can($request, $ability, ...$arguments);
+        return !$this->can($request, $ability, $objectOrClass, ...$arguments);
     }
 }

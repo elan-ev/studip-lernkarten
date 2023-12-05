@@ -2,7 +2,6 @@
 
 namespace Lernkarten\JsonApi\Routes;
 
-use User;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
@@ -10,6 +9,7 @@ use Lernkarten\JsonApi\Schemas\Instance as InstanceSchema;
 use Lernkarten\Models\Instance;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use User;
 
 /**
  * Displays all instances of LernkartenPlugin of a User.
@@ -34,6 +34,10 @@ class InstancesOfUsersIndex extends JsonApiController
         $resource = User::find($args['id']);
         if (!$resource) {
             throw new RecordNotFoundException();
+        }
+
+        if ($this->cannot($request, 'viewAnyOfUsers', Instance::class, $resource)) {
+            throw new AuthorizationFailedException();
         }
 
         $instances = array_filter(

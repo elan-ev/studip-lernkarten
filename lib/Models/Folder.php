@@ -51,6 +51,11 @@ class Folder extends SimpleORMap
         parent::configure($config);
     }
 
+    public static function findByUser(User $user): iterable
+    {
+        return self::findBySql('context_id = ? AND context_type = ?', [$user->id, User::class]);
+    }
+
     /**
      * @return User|Course|null
      *

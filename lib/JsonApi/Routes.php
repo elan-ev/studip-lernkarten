@@ -34,7 +34,7 @@ trait Routes
         $group->post('/lernkarten-shared-decks/{id}/colearn', Routes\SharedDecksColearn::class);
         $group->post('/lernkarten-shared-decks/{id}/copy', Routes\SharedDecksCopy::class);
 
-        $group->get('/lernkarten-folders/{id}/decks', Routes\DecksOfFoldersShow::class);
+        $group->get('/lernkarten-folders/{id}/decks', Routes\DecksOfFoldersIndex::class);
         $group->get('/lernkarten-decks/{id}/cards', Routes\CardsOfDecksShow::class);
 
         $group->get('/courses/{id}/lernkarten-decks', Routes\DecksOfCoursesIndex::class);

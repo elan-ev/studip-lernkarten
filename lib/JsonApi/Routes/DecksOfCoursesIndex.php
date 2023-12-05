@@ -46,6 +46,10 @@ class DecksOfCoursesIndex extends JsonApiController
             throw new RecordNotFoundException();
         }
 
+        if ($this->cannot($request, 'viewAnyOfCourse', Deck::class, $resource)) {
+            throw new AuthorizationFailedException();
+        }
+
         $resources = Deck::findBySql("context_id = ? AND context_type = ?", [$resource->id, Course::class]);
         return $this->getPaginatedContentResponse(
             array_slice($resources, ...$this->getOffsetAndLimit()),

@@ -33,6 +33,11 @@ class CardsUpdate extends JsonApiController
         if (!$resource) {
             throw new RecordNotFoundException();
         }
+
+        if ($this->cannot($request, 'update', $resource)) {
+            throw new AuthorizationFailedException();
+        }
+
         $json = $this->validate($request, $resource);
         $card = $this->update($resource, $json);
 

@@ -38,6 +38,10 @@ class CardsCreate extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
+        if ($this->cannot($request, 'create', Card::class)) {
+            throw new AuthorizationFailedException();
+        }
+
         $json = $this->validate($request);
 
         $resource = $this->create($json);
