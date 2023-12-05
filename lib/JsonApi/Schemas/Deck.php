@@ -36,6 +36,7 @@ class Deck extends SchemaProvider
         return [
             'name' => (string) $resource->name,
             'description' => (string) $resource->description,
+            'metadata' => (string) $resource->metadata,
             'colearning' => (bool) $resource->colearning,
             'is-editable' => $this->userCan("update", $resource),
             'progress' => $resource->getProgress(),

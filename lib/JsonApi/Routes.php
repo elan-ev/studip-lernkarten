@@ -14,6 +14,7 @@ trait Routes
         $group->get('/lernkarten-decks', Routes\DecksIndex::class);
         $group->post('/lernkarten-decks', Routes\DecksCreate::class);
         $group->get('/lernkarten-decks/{id}', Routes\DecksShow::class);
+        $group->patch('/lernkarten-decks/{id}', Routes\DecksUpdate::class);
         $group->delete('/lernkarten-decks/{id}', Routes\DecksDelete::class);
 
         // not a real JSONAPI route

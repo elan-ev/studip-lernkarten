@@ -15,6 +15,7 @@ const props = defineProps(['folder']);
 
 const description = ref('');
 const folder = ref(null);
+const metadata = ref('');
 const name = ref('');
 const nameRef = ref(null);
 
@@ -32,9 +33,9 @@ const onSelectFolder = (selected) => {
 };
 
 const onSubmit = () => {
-    if (validateName) {
+    if (validateName()) {
         decksStore
-            .createDeck(folder.value, name.value, description.value)
+            .createDeck(folder.value, name.value, description.value, metadata.value)
             .then(({ id }) => router.push({ name: 'deck', params: { id } }));
     }
 };
@@ -101,6 +102,15 @@ function validateName() {
                         >*</span
                     >
                     <textarea v-model="description" required aria-required="true" />
+                </label>
+            </div>
+
+            <div class="formpart">
+                <label>
+                    <span class="textlabel">
+                        {{ $gettext('Metadaten des Kartensatzes') }}
+                    </span>
+                    <textarea v-model="metadata" />
                 </label>
             </div>
 

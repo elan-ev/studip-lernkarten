@@ -59,18 +59,16 @@ export const useDecksStore = defineStore(
         }
 
         async function copyDeck(deck) {
-            const { data } = await api.post(
-                `lernkarten-decks/${deck.id}/copy`,
-                deck,
-            );
+            const { data } = await api.post(`lernkarten-decks/${deck.id}/copy`, deck);
 
             return fetchById(data.id);
         }
 
-        async function createDeck(folder, name, description) {
+        async function createDeck(folder, name, description, metadata) {
             const record = {
                 name,
                 description,
+                metadata,
                 context: { data: { id: contextStore.id, type: contextStore.type } },
                 folder: {
                     data: folder ? { id: folder.id, type: 'lernkarten-folders' } : null,
@@ -88,6 +86,11 @@ export const useDecksStore = defineStore(
                 .then(() => records.value.delete(deck.id));
         }
 
+        async function updateDeck(deck, attributes) {
+            const { data } = await api.patch('lernkarten-decks', { id: deck.id, ...attributes });
+            return fetchById(deck.id);
+        }
+
         return {
             all,
             byContext,
@@ -99,6 +102,7 @@ export const useDecksStore = defineStore(
             fetchById,
             fetchContext,
             isLoading,
+            updateDeck,
         };
     },
     {

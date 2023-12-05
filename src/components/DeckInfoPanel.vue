@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue';
-import Button from './IconButton.vue';
 import CourseAvatar from './CourseAvatar.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipDate from '../components/base/StudipDate.vue';
@@ -72,12 +71,19 @@ const userUrl = (user) =>
         <section>
             {{ deck.description }}
         </section>
-        <footer>
-            <Button disabled type="button" icon="edit">{{ $gettext('Bearbeiten') }}</Button>
-        </footer>
     </article>
 
     <article class="studip">
+        <header>
+            <h1>{{ $gettext('Metadaten') }}</h1>
+        </header>
+        <section>
+            <span v-if="deck.metadata.length">{{ deck.metadata }}</span>
+            <span v-else>–</span>
+        </section>
+    </article>
+
+    <article class="studip" v-if="sharedWithCourses.length || sharedWithUsers.length">
         <header>
             <h1>{{ $gettext('Geteilt mit') }}</h1>
         </header>

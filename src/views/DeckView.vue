@@ -2,12 +2,13 @@
 import { computed, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
-import Button from '../components/IconButton.vue';
+import IconButton from '../components/IconButton.vue';
 import DeckCardsPanel from '../components/DeckCardsPanel.vue';
 import DeckInfoPanel from '../components/DeckInfoPanel.vue';
 import DeckSettingsPanel from '../components/DeckSettingsPanel.vue';
 import DeckStatisticsPanel from '../components/DeckStatisticsPanel.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
+import DialogEditDeck from '../components/DialogEditDeck.vue';
 import DialogShareDeck from '../components/DialogShareDeck.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
@@ -20,6 +21,7 @@ const router = useRouter();
 
 const props = defineProps(['id']);
 
+const showEditDialog = ref(false);
 const showLearnDialog = ref(false);
 const showShareDialog = ref(false);
 
@@ -32,6 +34,10 @@ const folder = computed(() => deck.value?.folder.data ?? null);
 
 const onAdjustLearn = () => {
     showLearnDialog.value = true;
+};
+
+const onShowEditDialog = () => {
+    showEditDialog.value = true;
 };
 
 const onLearn = (options) => {
@@ -68,19 +74,17 @@ const onShowShareDialog = () => {
                     </RouterLink>
                 </div>
                 <div class="tw-mt-3 tw-font-bold tw-text-lg">{{ deck.name }}</div>
-                <div>
-                    <Button icon="edit" type="button" class="!tw-m-0 !tw-border-0">{{
-                        $gettext('Bearbeiten')
-                    }}</Button>
-                </div>
             </div>
             <div>
-                <Button icon="refresh" type="button" @click="onAdjustLearn">
+                <IconButton icon="refresh" type="button" @click="onAdjustLearn">
                     {{ $gettext('Lernen') }}
-                </Button>
-                <Button icon="share" type="button" @click="onShowShareDialog">
+                </IconButton>
+                <IconButton icon="share" type="button" @click="onShowShareDialog">
                     {{ $gettext('Teilen') }}
-                </Button>
+                </IconButton>
+                <IconButton icon="edit" type="button" @click="onShowEditDialog">
+                    {{ $gettext('Bearbeiten') }}
+                </IconButton>
             </div>
         </div>
 
@@ -124,5 +128,6 @@ const onShowShareDialog = () => {
         </TabGroup>
     </div>
     <DialogAdjustLearningOptions v-model:open="showLearnDialog" :deck="deck" @confirm="onLearn" />
+    <DialogEditDeck v-model:open="showEditDialog" :deck="deck" />
     <DialogShareDeck v-model:open="showShareDialog" :deck="deck" />
 </template>
