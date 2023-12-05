@@ -41,7 +41,7 @@ export const useSharedDecksStore = defineStore(
 
             const { data } = await api.fetch(
                 `${contextStore.type}/${contextStore.id}/lernkarten-shared-decks`,
-                { params: { include: 'colearning-deck.owner,deck,sharer' } },
+                { params: { include: 'colearning-deck.owner,deck,sharer' } }
             );
             isLoading.value = false;
             data.forEach(storeRecord);
@@ -59,6 +59,12 @@ export const useSharedDecksStore = defineStore(
             return Promise.all(userIds.map((id) => createSharedDeck(deck, { id, type: 'users' })));
         }
 
+        function unshareDeck(sharedDeck) {
+            return api
+                .delete('lernkarten-shared-decks', sharedDeck.id)
+                .then(() => records.value.delete(sharedDeck.id));
+        }
+
         async function createSharedDeck(deck, recipient) {
             const record = {
                 deck: { data: { id: deck.id, type: 'lernkarten-decks' } },
@@ -73,7 +79,7 @@ export const useSharedDecksStore = defineStore(
         async function colearn(sharedDeck) {
             const { data } = await api.post(
                 `lernkarten-shared-decks/${sharedDeck.id}/colearn`,
-                sharedDeck,
+                sharedDeck
             );
 
             return decksStore.fetchById(data.id).then(() => fetchById(sharedDeck.id));
@@ -82,7 +88,7 @@ export const useSharedDecksStore = defineStore(
         async function copy(sharedDeck) {
             const { data } = await api.post(
                 `lernkarten-shared-decks/${sharedDeck.id}/copy`,
-                sharedDeck,
+                sharedDeck
             );
 
             return decksStore.fetchById(data.id);
@@ -99,9 +105,10 @@ export const useSharedDecksStore = defineStore(
             isLoading,
             shareDeckWithCourse,
             shareDeckWithUserIds,
+            unshareDeck,
         };
     },
     {
         persist: true,
-    },
+    }
 );

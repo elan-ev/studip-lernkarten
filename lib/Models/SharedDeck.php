@@ -3,6 +3,7 @@
 namespace Lernkarten\Models;
 
 use Course;
+use DBManager;
 use RuntimeException;
 use SimpleORMap;
 use User;
@@ -66,7 +67,7 @@ class SharedDeck extends SimpleORMap
             'context_id' => $this->recipient_id,
             'context_type' => $this->recipient_type,
             'name' => $this->deck->name,
-            'description' => $this->deck->description,
+#            'description' => $this->deck->description,
             'owner_id' => $user->id,
             'shared_deck_id' => $this->id,
             'template_id' => $this->deck_id,

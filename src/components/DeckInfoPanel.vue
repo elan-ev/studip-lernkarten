@@ -18,7 +18,7 @@ const sharedWithUsers = computed(() =>
 );
 
 const courseUrl = (course) =>
-    window.STUDIP.URLHelper.getURL(`dispatch.php/course/details/index/${course.id}`);
+    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin', { cid: course.id });
 const userUrl = (user) =>
     window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username: user.username });
 </script>

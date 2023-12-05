@@ -27,6 +27,10 @@ class SharedDecksDelete extends JsonApiController
             throw new RecordNotFoundException();
         }
 
+        if ($this->cannot($request, 'delete', $resource)) {
+            throw new AuthorizationFailedException();
+        }
+
         $resource->delete();
 
         return $this->getCodeResponse(204);

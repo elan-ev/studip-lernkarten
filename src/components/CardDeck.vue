@@ -8,6 +8,7 @@ import StudipAvatar from './base/StudipAvatar.vue';
 import StudipIcon from './base/StudipIcon.vue';
 import DialogConfirmCopyDeck from './DialogConfirmCopyDeck.vue';
 import DialogConfirmDeleteDeck from './DialogConfirmDeleteDeck.vue';
+import DialogShareDeck from '../components/DialogShareDeck.vue';
 import { useDecksStore } from '../stores/decks.js';
 
 const { $gettext } = useGettext();
@@ -18,6 +19,7 @@ const emit = defineEmits(['deleted', 'select']);
 
 const showConfirmCopy = ref(false);
 const showConfirmDelete = ref(false);
+const showShareDialog = ref(false);
 
 const deckOwner = computed(() => props.deck.owner.data);
 const avatarUrl = computed(() => deckOwner.value.meta.avatar.small);
@@ -39,6 +41,12 @@ const actionMenuItems = computed(() => {
         ...(editable.value
             ? [
                   {
+                      id: 'share',
+                      label: $gettext('Kartensatz teilen'),
+                      icon: 'share',
+                      emit: 'share',
+                  },
+                  {
                       id: 'delete',
                       label: $gettext('Kartensatz löschen'),
                       icon: 'trash',
@@ -57,7 +65,7 @@ const progress = computed(() => {
 
 const onCopyDeck = () => (showConfirmCopy.value = true);
 const onDeleteDeck = () => (showConfirmDelete.value = true);
-
+const onShareDeck = () => (showShareDialog.value = true);
 const deleteDeck = () => {
     showConfirmDelete.value = false;
     decksStore.deleteDeck(props.deck).then(() => {
@@ -107,6 +115,7 @@ const deleteDeck = () => {
                         :collapseAt="0"
                         @copy="onCopyDeck"
                         @delete="onDeleteDeck"
+                        @share="onShareDeck"
                     />
                 </div>
             </div>
@@ -114,4 +123,5 @@ const deleteDeck = () => {
     </section>
     <DialogConfirmCopyDeck v-model:open="showConfirmCopy" :deck="deck" />
     <DialogConfirmDeleteDeck v-model:open="showConfirmDelete" @confirm="deleteDeck" />
+    <DialogShareDeck v-model:open="showShareDialog" :deck="deck" />
 </template>

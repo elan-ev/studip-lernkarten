@@ -1,20 +1,42 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+import { useGettext } from 'vue3-gettext';
 import CardDeck from './CardDeck.vue';
 import DialogColearnSharedDeck from './DialogColearnSharedDeck.vue';
+import DialogConfirmUnshare from './DialogConfirmUnshare.vue';
 import DialogCopySharedDeck from './DialogCopySharedDeck.vue';
 import IconButton from './IconButton.vue';
+import StudipActionMenu from './base/StudipActionMenu.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipIcon from './base/StudipIcon.vue';
+import { useContextStore } from '../stores/context.js';
+
+const { $gettext } = useGettext();
+const contextStore = useContextStore();
 
 const props = defineProps(['sharedDeck']);
 
 const showColearnDialog = ref(false);
 const showCopyDialog = ref(false);
+const showConfirmUnshareDialog = ref(false);
 
-const avatarUrl = computed(() => props.sharedDeck.sharer.data.meta.avatar.small);
-const formattedName = computed(() => props.sharedDeck.sharer.data['formatted-name']);
+const sharer = computed(() => props.sharedDeck.sharer.data);
+const avatarUrl = computed(() => sharer.value.meta.avatar.small);
+const formattedName = computed(() => sharer.value['formatted-name']);
+
+const actionMenuItems = computed(() => {
+    return [
+        sharer.value.id === contextStore.userId
+            ? {
+                  id: 'unshare',
+                  label: $gettext('Nicht mehr teilen'),
+                  icon: 'decline',
+                  emit: 'unshare',
+              }
+            : null,
+    ].filter(Boolean);
+});
 
 const onCopy = () => {
     showCopyDialog.value = true;
@@ -22,6 +44,10 @@ const onCopy = () => {
 
 const onColearn = () => {
     showColearnDialog.value = true;
+};
+
+const onUnshare = () => {
+    showConfirmUnshareDialog.value = true;
 };
 </script>
 
@@ -48,10 +74,17 @@ const onColearn = () => {
                     <IconButton icon="refresh" type="button" @click="onColearn">
                         {{ $gettext('Mitlernen') }}
                     </IconButton>
+                    <StudipActionMenu
+                        v-if="actionMenuItems.length"
+                        :items="actionMenuItems"
+                        :collapseAt="0"
+                        @unshare="onUnshare"
+                    />
                 </div>
             </div>
         </div>
     </section>
     <DialogColearnSharedDeck v-model:open="showColearnDialog" :shared-deck="sharedDeck" />
+    <DialogConfirmUnshare v-model:open="showConfirmUnshareDialog" :shared-deck="sharedDeck" />
     <DialogCopySharedDeck v-model:open="showCopyDialog" :shared-deck="sharedDeck" />
 </template>
