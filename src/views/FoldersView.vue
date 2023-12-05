@@ -53,7 +53,7 @@ const onSelectDeck = (deck) => {
 <template>
     <Ribbon>
         <li>
-            <RouterLink :to="{ name: 'folders' }" disabled>
+            <RouterLink :to="{ name: 'home' }" disabled>
                 <StudipIcon
                     shape="folder-home-empty"
                     role="info"

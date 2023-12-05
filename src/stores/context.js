@@ -1,6 +1,7 @@
 import { computed } from 'vue';
 import { defineStore } from 'pinia';
 
+// TODO: This should be a composable and not a store.
 export const useContextStore = defineStore(
     'context',
     () => {

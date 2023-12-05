@@ -58,7 +58,7 @@ const deleteFolder = () => {
 <template>
     <Ribbon v-if="folder">
         <li>
-            <RouterLink :to="{ name: 'folders' }">
+            <RouterLink :to="{ name: 'home' }">
                 <StudipIcon
                     shape="folder-home-empty"
                     :height="18"
