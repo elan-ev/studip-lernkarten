@@ -38,7 +38,7 @@ class Deck extends SchemaProvider
             'description' => (string) $resource->description,
             'metadata' => (string) $resource->metadata,
             'colearning' => (bool) $resource->colearning,
-            'is-editable' => $this->userCan("update", $resource),
+            'is-editable' => $this->userCan('update', $resource),
             'progress' => $resource->getProgress(),
             'mkdate' => date('c', $resource->mkdate),
             'chdate' => date('c', $resource->chdate),
@@ -118,5 +118,17 @@ class Deck extends SchemaProvider
         ];
 
         return $relationships;
+    }
+
+    public function hasResourceMeta($resource): bool
+    {
+        return true;
+    }
+
+    public function getResourceMeta($resource)
+    {
+        return [
+            'cards-count' => $resource->getNumberOfCards(),
+        ];
     }
 }

@@ -89,6 +89,11 @@ class Deck extends SimpleORMap
         return $resource;
     }
 
+    public function getNumberOfCards(): int
+    {
+        return Card::countBySql('deck_id = ?', [$this->id]);
+    }
+
     /**
      * @return User|Course|null
      */

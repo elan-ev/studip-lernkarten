@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
 import IconButton from '../components/IconButton.vue';
 import DeckCardsPanel from '../components/DeckCardsPanel.vue';
@@ -17,12 +17,11 @@ import { useDecksStore } from '../stores/decks.js';
 
 const cardsStore = useCardsStore();
 const decksStore = useDecksStore();
-const router = useRouter();
 
 const props = defineProps(['id']);
 
 const showEditDialog = ref(false);
-const showLearnDialog = ref(false);
+const showAdjustLearningDialog = ref(false);
 const showShareDialog = ref(false);
 
 decksStore.fetchById(props.id);
@@ -32,23 +31,9 @@ const deck = computed(() => decksStore.byId(props.id));
 const cards = computed(() => cardsStore.byDeck({ id: props.id }));
 const folder = computed(() => deck.value?.folder.data ?? null);
 
-const onAdjustLearn = () => {
-    showLearnDialog.value = true;
-};
-
-const onShowEditDialog = () => {
-    showEditDialog.value = true;
-};
-
-const onLearn = (options) => {
-    console.debug('onLearn', options);
-    showLearnDialog.value = false;
-    router.push({ name: 'study', params: { id: deck.value.id } });
-};
-
-const onShowShareDialog = () => {
-    showShareDialog.value = true;
-};
+const onAdjustLearn = () => (showAdjustLearningDialog.value = true);
+const onShowEditDialog = () => (showEditDialog.value = true);
+const onShowShareDialog = () => (showShareDialog.value = true);
 </script>
 
 <template>
@@ -127,7 +112,7 @@ const onShowShareDialog = () => {
             </TabPanels>
         </TabGroup>
     </div>
-    <DialogAdjustLearningOptions v-model:open="showLearnDialog" :deck="deck" @confirm="onLearn" />
+    <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[deck]" />
     <DialogEditDeck v-model:open="showEditDialog" :deck="deck" />
     <DialogShareDeck v-model:open="showShareDialog" :deck="deck" />
 </template>

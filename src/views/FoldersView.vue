@@ -5,6 +5,7 @@ import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
 import { useFoldersStore } from '../stores/folders.js';
 import CardDeck from '../components/CardDeck.vue';
+import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import DialogCreateFolder from '../components/DialogCreateFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
@@ -18,6 +19,7 @@ const router = useRouter();
 const createDialogOpen = ref(false);
 const confirmDeleteDialogOpen = ref(false);
 const selectedFolder = ref(null);
+const showAdjustLearningDialog = ref(false);
 
 const contextStore = useContextStore();
 const decksStore = useDecksStore();
@@ -48,6 +50,8 @@ const onConfirmDeleteDialog = () => {
 const onSelectDeck = (deck) => {
     router.push({ name: 'deck', params: { id: deck.id } });
 };
+
+const onLearnDecks = () => (showAdjustLearningDialog.value = true);
 </script>
 
 <template>
@@ -78,9 +82,12 @@ const onSelectDeck = (deck) => {
                 </StudipCompanion>
             </template>
         </FolderList>
-        <button type="button" class="button add" @click="addTopFolder">
+        <IconButton type="button" icon="add" @click="addTopFolder">
             {{ $gettext('Ordner anlegen') }}
-        </button>
+        </IconButton>
+        <IconButton type="button" icon="refresh" @click="onLearnDecks">
+            {{ $gettext('Kartensätze lernen') }}
+        </IconButton>
     </section>
 
     <section class="tw-mt-12" v-if="decks.length">
@@ -89,11 +96,12 @@ const onSelectDeck = (deck) => {
                 {{ $gettext('Kartensätze ohne Ordner') }}
             </h3>
         </header>
-        <article v-for="deck in decks" :key="deck.id">
+        <article v-for="deck in decks" :key="deck.id" class="tw-flex tw-flex-col tw-gap-1">
             <CardDeck :deck="deck" @select="onSelectDeck" />
         </article>
     </section>
 
+    <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="decks" />
     <DialogCreateFolder v-model:open="createDialogOpen" @confirm="onCreateDialog" />
     <DialogConfirmDeleteFolder
         v-model:open="confirmDeleteDialogOpen"

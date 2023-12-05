@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
 import BasicBack from '../components/cards/BasicBack.vue';
 import BasicFront from '../components/cards/BasicFront.vue';
@@ -8,39 +8,44 @@ import ImageBack from '../components/cards/ImageBack.vue';
 import ImageFront from '../components/cards/ImageFront.vue';
 import IconButton from '../components/IconButton.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
+import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
 import StudyViewRepeatButtons from '../components/StudyViewRepeatButtons.vue';
 import StudyViewStatistics from '../components/StudyViewStatistics.vue';
 import { useScheduler } from '../composables/scheduler.js';
 
-const props = defineProps(['id']);
+const props = defineProps(['decks', 'order']);
 
 const { $gettext } = useGettext();
 const router = useRouter();
-const { cards, cardStates, deck, dueCards, queuedCard, repeat } = useScheduler({ id: props.id });
+const { cards, cardStates, dueCards, isLoading, queuedCard, repeat } = useScheduler({
+    decks: props.decks,
+    order: props.order,
+});
 
 const showAnswer = ref(false);
 
 onMounted(enableCompactNavigation);
 
-// const cardsLeft = computed(() => orderedCards.value.length - (currentIndex.value + 1));
-const cardsLeft = computed(() => 17);
-const currentIndex = computed(() => 0);
-
-const folderName = computed(() => {
-    return deck.value.folder?.name ?? $gettext('Kein Ordner');
-});
-
 const cardFront = computed(() => {
     switch (queuedCard.value.model) {
-        case 'image': return ImageFront;
-        default:      return BasicFront;
+        case 'image':
+            return ImageFront;
+        default:
+            return BasicFront;
     }
 });
 const cardBack = computed(() => {
     switch (queuedCard.value.model) {
-        case 'image': return ImageBack;
-        default:      return BasicBack;
+        case 'image':
+            return ImageBack;
+        default:
+            return BasicBack;
     }
+});
+
+const folderName = computed(() => {
+    // return deck.value.folder?.name ?? $gettext('Kein Ordner');
+    return $gettext('TODO Ordner');
 });
 
 const onShowAnswer = () => (showAnswer.value = true);
@@ -48,27 +53,24 @@ const onShowAnswer = () => (showAnswer.value = true);
 const onRepeat = (rating) => {
     const card = repeat(rating);
     showAnswer.value = false;
-    // currentIndex.value = currentIndex.value + 1;
 };
 const onCancel = () => {
-    router.push({ name: 'deck', params: { id: props.id } });
+    router.back();
     disableCompactNavigation();
 };
 
 function disableCompactNavigation() {
-    STUDIP.Vue.emit('toggle-compact-navigation', false);
+    // STUDIP.Vue.emit('toggle-compact-navigation', false);
 }
 function enableCompactNavigation() {
-    STUDIP.Vue.emit('toggle-compact-navigation', true);
+    // STUDIP.Vue.emit('toggle-compact-navigation', true);
 }
 </script>
 
 <template>
     <div class="tw-flex tw-flex-col tw-items-center">
-        <div v-if="isLoading">
-            {{ $gettext('Lade Kartensatz') }}
-        </div>
-        <div v-if="deck" class="tw-max-w-[700px] tw-w-full">
+        <StudipProgressIndicator :description="$gettext('Lade Karten …')" v-if="isLoading" />
+        <div v-if="!isLoading" class="tw-max-w-[700px] tw-w-full">
             <div v-if="queuedCard">
                 <StudyViewStatistics
                     class="tw-mb-8"
@@ -112,12 +114,9 @@ function enableCompactNavigation() {
                     culpa qui officia deserunt mollit anim id est laborum.
                 </p>
                 <div>
-                    <RouterLink
-                        :to="{ name: 'deck', params: { id } }"
-                        @click="disableCompactNavigation"
-                    >
-                        Zurück zum Kartensatz
-                    </RouterLink>
+                    <IconButton icon="stop" type="button" @click="onCancel">
+                        {{ $gettext('Zurück zum Kartensatz') }}
+                    </IconButton>
                 </div>
             </article>
         </div>

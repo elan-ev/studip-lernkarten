@@ -46,10 +46,12 @@ const router = createRouter({
             props: (route) => ({ folder: route.query.f }),
         },
         {
-            path: '/study/:id',
+            path: '/study',
             name: 'study',
             component: StudyView,
-            props: true,
+            props: (route) => {
+                return { decks: route?.query?.decks ?? [], order: router?.query?.order ?? null };
+            },
         },
     ],
 });

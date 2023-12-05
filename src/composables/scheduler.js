@@ -1,13 +1,32 @@
 import { computed, ref } from 'vue';
+import { useGettext } from 'vue3-gettext';
 import { useFsrs } from './fsrs.js';
 import { useCardsStore } from '../stores/cards.js';
 import { useDecksStore } from '../stores/decks.js';
 
-export function useScheduler({ id }) {
+export function useSchedulerOptions() {
+    const { $gettext } = useGettext();
+
+    const orders = ref(
+        new Map([
+            ['basic', $gettext('Feste Reihenfolge')],
+            ['random', $gettext('Zufällige Reihenfolge')],
+            ['algorithm', $gettext('Lernplan')],
+        ])
+    );
+    const defaultOrder = ref('basic');
+
+    return {
+        defaultOrder,
+        orders,
+    };
+}
+
+export function useScheduler(options) {
     const errors = ref(null);
     const isLoading = ref(false);
 
-    const deck = ref(null);
+    const decks = ref(new Map());
     const cards = ref([]);
 
     const { repeatWithRating, Rating, State } = useFsrs();
@@ -26,7 +45,7 @@ export function useScheduler({ id }) {
                 [State.Learning, 0],
                 [State.Review, 0],
                 [State.Relearning, 0],
-            ]),
+            ])
         );
     });
 
@@ -57,15 +76,21 @@ export function useScheduler({ id }) {
         return card;
     };
 
-    Promise.all([decksStore.fetchById(id), cardsStore.fetchByDeck({ id })]).then(() => {
-        deck.value = decksStore.byId(id);
-        cards.value = cardsStore.byDeck({ id });
+    const ids = options.decks.split(',').filter((id) => +id);
+    isLoading.value = true;
+    Promise.all([
+        ...ids.map((id) => decksStore.fetchById(id)),
+        ...ids.map((id) => cardsStore.fetchByDeck({ id })),
+    ]).then(() => {
+        decks.value = new Map(ids.map((id) => [id, decksStore.byId(id)]));
+        cards.value = _.flatMap(ids, (id) => cardsStore.byDeck({ id }));
+        isLoading.value = false;
     });
 
     return {
         cards,
         cardStates,
-        deck,
+        decks,
         dueCards,
         errors,
         isLoading,

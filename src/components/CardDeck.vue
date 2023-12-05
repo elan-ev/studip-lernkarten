@@ -1,14 +1,15 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { RouterLink } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
+import IconButton from './IconButton.vue';
 import RadialProgress from './RadialProgress.vue';
 import StudipActionMenu from './base/StudipActionMenu.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipIcon from './base/StudipIcon.vue';
+import DialogAdjustLearningOptions from './DialogAdjustLearningOptions.vue';
 import DialogConfirmCopyDeck from './DialogConfirmCopyDeck.vue';
 import DialogConfirmDeleteDeck from './DialogConfirmDeleteDeck.vue';
-import DialogShareDeck from '../components/DialogShareDeck.vue';
+import DialogShareDeck from './DialogShareDeck.vue';
 import { useDecksStore } from '../stores/decks.js';
 
 const { $gettext } = useGettext();
@@ -17,6 +18,7 @@ const decksStore = useDecksStore();
 const props = defineProps(['deck']);
 const emit = defineEmits(['deleted', 'select']);
 
+const showAdjustLearningDialog = ref(false);
 const showConfirmCopy = ref(false);
 const showConfirmDelete = ref(false);
 const showShareDialog = ref(false);
@@ -63,6 +65,7 @@ const progress = computed(() => {
     return total ? props.deck.progress[2] / total : 0;
 });
 
+const onAdjustLearning = () => (showAdjustLearningDialog.value = true);
 const onCopyDeck = () => (showConfirmCopy.value = true);
 const onDeleteDeck = () => (showConfirmDelete.value = true);
 const onShareDeck = () => (showShareDialog.value = true);
@@ -101,14 +104,14 @@ const deleteDeck = () => {
             </div>
             <div class="tw-flex tw-items-end tw-justify-between">
                 <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
+                <div>
+                    <StudipIcon shape="dialog-cards" role="info" />
+                    {{ deck.meta['cards-count'] }}
+                </div>
                 <div class="tw-px-4 tw-flex tw-gap-2">
-                    <RouterLink
-                        :to="{ name: 'study', params: { id: deck.id } }"
-                        class="tw-flex tw-items-center tw-gap-1"
-                    >
-                        <StudipIcon shape="refresh" role="info" />
+                    <IconButton icon="refresh" type="button" @click="onAdjustLearning">
                         {{ $gettext('Lernen') }}
-                    </RouterLink>
+                    </IconButton>
                     <StudipActionMenu
                         v-if="actionMenuItems.length"
                         :items="actionMenuItems"
@@ -121,6 +124,7 @@ const deleteDeck = () => {
             </div>
         </div>
     </section>
+    <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[deck]" />
     <DialogConfirmCopyDeck v-model:open="showConfirmCopy" :deck="deck" />
     <DialogConfirmDeleteDeck v-model:open="showConfirmDelete" @confirm="deleteDeck" />
     <DialogShareDeck v-model:open="showShareDialog" :deck="deck" />
