@@ -4,9 +4,52 @@ import { RouterLink } from 'vue-router';
 import StudipIcon from '../components/base/StudipIcon.vue';
 
 const props = defineProps(['folders']);
-const emit = defineEmits(['delete-folder']);
+const emit = defineEmits(['delete-folder', 'edit-folder']);
 const deleteFolder = (folder) => emit('delete-folder', folder);
 const editFolder = (folder) => emit('edit-folder', folder);
+const sortOrder = ref('asc');
+const sortBy = ref('name');
+
+const sortData = (sortOrder, sortBy) => {
+    return function(a,b) {
+
+        let modifier = 1;
+        if (sortOrder === 'desc') {
+            modifier = -1;
+        }
+
+        if (a[sortBy] === b[sortBy]) {
+            return 0;
+        } else if (!a[sortBy]) {
+            return 1;
+        } else if (!b[sortBy]) {
+            return -1;
+        } else if (a[sortBy] < b[sortBy]) {
+            return -1 * modifier;
+        } else if (a[sortBy] > b[sortBy]) {
+            return 1 * modifier;
+        }
+    }
+}
+
+const sortedFolders = computed(() => {
+    if (props.folders && props.folders.length) {
+        let newOrder = props.folders;
+        return newOrder.sort(sortData(sortOrder.value, sortBy.value));
+    }
+
+    return [];
+});
+
+const toggleSort = (field) => {
+    if (sortBy.value == field) {
+        sortOrder.value = (sortOrder.value == 'asc') ? 'desc' : 'asc';
+    } else {
+        sortOrder.value = 'asc';
+    }
+
+    sortBy.value = field;
+}
 </script>
 
 <template>
@@ -18,14 +61,20 @@ const editFolder = (folder) => emit('edit-folder', folder);
     <thead>
         <tr class="sortable">
             <th></th>
-            <th class="sortasc">{{ $gettext('Name') }}</th>
+            <th :class="{
+                    'sortasc' : sortBy == 'name' && sortOrder == 'asc',
+                    'sortdesc' : sortBy == 'name' && sortOrder == 'desc'
+                }"
+                @click="toggleSort('name')"
+                class="tw-cursor-pointer"
+            >{{ $gettext('Name') }}</th>
             <th class="actions">{{ $gettext('Aktionen') }}</th>
         </tr>
     </thead>
 
     <tbody>
         <tr
-            v-if="folders.length > 0"
+            v-if="sortedFolders.length > 0"
             class="studip toggle tw-my-2"
             v-for="folder in folders"
             :key="folder.id"
