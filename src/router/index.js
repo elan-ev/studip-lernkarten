@@ -50,7 +50,10 @@ const router = createRouter({
             name: 'study',
             component: StudyView,
             props: (route) => {
-                return { decks: route?.query?.decks ?? [], order: router?.query?.order ?? null };
+                return {
+                    decks: route?.query?.decks ?? [],
+                    order: route?.query?.order ?? null
+                }
             },
         },
     ],

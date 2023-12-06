@@ -2,7 +2,6 @@
 import { nextTick, ref, watch } from 'vue';
 
 const props = defineProps(['card']);
-
 const answer = ref('');
 const textarea = ref(null);
 

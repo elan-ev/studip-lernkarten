@@ -118,6 +118,7 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
         $params = $cid ? ['cid' => $cid] : [];
         $navigation = new Navigation($this->_('Lernkarten'));
         $navigation->setDescription(
+            // TODO
             $this->_('Lorem ipsum dolor sit amet, consectetur adipisicing elit.')
         );
         $navigation->setImage(Icon::create('dialog-cards', 'navigation'));
@@ -125,11 +126,6 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
 
         // subnavigation
         $navigation->addSubnavigation('index', clone $navigation);
-        // TODO: Das dürfen abhängig vom Kontext wohl nicht alle sehen?
-        $folders = new Navigation($this->_('Ordnerverwaltung'));
-        $folders->setImage(Icon::create('folder-full', 'navigation'));
-        $folders->setURL(PluginEngine::getURL($this, $params, 'folders', true));
-        $navigation->addSubnavigation('folders', $folders);
 
         return $navigation;
     }

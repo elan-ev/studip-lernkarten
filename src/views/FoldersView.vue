@@ -5,6 +5,7 @@ import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
 import { useFoldersStore } from '../stores/folders.js';
 import CardDeck from '../components/CardDeck.vue';
+import DeckList from '../components/DeckList.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import DialogCreateFolder from '../components/DialogCreateFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
@@ -45,10 +46,6 @@ const deleteFolder = (folder) => {
 const onConfirmDeleteDialog = () => {
     confirmDeleteDialogOpen.value = false;
     foldersStore.deleteFolder(selectedFolder.value);
-};
-
-const onSelectDeck = (deck) => {
-    router.push({ name: 'deck', params: { id: deck.id } });
 };
 
 const onLearnDecks = () => (showAdjustLearningDialog.value = true);
@@ -96,9 +93,7 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
                 {{ $gettext('Kartensätze ohne Ordner') }}
             </h3>
         </header>
-        <article v-for="deck in decks" :key="deck.id" class="tw-flex tw-flex-col tw-gap-1">
-            <CardDeck :deck="deck" @select="onSelectDeck" />
-        </article>
+        <DeckList :decks="decks" />
     </section>
 
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="decks" />

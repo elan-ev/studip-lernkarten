@@ -10,6 +10,12 @@ const props = defineProps(['deck']);
 const avatarUrl = computed(() => props.deck.owner.data.meta.avatar.small);
 const formattedName = computed(() => props.deck.owner.data['formatted-name']);
 
+const progress = computed(() => {
+    const total = props.deck.progress.reduce((sum, n) => sum + n, 0);
+
+    return Math.floor((total ? props.deck.progress[2] / total : 0) * 100);
+});
+
 const sharedWithCourses = computed(() =>
     props.deck['shared-with'].data.filter(({ type }) => type === 'courses'),
 );
@@ -57,7 +63,7 @@ const userUrl = (user) =>
                         {{ $gettext('Gesamtfortschritt') }}
                     </th>
                     <td>
-                        <span>0%</span>
+                        <span>{{ progress }}%</span>
                     </td>
                 </tr>
             </table>

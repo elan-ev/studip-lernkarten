@@ -17,7 +17,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class CardsOfDecksShow extends JsonApiController
+class CardsOfDecksIndex extends JsonApiController
 {
     protected $allowedIncludePaths = [
         CardSchema::REL_DECK,
@@ -42,7 +42,7 @@ class CardsOfDecksShow extends JsonApiController
             throw new AuthorizationFailedException();
         }
 
-        $resources = Card::findBySql("deck_id = ?", [$resource->id]);
+        $resources = Card::findBySql("deck_id = ? ORDER BY mkdate", [$resource->id]);
         return $this->getPaginatedContentResponse(
             array_slice($resources, ...$this->getOffsetAndLimit()),
             count($resources)

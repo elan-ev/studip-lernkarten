@@ -177,7 +177,7 @@ class CardsUpdate extends JsonApiController
         $path = 'data.attributes.' . $attr;
         if (self::arrayHas($json, $path)) {
             $value = self::arrayGet($json, $path);
-            if (!is_float($value)) {
+            if (!is_float($value) && !is_int($value)) {
                 return "Invalid float for attribute `$attr`";
             }
         }

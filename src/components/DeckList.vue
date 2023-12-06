@@ -12,9 +12,15 @@ const onSelectDeck = (deck) => {
 </script>
 
 <template>
-    <section class="tw-flex tw-flex-col tw-gap-2">
+    <section>
         <article v-for="deck in decks" :key="deck.id">
             <CardDeck :deck="deck" @select="onSelectDeck" />
         </article>
     </section>
 </template>
+
+<style scoped>
+article + article {
+    margin-block-start: 1rem;
+}
+</style>

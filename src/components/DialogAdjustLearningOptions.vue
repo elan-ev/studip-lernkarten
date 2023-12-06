@@ -30,7 +30,7 @@ const setIsOpen = (value) => {
 };
 
 const onConfirm = () => {
-    const decks = [1, ...props.decks.map(({ id }) => id)].join(',');
+    const decks = props.decks.map(({ id }) => id).join(',');
     const order = selectedOrder.value;
     router.push({ name: 'study', query: { decks, order } });
     setIsOpen(false);
@@ -81,7 +81,7 @@ const onConfirm = () => {
                             >*</span
                         >
                         <select v-model="selectedOrder" ref="initialFocus">
-                            <option v-for="[value, text] in selectableOrders" :value="value">
+                            <option v-for="[value, { text }] in selectableOrders" :value="value">
                                 {{ text }}
                             </option>
                         </select>

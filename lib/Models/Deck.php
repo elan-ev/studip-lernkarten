@@ -119,11 +119,19 @@ class Deck extends SimpleORMap
     public function getProgress(): array
     {
         $sql =
-            'SELECT IF(state IS NULL, 0, state) as state, COUNT(state) as count FROM `lernkarten_cards` WHERE deck_id = ? GROUP BY state';
+            'SELECT state, COUNT(state) as count FROM `lernkarten_cards` WHERE deck_id = ? AND state IS NOT NULL GROUP BY state';
         $results = DBManager::get()->fetchPairs($sql, [$this->id], function ($x) {
             return (int) $x;
         });
-        return $results + array_fill(0, 4, 0);
+
+        $progress = array_fill(0, 4, 0);
+        foreach ($results as $key => $value) {
+            $progress[(int) $key] = $value;
+        }
+
+        $progress[0] += $this->getNumberOfCards() - array_sum($results);
+
+        return $progress;
     }
 
     public function getSharedWith(): iterable

@@ -29,7 +29,11 @@ export function useFsrs() {
         const card = createCard(flashCard);
         const schedulingInfos = fsrs.repeat(card, new Date());
 
-        return schedulingInfos[rating].card;
+        const stats = schedulingInfos[rating].card;
+        stats.elapsed_days = Math.floor(stats.elapsed_days);
+
+
+        return stats
     };
 
     const { $gettext } = useGettext();

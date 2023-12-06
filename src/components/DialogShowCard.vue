@@ -121,7 +121,7 @@ const deleteCard = () => {
                             </div>
                             <div class="tw-grow tw-p-2 tw-text-[#e79e3d]">
                                 {{
-                                    $gettext('%{ count } kaum gewusst', {
+                                    $gettext('%{ count } teilweise gewusst', {
                                         count: card['hard-count'],
                                     })
                                 }}
