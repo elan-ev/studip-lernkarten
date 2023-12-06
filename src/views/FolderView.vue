@@ -5,6 +5,7 @@ import CardDeck from '../components/CardDeck.vue';
 import DeckList from '../components/DeckList.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import DialogCreateFolder from '../components/DialogCreateFolder.vue';
+import DialogEditFolder from '../components/DialogEditFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
 import IconButton from '../components/IconButton.vue';
@@ -18,9 +19,12 @@ const foldersStore = useFoldersStore();
 decksStore.fetchContext();
 
 const createDialogOpen = ref(false);
+const editDialogOpen = ref(false);
 const confirmDeleteDialogOpen = ref(false);
 const selectedFolder = ref(null);
 const showAdjustLearningDialog = ref(false);
+
+const editFolderObject = ref(null);
 
 const props = defineProps(['id']);
 
@@ -48,6 +52,16 @@ const createChild = (name) => {
     foldersStore.createFolder(name, folder.value);
 };
 
+const editFolder = (folder) => {
+    editDialogOpen.value = true;
+    editFolderObject.value = folder;
+}
+
+const onEditDialog = (folder, name) => {
+    editDialogOpen.value = false;
+    foldersStore.updateFolder(folder, {name: name});
+};
+
 const onDeleteFolder = (folder) => {
     confirmDeleteDialogOpen.value = true;
     selectedFolder.value = folder;
@@ -61,39 +75,49 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
 </script>
 
 <template>
-    <Ribbon v-if="folder">
-        <li>
-            <RouterLink :to="{ name: 'home' }">
-                <StudipIcon
-                    shape="folder-home-empty"
-                    :height="18"
-                    :width="18"
-                    class="tw-align-middle tw-mr-1"
-                />
-                <span class="">{{ $gettext('Home') }}</span>
-            </RouterLink>
-        </li>
-        <li v-for="ancestor in foldersStore.ancestors(folder)" :key="ancestor.id">
-            <RouterLink
-                :to="{ name: 'folder', params: { id: ancestor.id } }"
-                class="tw-whitespace-nowrap"
-            >
-                {{ ancestor.name }}
-            </RouterLink>
-        </li>
-        <li>{{ folder.name }}</li>
-    </Ribbon>
+    <table class="default">
+        <Ribbon v-if="folder">
+            <span :title="$gettext('Zum Hauptordner')">
+                <RouterLink :to="{ name: 'home' }">
+                    <StudipIcon
+                        shape="folder-home-empty"
+                        :height="30"
+                        :width="30"
+                        class="tw-align-middle tw-mr-1 tw-mb-1"
+                    />
+                </RouterLink>
+                <span v-for="ancestor in foldersStore.ancestors(folder)" :key="ancestor.id">
+                    /
+                    <RouterLink
+                        :to="{ name: 'folder', params: { id: ancestor.id } }"
+                        class="tw-whitespace-nowrap"
+                    >
+                        {{ ancestor.name }}
+                    </RouterLink>
+                </span>
+                /
+                <span>{{ folder.name }}</span>
+            </span>
+        </Ribbon>
 
-    <section class="tw-mt-8">
-        <FolderList :folders="children" @delete-folder="onDeleteFolder" />
 
-        <IconButton type="button" icon="add" @click="onAddChild">
-            {{ $gettext('Unterordner erstellen') }}
-        </IconButton>
-        <IconButton type="button" icon="refresh" @click="onLearnDecks">
-            {{ $gettext('Kartensätze lernen') }}
-        </IconButton>
-    </section>
+        <FolderList :folders="children" @delete-folder="onDeleteFolder" @edit-folder="editFolder"/>
+
+        <tfoot>
+            <tr>
+                <td colspan="3">
+                    <div class="footer-items">
+                        <IconButton type="button" icon="add" @click="onAddChild">
+                            {{ $gettext('Unterordner erstellen') }}
+                        </IconButton>
+                        <IconButton type="button" icon="refresh" @click="onLearnDecks">
+                            {{ $gettext('Kartensätze lernen') }}
+                        </IconButton>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 
     <section class="tw-mt-12" v-if="decks.length">
         <header>
@@ -106,5 +130,6 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
 
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="decks" />
     <DialogCreateFolder v-model:open="createDialogOpen" @confirm="createChild" />
+    <DialogEditFolder v-model:open="editDialogOpen" :folder="editFolderObject" @confirm="onEditDialog" />
     <DialogConfirmDeleteFolder v-model:open="confirmDeleteDialogOpen" @confirm="deleteFolder" />
 </template>

@@ -71,6 +71,12 @@ export const useFoldersStore = defineStore('folders', () => {
         });
     }
 
+    function updateFolder(folder, attributes) {
+        return api.patch('lernkarten-folders', { id: folder.id, ...attributes}).then(({ data }) => {
+            storeRecord(data);
+        });
+    }
+
     function deleteFolder(folder) {
         return api
             .delete('lernkarten-folders', folder.id)
@@ -83,6 +89,7 @@ export const useFoldersStore = defineStore('folders', () => {
         byId,
         children,
         createFolder,
+        updateFolder,
         deleteFolder,
         fetch,
         isLoading,

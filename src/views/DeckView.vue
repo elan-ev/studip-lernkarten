@@ -43,19 +43,45 @@ const onShowShareDialog = () => (showShareDialog.value = true);
     <div v-else>
         <div class="tw-mb-6 tw-flex tw-flex-row tw-items-center">
             <div class="tw-grow">
-                <div v-if="folder">
+                <div v-if="folder" :title="$gettext('Zurück zum Ordner')">
                     <RouterLink
                         :to="{ name: 'folder', params: { id: folder.id } }"
                         class="tw-flex tw-items-center tw-gap-2"
                     >
-                        <StudipIcon shape="folder-empty" role="info" />
+                    <StudipIcon
+                        shape="arr_1left"
+                        :height="30"
+                        :width="30"
+                        class="tw-align-middle tw-mb-1"
+                    />
+                    <StudipIcon
+                        shape="folder-empty"
+                        :height="30"
+                        :width="30"
+                        class="tw-align-middle tw-mb-1"
+                    />
+                    <span class="breadcrumb">
                         {{ folder.name }}
+                    </span>
                     </RouterLink>
                 </div>
-                <div v-else>
+                <div v-else :title="$gettext('Zurück zur Ordnerübersicht')">
                     <RouterLink to="/" class="tw-flex tw-items-center tw-gap-2 tw-italic">
-                        <StudipIcon shape="folder-empty" role="info" />
-                        {{ $gettext('Kein Ordner') }}
+                        <StudipIcon
+                            shape="arr_1left"
+                            :height="30"
+                            :width="30"
+                            class="tw-align-middle tw-mb-1"
+                        />
+                        <StudipIcon
+                            shape="folder-home-empty"
+                            :height="30"
+                            :width="30"
+                            class="tw-align-middle tw-mb-1"
+                        />
+                        <span class="breadcrumb">
+                            {{ $gettext('Kein Ordner') }}
+                        </span>
                     </RouterLink>
                 </div>
                 <div class="tw-mt-3 tw-font-bold tw-text-lg">{{ deck.name }}</div>
@@ -116,3 +142,11 @@ const onShowShareDialog = () => (showShareDialog.value = true);
     <DialogEditDeck v-model:open="showEditDialog" :deck="deck" />
     <DialogShareDeck v-model:open="showShareDialog" :deck="deck" />
 </template>
+
+<style scoped>
+span.breadcrumb {
+    color: var(--headings-color);
+    font-size: 1.4em;
+    text-align: left;
+}
+</style>

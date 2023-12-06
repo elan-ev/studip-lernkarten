@@ -21,4 +21,5 @@ const mountLernkarten = (el, data) => {
 
 if (window.STUDIP) {
     window.STUDIP.mountLernkarten = mountLernkarten;
+    window.STUDIP.loadChunk('courseware');
 }

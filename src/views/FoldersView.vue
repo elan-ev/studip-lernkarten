@@ -8,6 +8,7 @@ import CardDeck from '../components/CardDeck.vue';
 import DeckList from '../components/DeckList.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import DialogCreateFolder from '../components/DialogCreateFolder.vue';
+import DialogEditFolder from '../components/DialogEditFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
 import IconButton from '../components/IconButton.vue';
@@ -18,6 +19,7 @@ import StudipIcon from '../components/base/StudipIcon.vue';
 const router = useRouter();
 
 const createDialogOpen = ref(false);
+const editDialogOpen = ref(false);
 const confirmDeleteDialogOpen = ref(false);
 const selectedFolder = ref(null);
 const showAdjustLearningDialog = ref(false);
@@ -25,6 +27,7 @@ const showAdjustLearningDialog = ref(false);
 const contextStore = useContextStore();
 const decksStore = useDecksStore();
 const foldersStore = useFoldersStore();
+const editFolderObject = ref(null);
 decksStore.fetchContext();
 
 const topFolders = computed(() => foldersStore.topFolders);
@@ -34,6 +37,17 @@ const decks = computed(() => decksStore.byContext.filter((deck) => !deck.folder.
 const addTopFolder = () => {
     createDialogOpen.value = true;
 };
+
+const editFolder = (folder) => {
+    editDialogOpen.value = true;
+    editFolderObject.value = folder;
+}
+
+const onEditDialog = (folder, name) => {
+    editDialogOpen.value = false;
+    foldersStore.updateFolder(folder, {name: name});
+};
+
 const onCreateDialog = (name) => {
     createDialogOpen.value = false;
     foldersStore.createFolder(name, null);
@@ -52,23 +66,22 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
 </script>
 
 <template>
-    <Ribbon>
-        <li>
-            <RouterLink :to="{ name: 'home' }" disabled>
-                <StudipIcon
-                    shape="folder-home-empty"
-                    role="info"
-                    :height="18"
-                    :width="18"
-                    class="tw-align-middle tw-mr-1"
-                />
-                <span class="">{{ $gettext('Home') }}</span>
-            </RouterLink>
-        </li>
-    </Ribbon>
+    <table class="default">
+        <Ribbon>
+            <span :title="$gettext('Zum Hauptordner')">
+                <RouterLink :to="{ name: 'home' }">
+                    <StudipIcon
+                        shape="folder-home-empty"
+                        :height="30"
+                        :width="30"
+                        class="tw-align-middle tw-mr-2 tw-mb-1"
+                    />
+                    <span class="">{{ $gettext('Lernkarten') }}</span>
+                </RouterLink>
+            </span>
+        </Ribbon>
 
-    <section class="tw-mt-8">
-        <FolderList :folders="topFolders" @delete-folder="deleteFolder">
+        <FolderList :folders="topFolders" @delete-folder="deleteFolder" @edit-folder="editFolder">
             <template #empty>
                 <StudipCompanion :msgCompanion="$gettext('Es gibt noch keinen Ordner.')">
                     <template #companionActions>
@@ -79,13 +92,22 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
                 </StudipCompanion>
             </template>
         </FolderList>
-        <IconButton type="button" icon="add" @click="addTopFolder">
-            {{ $gettext('Ordner anlegen') }}
-        </IconButton>
-        <IconButton type="button" icon="refresh" @click="onLearnDecks">
-            {{ $gettext('Kartensätze lernen') }}
-        </IconButton>
-    </section>
+
+        <tfoot>
+            <tr>
+                <td colspan="3">
+                    <div class="footer-items">
+                        <IconButton type="button" icon="add" @click="addTopFolder">
+                            {{ $gettext('Ordner anlegen') }}
+                        </IconButton>
+                        <IconButton type="button" icon="refresh" @click="onLearnDecks">
+                            {{ $gettext('Kartensätze lernen') }}
+                        </IconButton>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 
     <section class="tw-mt-12" v-if="decks.length">
         <header>
@@ -98,6 +120,7 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
 
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="decks" />
     <DialogCreateFolder v-model:open="createDialogOpen" @confirm="onCreateDialog" />
+    <DialogEditFolder v-model:open="editDialogOpen" :folder="editFolderObject" @confirm="onEditDialog" />
     <DialogConfirmDeleteFolder
         v-model:open="confirmDeleteDialogOpen"
         @confirm="onConfirmDeleteDialog"

@@ -8,6 +8,7 @@ trait Routes
     {
         $group->get('/lernkarten-folders', Routes\FoldersIndex::class);
         $group->post('/lernkarten-folders', Routes\FoldersCreate::class);
+        $group->patch('/lernkarten-folders/{id}', Routes\FoldersUpdate::class);
         $group->get('/lernkarten-folders/{id}', Routes\FoldersShow::class);
         $group->delete('/lernkarten-folders/{id}', Routes\FoldersDelete::class);
 
