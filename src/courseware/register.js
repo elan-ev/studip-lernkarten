@@ -40,5 +40,6 @@ function createElementInstance({
             Object.assign(inst.provides, app._context.provides);
         },
         render: () => h(component, renderOptions),
+        styles: [`@import url('` + window.STUDIP.URLHelper.getURL('assets/stylesheets/studip-base.css') + `')`]
     });
 }
