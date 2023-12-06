@@ -27,7 +27,7 @@ export const useCourseMembershipsStore = defineStore(
 
             try {
                 const { data } = await api.fetch(`users/${userId.value}/course-memberships`, {
-                    params: { include: 'course' },
+                    params: { include: 'course', 'page[limit]': 1000 },
                 });
                 data.forEach(storeRecord);
             } catch (errors) {

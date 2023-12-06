@@ -30,7 +30,7 @@ export const useDecksStore = defineStore(
             try {
                 const { data } = await api.fetch(
                     `${contextStore.type}/${contextStore.id}/lernkarten-decks`,
-                    { params: { include: 'folder,owner,shared-with,template.owner' } }
+                    { params: { include: 'folder,owner,shared-with,template.owner', 'page[limit]': 1000 } }
                 );
                 data.forEach(storeRecord);
             } catch (errors) {
