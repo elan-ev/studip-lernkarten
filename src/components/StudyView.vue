@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import BasicBack from './cards/BasicBack.vue';
 import BasicFront from './cards/BasicFront.vue';
@@ -16,7 +16,9 @@ import StudyViewStatistics from './StudyViewStatistics.vue';
 import DialogAdjustLearningOptions from './DialogAdjustLearningOptions.vue';
 import { useScheduler } from '../composables/scheduler.js';
 import { useDecksStore } from '../stores/decks.js';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 
 const props = defineProps({
     decks: { type: String },
@@ -72,6 +74,29 @@ const onContinue = () => {
     showCongratulations.value = false;
     showAdjustLearningDialog.value = true
 };
+
+const usedDecks = computed(() => {
+    if (props.decks) {
+        let usedDecks = [];
+        let deck_ids = props.decks.split(',');
+        for (let i = 0; i < deck_ids.length; i++) {
+            usedDecks.push(decksStore.byId(deck_ids[i]));
+        }
+
+        return usedDecks;
+    }
+
+    return [];
+});
+
+watch(
+    () => showAdjustLearningDialog.value,
+    (newV, oldV) => {
+        if (newV === false && oldV === true) {
+            router.go();
+        }
+    }
+);
 
 const onStop = () => (showCongratulations.value = true);
 </script>
@@ -134,5 +159,5 @@ const onStop = () => (showCongratulations.value = true);
         </div>
     </div>
 
-    <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[decksStore.byId(props.decks)]" />
+    <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="usedDecks" />
 </template>
