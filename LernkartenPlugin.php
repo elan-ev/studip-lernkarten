@@ -119,7 +119,7 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
         $navigation = new Navigation($this->_('Lernkarten'));
         $navigation->setDescription(
             // TODO
-            $this->_('Lorem ipsum dolor sit amet, consectetur adipisicing elit.')
+            $this->_('Eigene Kartensätze erstellen, teilen und in Kurse einbinden')
         );
         $navigation->setImage(Icon::create('dialog-cards', 'navigation'));
         $navigation->setURL(PluginEngine::getURL($this, $params, '', true));

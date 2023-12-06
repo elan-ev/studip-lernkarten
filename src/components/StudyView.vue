@@ -71,7 +71,6 @@ const onStop = () => (showCongratulations.value = true);
     <div class="tw-flex tw-flex-col tw-items-center">
         <StudipProgressIndicator :description="$gettext('Lade Karten …')" v-if="isLoading" />
         <div v-if="!isLoading" class="tw-max-w-[700px] tw-w-full">
-            <pre>{{ learningProgress }}</pre>
             <StudipCompanion
                 v-if="!hasCards"
                 :msg-companion="$gettext('Keine Karten enthalten.')"
