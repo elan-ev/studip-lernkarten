@@ -6,7 +6,7 @@ const foldersStore = useFoldersStore();
 const props = defineProps(['folder']);
 defineEmits(['select']);
 
-const selectedFolder = ref(props.selected ?? null);
+const selectedFolder = ref(props.folder ?? null);
 
 watch(
     () => props.folder,

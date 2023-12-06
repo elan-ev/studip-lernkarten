@@ -78,7 +78,7 @@ class DecksUpdate extends JsonApiController
 
     private function update(Deck $resource, array $json): Deck
     {
-        foreach (['name', 'description', 'metadata'] as $attr) {
+        foreach (['name', 'description', 'metadata', 'folder_id'] as $attr) {
             if (self::arrayHas($json, 'data.attributes.' . $attr)) {
                 $resource->$attr = trim(self::arrayGet($json, 'data.attributes.' . $attr));
             }
