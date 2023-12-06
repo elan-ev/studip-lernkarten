@@ -129,4 +129,21 @@ class SharedDeck extends SimpleORMap
 
         throw new RuntimeException('Unknown recipient_type.');
     }
+
+    /**
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function isSharedWith(User $user): bool
+    {
+        switch ($this->recipient_type) {
+            case Course::class:
+                return $GLOBALS['perm']->have_studip_perm(
+                    'autor',
+                    $this->recipient_id,
+                    $user->id
+                );
+            case User::class:
+                return $this->recipient_id === $user->id;
+        }
+    }
 }

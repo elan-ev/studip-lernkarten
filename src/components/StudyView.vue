@@ -15,7 +15,11 @@ import StudyViewRepeatButtons from './StudyViewRepeatButtons.vue';
 import StudyViewStatistics from './StudyViewStatistics.vue';
 import { useScheduler } from '../composables/scheduler.js';
 
-const props = defineProps(['decks', 'order']);
+const props = defineProps({
+    decks: { type: String },
+    order: { type: String },
+    hideBack: { type: Boolean, default: false },
+});
 const emit = defineEmits(['cancel']);
 
 const { $gettext } = useGettext();
@@ -114,6 +118,7 @@ const onStop = () => (showCongratulations.value = true);
             <StudyViewCongratulations
                 v-if="showCongratulations"
                 :cards="cards"
+                :hide-back="hideBack"
                 :ratings="ratings"
                 @cancel="onCancel"
                 @continue="onContinue"

@@ -43,7 +43,7 @@ class SharedDeckPolicy
      */
     public function view(User $user, SharedDeck $sharedDeck): bool
     {
-        return $sharedDeck->sharer_id === $user->id || $sharedDeck->isShared($sharedDeck, $user);
+        return $sharedDeck->sharer_id === $user->id || $sharedDeck->isSharedWith($user);
     }
 
     /**
@@ -76,7 +76,7 @@ class SharedDeckPolicy
      */
     public function colearn(User $user, SharedDeck $sharedDeck): bool
     {
-        return $sharedDeck->isShared($sharedDeck, $user);
+        return $sharedDeck->isSharedWith($user);
     }
 
     /**

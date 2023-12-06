@@ -22,22 +22,14 @@
                     Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
                     fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
                     culpa qui officia deserunt mollit anim id est laborum.
-                    <lernkarten-block></lernkarten-block>
+                    {{ sharedDeckId }}
+                    <lernkarten-block :deck="sharedDeckId"></lernkarten-block>
                 </div>
             </template>
             <template v-if="canEdit" #edit>
-                <component
-                    :is="coursewarePluginComponents.CoursewareCollapsibleBox"
-                    title="Grunddaten"
-                    :open="true"
-                >
-                    <form class="default" @submit.prevent="">
-                        <label>
-                            <translate>Höhe</translate>
-                            <input type="number" min="0" v-model.number="blockHeight" />
-                        </label>
-                    </form>
-                </component>
+                <form class="default" @submit.prevent="onSubmit">
+                    <lernkarten-deck-selector :deck="sharedDeckId" @change="onSelectDeck"></lernkarten-deck-selector>
+                </form>
             </template>
             <template #info><translate>Informationen zum Lernkartenblock</translate></template>
         </component>
@@ -59,6 +51,7 @@ export default {
     data() {
         return {
             blockHeight: 0,
+            sharedDeckId: null,
         };
     },
     computed: {
@@ -75,6 +68,10 @@ export default {
         }),
         initCurrentData() {
             this.blockHeight = this.block.attributes.payload.height || 500;
+            this.sharedDeckId = this.block.attributes.payload.shareddeck || null;
+        },
+        onSelectDeck({ detail: [ deckId = null ] }) {
+            this.sharedDeckId = deckId;
         },
         storeBlock() {
             const attributes = {
@@ -82,7 +79,7 @@ export default {
                 payload: {
                     ...this.block.attributes.payload,
                     initialized: true,
-                    height: this.blockHeight,
+                    shareddeck: this.sharedDeckId,
                 },
             };
             this.updateBlock({

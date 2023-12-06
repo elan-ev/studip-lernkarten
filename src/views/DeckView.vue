@@ -140,7 +140,7 @@ const onShowShareDialog = () => (showShareDialog.value = true);
     </div>
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[deck]" />
     <DialogEditDeck v-model:open="showEditDialog" :deck="deck" />
-    <DialogShareDeck v-model:open="showShareDialog" :deck="deck" />
+    <DialogShareDeck v-if="showShareDialog" v-model:open="showShareDialog" :deck="deck" />
 </template>
 
 <style scoped>

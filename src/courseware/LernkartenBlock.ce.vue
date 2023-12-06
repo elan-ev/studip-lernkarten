@@ -1,17 +1,63 @@
 <script setup>
-console.debug("Lernkarten-Block geladen");
+import { computed, getCurrentInstance, nextTick, onMounted, ref, toRaw, watch } from 'vue';
+import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
+import { useSharedDecksStore } from '../stores/shared-decks.js';
+import StudyView from '../components/StudyView.vue';
+
+const sharedDecksStore = useSharedDecksStore();
+
+const initialized = ref(false);
+const sharedDeckId = ref(null);
+const deckId = computed(() => {
+    const inst = getCurrentInstance();
+
+    return inst.root.props.deck;
+});
+const sharedDeck = computed(() => {
+    if (!sharedDeckId.value) {
+        return null;
+    }
+
+    const deck = sharedDecksStore.byId(sharedDeckId.value);
+
+    return deck;
+});
+const decks = computed(() => '' + sharedDeck.value.deck.data.id);
+
+onMounted(() => {
+    nextTick(() => {
+        sharedDeckId.value = deckId.value;
+        if (!sharedDeckId.value) {
+            initialized.value = true;
+        } else {
+            sharedDecksStore.fetchById(deckId.value).then(() => (initialized.value = true));
+        }
+    });
+});
+
+const externalCss = computed(() => {
+    return (
+        window.STUDIP.ABSOLUTE_URI_STUDIP +
+        'plugins_packages/elan-ev/LernkartenPlugin/dist/style.css'
+    );
+});
 </script>
 <template>
-    <article class="studip">
+    <link media="screen" rel="stylesheet" :href="externalCss" />
+    <div class="tw-hidden" :this-is-necessary="deckId" />
+    <StudipProgressIndicator
+        v-if="!initialized"
+        :description="$gettext('Initialisiere Lernkarten-Block …')"
+    />
+
+    <div v-else>
+        <StudyView v-if="sharedDeck" :decks="decks" order="basic" :hide-back="true" />
+        <div v-else>TODO: Hier fehlt ein geteiltes deck</div>
+    </div>
+
+    <article class="studip tw-hidden">
         <header>
-            <h1>Lernkarten-Block</h1>
+            <h1>Lernkarten-Block (deck: {{ sharedDeckId }})</h1>
         </header>
-        <p>
-            Es gibt im Moment in diese Mannschaft, oh, einige Spieler vergessen ihnen Profi was sie sind. Ich lese nicht
-            sehr viele Zeitungen, aber ich habe gehört viele Situationen. Erstens: wir haben nicht offensiv gespielt. Es
-            gibt keine deutsche Mannschaft spielt offensiv und die Name offensiv wie Bayern. Letzte Spiel hatten wir in
-            Platz drei Spitzen: Elber, Jancka und dann Zickler. Wir müssen nicht vergessen Zickler. Zickler ist eine Spitzen
-            mehr, Mehmet eh mehr Basler.
-        </p>
     </article>
 </template>

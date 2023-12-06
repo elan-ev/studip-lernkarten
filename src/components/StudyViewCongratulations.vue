@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import IconButton from './IconButton.vue';
 import RadialProgress from './RadialProgress.vue';
 
-const props = defineProps(['cards', 'ratings']);
+const props = defineProps(['cards', 'hide-back', 'ratings']);
 const emit = defineEmits(['cancel', 'continue']);
 
 const progress = computed(() => {
@@ -64,7 +64,7 @@ const totalLearned = computed(() => {
                 </IconButton>
             </div>
         </section>
-        <footer>
+        <footer v-if="!hideBack">
             <IconButton icon="stop" type="button" @click="emit('cancel')">
                 {{ $gettext('Zurück') }}
             </IconButton>

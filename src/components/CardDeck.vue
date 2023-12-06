@@ -79,7 +79,7 @@ const deleteDeck = () => {
 
 <template>
     <section
-        class="tw-flex tw-gap-2 tw-h-24 tw-py-2 tw-border tw-border-solid tw-border-[var(--light-gray-color-20)]"
+        class="tw-flex tw-gap-2 tw-py-2 tw-border tw-border-solid tw-border-[var(--light-gray-color-20)]"
     >
         <div
             class="tw-flex tw-items-center tw-justify-center tw-w-24 tw-aspect-square tw-cursor-pointer"
@@ -102,13 +102,13 @@ const deleteDeck = () => {
             <div class="tw-cursor-pointer tw-flex-grow" @click="$emit('select', deck)">
                 <span class="tw-text-lg tw-font-bold">{{ deck.name }}</span>
             </div>
-            <div class="tw-flex tw-items-end tw-justify-between">
+            <div class="tw-flex tw-items-center tw-justify-between">
                 <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
                 <div>
                     <StudipIcon shape="dialog-cards" role="info" />
                     {{ deck.meta['cards-count'] }}
                 </div>
-                <div class="tw-px-4 tw-flex tw-gap-2">
+                <div class="tw-px-4 tw-flex tw-gap-2 tw-items-center">
                     <IconButton icon="refresh" type="button" @click="onAdjustLearning">
                         {{ $gettext('Lernen') }}
                     </IconButton>
@@ -127,5 +127,5 @@ const deleteDeck = () => {
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[deck]" />
     <DialogConfirmCopyDeck v-model:open="showConfirmCopy" :deck="deck" />
     <DialogConfirmDeleteDeck v-model:open="showConfirmDelete" @confirm="deleteDeck" />
-    <DialogShareDeck v-model:open="showShareDialog" :deck="deck" />
+    <DialogShareDeck v-if="showShareDialog" v-model:open="showShareDialog" :deck="deck" />
 </template>

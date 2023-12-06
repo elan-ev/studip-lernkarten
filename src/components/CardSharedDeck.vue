@@ -65,8 +65,12 @@ const onUnshare = () => {
             <div class="tw-text-lg tw-font-bold" @click="$emit('select', sharedDeck)">
                 {{ sharedDeck.deck.data.name }}
             </div>
-            <div class="tw-flex tw-items-end tw-justify-between">
+            <div class="tw-flex tw-items-center tw-justify-between">
                 <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
+                <div>
+                    <StudipIcon shape="dialog-cards" role="info" />
+                    {{ sharedDeck.deck.data.meta['cards-count'] }}
+                </div>
                 <div class="tw-px-4">
                     <IconButton icon="copy" type="button" @click="onCopy">
                         {{ $gettext('Kopieren') }}
