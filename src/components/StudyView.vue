@@ -13,7 +13,10 @@ import StudipProgressIndicator from './base/StudipProgressIndicator.vue';
 import StudyViewCongratulations from './StudyViewCongratulations.vue';
 import StudyViewRepeatButtons from './StudyViewRepeatButtons.vue';
 import StudyViewStatistics from './StudyViewStatistics.vue';
+import DialogAdjustLearningOptions from './DialogAdjustLearningOptions.vue';
 import { useScheduler } from '../composables/scheduler.js';
+import { useDecksStore } from '../stores/decks.js';
+
 
 const props = defineProps({
     decks: { type: String },
@@ -29,8 +32,10 @@ const { cardStates, cards, cardsLeft, decks, isLoading, order, queuedCard, ratin
         order: props.order,
     });
 
+const decksStore = useDecksStore();
 const showAnswer = ref(false);
 const showCongratulations = ref(false);
+const showAdjustLearningDialog = ref(false);
 
 const cardFront = computed(() => {
     switch (queuedCard.value.model) {
@@ -63,7 +68,11 @@ const onRepeat = (rating) => {
     }
 };
 const onCancel = () => emit('cancel');
-const onContinue = () => (showCongratulations.value = false);
+const onContinue = () => {
+    showCongratulations.value = false;
+    showAdjustLearningDialog.value = true
+};
+
 const onStop = () => (showCongratulations.value = true);
 </script>
 
@@ -124,4 +133,6 @@ const onStop = () => (showCongratulations.value = true);
             />
         </div>
     </div>
+
+    <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[decksStore.byId(props.decks)]" />
 </template>

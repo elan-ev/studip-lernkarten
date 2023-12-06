@@ -33,6 +33,7 @@ const onConfirm = () => {
     const decks = props.decks.map(({ id }) => id).join(',');
     const order = selectedOrder.value;
     router.push({ name: 'study', query: { decks, order } });
+    router.go();
     setIsOpen(false);
 };
 </script>
