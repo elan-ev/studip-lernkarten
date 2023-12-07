@@ -1,0 +1,8 @@
+pluginname=LernkartenPlugin
+pluginclassname=LernkartenPlugin
+pluginclassname=CoursewareLernkartenBlockPlugin
+origin=elan-ev
+version=0.1
+studipMinVersion=5.3
+studipMaxVersion=5.5.99
+localedomain=lernkarten

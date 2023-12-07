@@ -1,2 +1,1 @@
-# studip-lernkarten
-Sammlungen Lernkarten verwalten, teilen und lernen
+# Stud.IP Lernkarten

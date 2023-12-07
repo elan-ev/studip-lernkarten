@@ -1,0 +1,117 @@
+<script setup>
+import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import { useGettext } from 'vue3-gettext';
+import RadialProgress from './RadialProgress.vue';
+import StudipActionMenu from './base/StudipActionMenu.vue';
+import StudipAvatar from './base/StudipAvatar.vue';
+import StudipIcon from './base/StudipIcon.vue';
+import DialogConfirmCopyDeck from './DialogConfirmCopyDeck.vue';
+import DialogConfirmDeleteDeck from './DialogConfirmDeleteDeck.vue';
+import { useDecksStore } from '../stores/decks.js';
+
+const { $gettext } = useGettext();
+const decksStore = useDecksStore();
+
+const props = defineProps(['deck']);
+const emit = defineEmits(['deleted', 'select']);
+
+const showConfirmCopy = ref(false);
+const showConfirmDelete = ref(false);
+
+const deckOwner = computed(() => props.deck.owner.data);
+const avatarUrl = computed(() => deckOwner.value.meta.avatar.small);
+const formattedName = computed(() => deckOwner.value['formatted-name']);
+const editable = computed(() => props.deck['is-editable']);
+
+const templateOwner = computed(() => props.deck.template.data.owner.data);
+const templateAvatarUrl = computed(() => templateOwner.value.meta.avatar.small);
+const templateFormattedName = computed(() => templateOwner.value['formatted-name']);
+
+const actionMenuItems = computed(() => {
+    return [
+        {
+            id: 'copy',
+            label: $gettext('Kartensatz kopieren'),
+            icon: 'copy',
+            emit: 'copy',
+        },
+        ...(editable.value
+            ? [
+                  {
+                      id: 'delete',
+                      label: $gettext('Kartensatz löschen'),
+                      icon: 'trash',
+                      emit: 'delete',
+                  },
+              ]
+            : []),
+    ];
+});
+
+const progress = computed(() => {
+    const total = props.deck.progress.reduce((sum, n) => sum + n, 0);
+
+    return total ? props.deck.progress[2] / total : 0;
+});
+
+const onCopyDeck = () => (showConfirmCopy.value = true);
+const onDeleteDeck = () => (showConfirmDelete.value = true);
+
+const deleteDeck = () => {
+    showConfirmDelete.value = false;
+    decksStore.deleteDeck(props.deck).then(() => {
+        emit('deleted');
+    });
+};
+</script>
+
+<template>
+    <section
+        class="tw-flex tw-gap-2 tw-h-24 tw-py-2 tw-border tw-border-solid tw-border-[var(--light-gray-color-20)]"
+    >
+        <div
+            class="tw-flex tw-items-center tw-justify-center tw-w-24 tw-aspect-square tw-cursor-pointer"
+            @click="$emit('select', deck)"
+        >
+            <RadialProgress :progress="progress" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-flex-grow tw-justify-between">
+            <div class="tw-italic tw-flex tw-gap-2 tw-items-center" v-if="deck.template.data">
+                <span v-if="deck.colearning">
+                    {{ $gettext('Mitlernen eines Kartensatzes von') }}
+                </span>
+                <span v-else>{{ $gettext('Kopie eines Kartensatzes von') }}</span>
+                <StudipAvatar
+                    class="tw-inline"
+                    :avatar-url="templateAvatarUrl"
+                    :formatted-name="templateFormattedName"
+                />
+            </div>
+            <div class="tw-cursor-pointer tw-flex-grow" @click="$emit('select', deck)">
+                <span class="tw-text-lg tw-font-bold">{{ deck.name }}</span>
+            </div>
+            <div class="tw-flex tw-items-end tw-justify-between">
+                <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
+                <div class="tw-px-4 tw-flex tw-gap-2">
+                    <RouterLink
+                        :to="{ name: 'study', params: { id: deck.id } }"
+                        class="tw-flex tw-items-center tw-gap-1"
+                    >
+                        <StudipIcon shape="refresh" role="info" />
+                        {{ $gettext('Lernen') }}
+                    </RouterLink>
+                    <StudipActionMenu
+                        v-if="actionMenuItems.length"
+                        :items="actionMenuItems"
+                        :collapseAt="0"
+                        @copy="onCopyDeck"
+                        @delete="onDeleteDeck"
+                    />
+                </div>
+            </div>
+        </div>
+    </section>
+    <DialogConfirmCopyDeck v-model:open="showConfirmCopy" :deck="deck" />
+    <DialogConfirmDeleteDeck v-model:open="showConfirmDelete" @confirm="deleteDeck" />
+</template>
