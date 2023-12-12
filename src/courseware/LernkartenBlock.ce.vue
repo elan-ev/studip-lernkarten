@@ -4,21 +4,18 @@ import StudipProgressIndicator from '../components/base/StudipProgressIndicator.
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 import StudyView from '../components/StudyView.vue';
 
+const props = defineProps(["deck"]);
+
 const sharedDecksStore = useSharedDecksStore();
 
 const initialized = ref(false);
-const sharedDeckId = ref(null);
-const deckId = computed(() => {
-    const inst = getCurrentInstance();
 
-    return inst.root.props.deck;
-});
 const sharedDeck = computed(() => {
-    if (!sharedDeckId.value) {
+    if (!props.deck) {
         return null;
     }
 
-    const deck = sharedDecksStore.byId(sharedDeckId.value);
+    const deck = sharedDecksStore.byId(props.deck);
 
     return deck;
 });
@@ -26,11 +23,10 @@ const decks = computed(() => '' + sharedDeck.value.deck.data.id);
 
 onMounted(() => {
     nextTick(() => {
-        sharedDeckId.value = deckId.value;
-        if (!sharedDeckId.value) {
+        if (!props.deck) {
             initialized.value = true;
         } else {
-            sharedDecksStore.fetchById(deckId.value).then(() => (initialized.value = true));
+            sharedDecksStore.fetchById(props.deck).then(() => (initialized.value = true));
         }
     });
 });
@@ -44,7 +40,6 @@ const externalCss = computed(() => {
 </script>
 <template>
     <link media="screen" rel="stylesheet" :href="externalCss" />
-    <div class="tw-hidden" :this-is-necessary="deckId" />
     <StudipProgressIndicator
         v-if="!initialized"
         :description="$gettext('Initialisiere Lernkarten-Block …')"
@@ -57,7 +52,7 @@ const externalCss = computed(() => {
 
     <article class="studip tw-hidden">
         <header>
-            <h1>Lernkarten-Block (deck: {{ sharedDeckId }})</h1>
+            <h1>Lernkarten-Block (deck: {{ props.deck }})</h1>
         </header>
     </article>
 </template>

@@ -8,6 +8,7 @@ import { useSharedDecksStore } from '../stores/shared-decks.js';
 
 const sharedDecksStore = useSharedDecksStore();
 
+const props = defineProps(["deck"]);
 const emit = defineEmits(['change']);
 
 const selectedSharedDeck = ref(null);
@@ -16,15 +17,8 @@ const externalCss = computed(() => {
     return window.STUDIP.ASSETS_URL + 'stylesheets/studip-base.css';
 });
 
-const deckId = computed(() => {
-    const inst = getCurrentInstance();
-    console.debug('inst', inst);
-    return inst.root.props.deck;
-});
-
 onMounted(() => {
-    console.debug('Lernkarten-Deck-Selector gemounted', deckId.value);
-    selectedSharedDeck.value = deckId.value;
+    selectedSharedDeck.value = props.deck;
 });
 
 const onChange = (root) => {
@@ -45,7 +39,6 @@ sharedDecksStore.fetchContext().then(() => {
         <header>
             <h1>Lernkarten-Deck-Selector</h1>
         </header>
-        <pre>[{{ deckId }}]</pre>
         <select v-model="selectedSharedDeck" @change="onChange($root)">
             <option
                 v-for="sharedDeck in sharedDecksStore.all"

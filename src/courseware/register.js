@@ -5,41 +5,31 @@ import translations from '../locales/translations.json';
 import LernkartenBlock from './LernkartenBlock.ce.vue';
 import LernkartenDeckSelector from './LernkartenDeckSelector.ce.vue';
 
-const plugins = [createGettext({ translations })];
-
-const LernkartenBlockElement = createElementInstance({
-    component: LernkartenBlock,
-    props: ['deck'],
-    plugins,
-});
+const LernkartenBlockElement = createElementInstance(LernkartenBlock);
 customElements.define('lernkarten-block', LernkartenBlockElement);
 
-const LernkartenDeckSelectorElement = createElementInstance({
-    component: LernkartenDeckSelector,
-    props: ['deck'],
-    plugins,
-});
+const LernkartenDeckSelectorElement = createElementInstance(LernkartenDeckSelector);
 customElements.define('lernkarten-deck-selector', LernkartenDeckSelectorElement);
 
-function createElementInstance({
-    component = null,
-    props = [],
-    plugins = [],
-    renderOptions = {},
-} = {}) {
+function createElementInstance(component) {
     return defineCustomElement({
-        props,
+        props: component.props,
+        // styles: component.styles,
+        render() {
+            return h(component, this.$props);
+        },
         setup() {
             const app = createApp();
-            const pinia = createPinia();
-            app.use(pinia);
-            plugins.forEach((plugin) => app.use(plugin));
+            app.use(createPinia()).use(createGettext({ translations }));
 
             const inst = getCurrentInstance();
             Object.assign(inst.appContext, app._context);
             Object.assign(inst.provides, app._context.provides);
         },
-        render: () => h(component, renderOptions),
-        styles: [`@import url('` + window.STUDIP.URLHelper.getURL('assets/stylesheets/studip-base.css') + `')`]
+        styles: [
+            `@import url('` +
+                window.STUDIP.URLHelper.getURL('assets/stylesheets/studip-base.css') +
+                `')`,
+        ],
     });
 }
