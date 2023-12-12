@@ -104,8 +104,10 @@ const deleteCard = () => {
                     </div>
                     <div>
                         <div class="tw-flex tw-gap-2">
+                            <div class="tw-grow tw-p-2 tw-bg-[var(--content-color-20)]">
+                                {{ readableState }}
+                            </div>
                             <div class="tw-grow tw-p-2 tw-text-[#00A279]">
-                                <StudipIcon shape="accept" />
                                 {{
                                     $gettext('%{ count } genau gewusst', {
                                         count: card['easy-count'],
@@ -132,9 +134,6 @@ const deleteCard = () => {
                                         count: card['again-count'],
                                     })
                                 }}
-                            </div>
-                            <div class="tw-grow tw-p-2 tw-bg-slate-100">
-                                {{ readableState }}
                             </div>
                         </div>
 
