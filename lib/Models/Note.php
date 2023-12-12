@@ -21,19 +21,6 @@ class Note extends SimpleORMap
             'order_by' => 'ORDER BY mkdate',
         ];
 
-        $config['has_many']['original_cards'] = [
-            'class_name' => Card::class,
-            'assoc_foreign_key' => 'original_note_id',
-            'on_delete' => function ($note) {
-                DBManager::get()->execute(
-                    'UPDATE lernkarten_cards SET original_note_id = NULL WHERE original_note_id = ?',
-                    [$note->id]
-                );
-            },
-            'on_store' => 'store',
-            'order_by' => 'ORDER BY mkdate',
-        ];
-
         $config['registered_callbacks']['before_create'][] = function ($note) {
             do {
                 $guid = sha1(uniqid(__CLASS__, true));

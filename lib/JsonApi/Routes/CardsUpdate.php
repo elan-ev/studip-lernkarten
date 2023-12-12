@@ -116,8 +116,8 @@ class CardsUpdate extends JsonApiController
     private function getOptionalUnsignedAttrs(): array
     {
         return [
-            'elapsed_days',
-            'scheduled_days',
+            'elapsed-days',
+            'scheduled-days',
             'reps',
             'lapses',
             'state',

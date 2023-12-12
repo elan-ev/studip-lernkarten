@@ -27,19 +27,6 @@ class Deck extends SimpleORMap
             'order_by' => 'ORDER BY mkdate',
         ];
 
-        $config['has_many']['copies'] = [
-            'class_name' => Deck::class,
-            'assoc_foreign_key' => 'template_id',
-            'on_delete' => function ($template) {
-                DBManager::get()->execute(
-                    'UPDATE lernkarten_decks SET template_id = NULL WHERE template_id = ?',
-                    [$template->id]
-                );
-            },
-            'on_store' => 'store',
-            'order_by' => 'ORDER BY mkdate',
-        ];
-
         $config['has_many']['shared_decks'] = [
             'class_name' => SharedDeck::class,
             'assoc_foreign_key' => 'deck_id',
@@ -67,6 +54,13 @@ class Deck extends SimpleORMap
             'class_name' => SharedDeck::class,
             'foreign_key' => 'shared_deck_id',
         ];
+
+        $config['registered_callbacks']['after_delete'][] = function ($deck) {
+            DBManager::get()->execute(
+                'UPDATE lernkarten_decks SET template_id = NULL WHERE template_id = ?',
+                [$deck->id]
+            );
+        };
 
         parent::configure($config);
     }
@@ -148,8 +142,8 @@ class Deck extends SimpleORMap
         }
 
         DBManager::get()->execute(
-            'INSERT INTO lernkarten_cards (note_id, original_note_id, deck_id) ' .
-                'SELECT note_id, note_id as original_note_id, ? as deck_id ' .
+            'INSERT INTO lernkarten_cards (note_id, original_card_id, deck_id) ' .
+                'SELECT note_id, id as original_card_id, ? as deck_id ' .
                 'FROM `lernkarten_cards` ' .
                 'WHERE deck_id = ?',
             [$this->id, $deck->id]

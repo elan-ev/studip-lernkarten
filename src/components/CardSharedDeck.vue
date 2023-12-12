@@ -26,29 +26,30 @@ const avatarUrl = computed(() => sharer.value.meta.avatar.small);
 const formattedName = computed(() => sharer.value['formatted-name']);
 
 const actionMenuItems = computed(() => {
-    return [
-        sharer.value.id === contextStore.userId
-            ? {
+    return isSharer.value
+        ? [
+              {
                   id: 'unshare',
                   label: $gettext('Nicht mehr teilen'),
                   icon: 'decline',
                   emit: 'unshare',
-              }
-            : null,
-    ].filter(Boolean);
+              },
+          ]
+        : [
+              {
+                  id: 'copy',
+                  label: $gettext('Kopieren'),
+                  icon: 'copy',
+                  emit: 'copy',
+              },
+          ];
 });
 
-const onCopy = () => {
-    showCopyDialog.value = true;
-};
+const isSharer = computed(() => sharer.value.id === contextStore.userId);
 
-const onColearn = () => {
-    showColearnDialog.value = true;
-};
-
-const onUnshare = () => {
-    showConfirmUnshareDialog.value = true;
-};
+const onCopy = () => (showCopyDialog.value = true);
+const onColearn = () => (showColearnDialog.value = true);
+const onUnshare = () => (showConfirmUnshareDialog.value = true);
 </script>
 
 <template>
@@ -72,16 +73,14 @@ const onUnshare = () => {
                     {{ sharedDeck.deck.data.meta['cards-count'] }}
                 </div>
                 <div class="tw-px-4">
-                    <IconButton icon="copy" type="button" @click="onCopy">
-                        {{ $gettext('Kopieren') }}
-                    </IconButton>
-                    <IconButton icon="refresh" type="button" @click="onColearn">
+                    <IconButton v-if="!isSharer" icon="refresh" type="button" @click="onColearn">
                         {{ $gettext('Mitlernen') }}
                     </IconButton>
                     <StudipActionMenu
                         v-if="actionMenuItems.length"
                         :items="actionMenuItems"
                         :collapseAt="0"
+                        @copy="onCopy"
                         @unshare="onUnshare"
                     />
                 </div>

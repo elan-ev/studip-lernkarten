@@ -72,9 +72,6 @@ export const useCardsStore = defineStore(
 
         async function updateLearningStats(card, stats) {
             try {
-                // Object.assign(card, stats);
-                // storeRecord(data);
-
                 const { data } = await api.patch('lernkarten-cards', { id: card.id, ...stats });
                 storeRecord(data);
             } catch (errors) {
