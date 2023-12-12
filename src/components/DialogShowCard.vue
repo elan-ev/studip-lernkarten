@@ -29,14 +29,15 @@ const showConfirmDelete = ref(false);
 const cardView = computed(() => cardViews[cardViewMode.value]);
 const readableState = computed(() => translatedStates[props.card.state]);
 
-const reset = () => {};
+const reset = () => {
+    cardViewMode.value = 'show'
+};
 const setIsOpen = (value) => {
     emit('update:open', value);
     reset();
 };
 const onSubmit = () => {};
 const onEdit = () => {
-    console.debug('onEdit', props.card, cardViewMode.value);
     cardViewMode.value = 'edit';
 };
 const onMove = () => {

@@ -125,7 +125,7 @@ const onStop = () => (showCongratulations.value = true);
                 />
                 <div class="tw-flex tw-items-center tw-gap-2 tw-my-6 tw-opacity-50">
                     <StudipIcon shape="dialog-cards" role="info" height="32" width="32" />
-                    <span>{{ deckName }}</span>
+                    <span class="tw-flex-grow">{{ deckName }}</span>
                 </div>
                 <component
                     :is="cardFront"

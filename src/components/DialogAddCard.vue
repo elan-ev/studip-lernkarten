@@ -1,10 +1,11 @@
 <script setup>
-import { nextTick, onBeforeUnmount, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import StudipDialog from './base/StudipDialog.vue';
+import StudipWysiwyg from './base/StudipWysiwyg.vue';
+import FileDropzone from './FileDropzone.vue';
+import CardImage from './CardImage.vue';
 import { useCardsStore } from '../stores/cards.js';
-import FileDropzone from "./FileDropzone.vue";
-import CardImage from "./CardImage.vue";
 
 const cardsStore = useCardsStore();
 const { $gettext } = useGettext();
@@ -17,89 +18,53 @@ const cardTypes = ref([
     { text: $gettext('Einfach'), value: 'basic' },
     { text: $gettext('Bild und optionaler Text'), value: 'image' },
 ]);
-const front = ref(null);
-const back = ref(null);
+const front = ref('');
+const back = ref('');
 const images = ref({});
-
-const reset = () => {
-    window.STUDIP.wysiwyg.getEditor(front.value).setData('');
-    window.STUDIP.wysiwyg.getEditor(back.value).setData('');
-
-    back.value.value = '';
-    front.value.value = '';
-    images.value = {};
-
-};
 
 const setIsOpen = (value) => {
     emit('update:open', value);
-    reset();
 };
+
+const reset = () => {
+    front.value = '';
+    back.value = '';
+    images.value = {};
+};
+
 const createOne = () => {
     const card = {
         model: cardType.value,
-        fields: { front: front.value.value, back: back.value.value, images: images.value },
+        fields: { front: front.value, back: back.value, images: images.value },
     };
     cardsStore.createCard(props.deck, card).then(() => setIsOpen(false));
 };
 const createMore = () => {
     const card = {
         model: cardType.value,
-        fields: { front: front.value.value, back: back.value.value, images: images.value },
+        fields: { front: front.value, back: back.value, images: images.value },
     };
     cardsStore.createCard(props.deck, card).then(reset);
 };
 
-const checkEditor = (ref, focus) => {
-    nextTick(() => {
-        let textarea = ref.value;
-
-        window.jQuery(textarea).on('load.wysiwyg', () => {
-            const editor = window.STUDIP.wysiwyg.getEditor(textarea);
-            if (focus) {
-                editor.editing.view.focus();
-            }
-            editor.ui.focusTracker.on('change:isFocused', () => {
-                textarea.value = editor.getData();
-            })
-        });
-
-        // make sure, wysiwyg is cleared before to force reinitialization
-        if (window.STUDIP.wysiwyg.getEditor(textarea)) {
-            window.STUDIP.wysiwyg.replace(textarea);
-        }
-
-        window.STUDIP.wysiwyg.replace(textarea);
-    });
+const setImage = (base64, fileid) => {
+    images.value[fileid] = base64;
 };
-
-onBeforeUnmount(() => {
-    window.jQuery(front.value).off();
-    window.jQuery(back.value).off();
-});
 
 watch(
     () => props.open,
-    (nowOpen) => {
-        if (nowOpen == true) {
-            checkEditor(front, true);
-            checkEditor(back, false);
-        } else {
-            window.jQuery(front.value).off();
-            window.jQuery(back.value).off();
+    (open) => {
+        if (open) {
+            reset();
         }
-    },
+    }
 );
-
-const setImage = (base64, fileid) => {
-    images.value[fileid] = base64;
-}
 </script>
 
 <template>
     <StudipDialog
         :close-text="$gettext('Abbrechen')"
-        :height="600"
+        :height="800"
         :open="open"
         :title="$gettext('Karten erstellen')"
         :width="600"
@@ -140,12 +105,17 @@ const setImage = (base64, fileid) => {
                     </label>
 
                     <div v-if="cardType == 'image'">
-                        <CardImage v-if="images['front']" :edit="true"
-                            :image="images['front']" fileid="front" @update:files="setImage"/>
-                        <FileDropzone v-else @update:files="setImage" fileid="front"/>
+                        <CardImage
+                            v-if="images['front']"
+                            :edit="true"
+                            :image="images['front']"
+                            fileid="front"
+                            @update:files="setImage"
+                        />
+                        <FileDropzone v-else @update:files="setImage" fileid="front" />
                     </div>
 
-                    <textarea id="card-text-front" ref="front" required aria-required="true" />
+                    <StudipWysiwyg v-model="front"></StudipWysiwyg>
                 </div>
 
                 <div class="formpart">
@@ -162,12 +132,17 @@ const setImage = (base64, fileid) => {
                     </label>
 
                     <div v-if="cardType == 'image'">
-                        <CardImage v-if="images['back']" :edit="true"
-                            :image="images['back']" fileid="back" @update:files="setImage"/>
-                        <FileDropzone v-else @update:files="setImage" fileid="back"/>
+                        <CardImage
+                            v-if="images['back']"
+                            :edit="true"
+                            :image="images['back']"
+                            fileid="back"
+                            @update:files="setImage"
+                        />
+                        <FileDropzone v-else @update:files="setImage" fileid="back" />
                     </div>
 
-                    <textarea id="card-text-back" ref="back" required aria-required="true" />
+                    <StudipWysiwyg v-model="back"></StudipWysiwyg>
                 </div>
             </form>
         </template>
