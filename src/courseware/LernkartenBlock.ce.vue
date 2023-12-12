@@ -46,7 +46,7 @@ const externalCss = computed(() => {
     />
 
     <div v-else>
-        <StudyView v-if="sharedDeck" :decks="decks" order="basic" :hide-back="true" />
+        <StudyView v-if="sharedDeck" :decks="decks" order="basic" :standalone="true" />
         <div v-else>TODO: Hier fehlt ein geteiltes deck</div>
     </div>
 

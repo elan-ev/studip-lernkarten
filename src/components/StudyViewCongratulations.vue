@@ -3,8 +3,8 @@ import { computed } from 'vue';
 import IconButton from './IconButton.vue';
 import RadialProgress from './RadialProgress.vue';
 
-const props = defineProps(['cards', 'hide-back', 'ratings']);
-const emit = defineEmits(['cancel', 'continue']);
+const props = defineProps(['cards', 'cardsLeft', 'standalone', 'ratings']);
+const emit = defineEmits(['again', 'cancel', 'continue']);
 
 const progress = computed(() => {
     const total = props.cards.length;
@@ -58,13 +58,16 @@ const totalLearned = computed(() => {
                     }}
                 </div>
             </div>
-            <div>
-                <IconButton icon="play" type="button" @click="emit('continue')">
-                    {{ $gettext('Weiterlernen') }}
+            <div class="tw-flex tw-flex-column">
+                <IconButton v-if="cardsLeft" icon="play" type="button" @click="emit('continue')">
+                    {{ $gettext('Weiter lernen (%{ count })', { count: cardsLeft }) }}
+                </IconButton>
+                <IconButton icon="refresh" type="button" @click="emit('again')">
+                    {{ $gettext('Noch einmal') }}
                 </IconButton>
             </div>
         </section>
-        <footer v-if="!hideBack">
+        <footer v-if="!standalone">
             <IconButton icon="stop" type="button" @click="emit('cancel')">
                 {{ $gettext('Zurück') }}
             </IconButton>

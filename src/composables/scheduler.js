@@ -123,6 +123,10 @@ export function useScheduler(options) {
         return card;
     };
 
+    const reset = () => {
+        queueAllCards();
+    };
+
     const ids = options.decks.split(',').filter((id) => +id);
     isLoading.value = true;
     Promise.all([
@@ -146,5 +150,6 @@ export function useScheduler(options) {
         queuedCard,
         ratings,
         repeat,
+        reset,
     };
 }

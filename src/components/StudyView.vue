@@ -13,22 +13,21 @@ import StudipProgressIndicator from './base/StudipProgressIndicator.vue';
 import StudyViewCongratulations from './StudyViewCongratulations.vue';
 import StudyViewRepeatButtons from './StudyViewRepeatButtons.vue';
 import StudyViewStatistics from './StudyViewStatistics.vue';
-import DialogAdjustLearningOptions from './DialogAdjustLearningOptions.vue';
+import { useFsrs } from '../composables/fsrs.js';
 import { useScheduler } from '../composables/scheduler.js';
 import { useDecksStore } from '../stores/decks.js';
-import { useRouter } from 'vue-router';
 
-const router = useRouter();
+const { translatedStates } = useFsrs();
 
 const props = defineProps({
     decks: { type: String },
     order: { type: String },
-    hideBack: { type: Boolean, default: false },
+    standalone: { type: Boolean, default: false },
 });
 const emit = defineEmits(['cancel']);
 
 const { $gettext } = useGettext();
-const { cardStates, cards, cardsLeft, decks, isLoading, order, queuedCard, ratings, repeat } =
+const { cardStates, cards, cardsLeft, decks, isLoading, order, queuedCard, ratings, repeat, reset } =
     useScheduler({
         decks: props.decks,
         order: props.order,
@@ -37,7 +36,6 @@ const { cardStates, cards, cardsLeft, decks, isLoading, order, queuedCard, ratin
 const decksStore = useDecksStore();
 const showAnswer = ref(false);
 const showCongratulations = ref(false);
-const showAdjustLearningDialog = ref(false);
 
 const cardFront = computed(() => {
     switch (queuedCard.value.model) {
@@ -60,8 +58,15 @@ const deckName = computed(() => {
 });
 const hasCards = computed(() => !!cards.value.length);
 
-const onShowAnswer = () => (showAnswer.value = true);
+const readableState = computed(() => queuedCard.value ? translatedStates[queuedCard.value.state] : null);
 
+const onAgain = () => {
+    reset();
+    showCongratulations.value = false;
+};
+const onCancel = () => emit('cancel');
+const onContinue = () => ( showCongratulations.value = false);
+const onShowAnswer = () => (showAnswer.value = true);
 const onRepeat = (rating) => {
     const card = repeat(rating);
     showAnswer.value = false;
@@ -69,35 +74,6 @@ const onRepeat = (rating) => {
         showCongratulations.value = true;
     }
 };
-const onCancel = () => emit('cancel');
-const onContinue = () => {
-    showCongratulations.value = false;
-    showAdjustLearningDialog.value = true
-};
-
-const usedDecks = computed(() => {
-    if (props.decks) {
-        let usedDecks = [];
-        let deck_ids = props.decks.split(',');
-        for (let i = 0; i < deck_ids.length; i++) {
-            usedDecks.push(decksStore.byId(deck_ids[i]));
-        }
-
-        return usedDecks;
-    }
-
-    return [];
-});
-
-watch(
-    () => showAdjustLearningDialog.value,
-    (newV, oldV) => {
-        if (newV === false && oldV === true) {
-            router.go();
-        }
-    }
-);
-
 const onStop = () => (showCongratulations.value = true);
 </script>
 
@@ -126,6 +102,7 @@ const onStop = () => (showCongratulations.value = true);
                 <div class="tw-flex tw-items-center tw-gap-2 tw-my-6 tw-opacity-50">
                     <StudipIcon shape="dialog-cards" role="info" height="32" width="32" />
                     <span class="tw-flex-grow">{{ deckName }}</span>
+                    <span class="tw-text-xs">{{ readableState }}</span>
                 </div>
                 <component
                     :is="cardFront"
@@ -151,13 +128,13 @@ const onStop = () => (showCongratulations.value = true);
             <StudyViewCongratulations
                 v-if="showCongratulations"
                 :cards="cards"
-                :hide-back="hideBack"
+                :standalone="standalone"
+                :cards-left="cardsLeft"
                 :ratings="ratings"
+                @again="onAgain"
                 @cancel="onCancel"
                 @continue="onContinue"
             />
         </div>
     </div>
-
-    <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="usedDecks" />
 </template>
