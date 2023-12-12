@@ -25,26 +25,41 @@ export const useDecksStore = defineStore(
             return all.value.filter((deck) => deck.context.data.id === context);
         });
 
-        async function fetchContext() {
+        function fetchDecksOf(type, id) {
             isLoading.value = true;
-            try {
-                const { data } = await api.fetch(
-                    `${contextStore.type}/${contextStore.id}/lernkarten-decks`,
-                    { params: { include: 'folder,owner,shared-with,template.owner', 'page[limit]': 1000 } }
-                );
-                data.forEach(storeRecord);
-            } catch (errors) {
-                console.error('fetching decks', errors);
-                errors.value = errors;
-            }
-            isLoading.value = false;
+            return api
+                .fetch(`${type}/${id}/lernkarten-decks`, {
+                    params: {
+                        include: 'folder,owner,shared-with,template.owner',
+                        'page[limit]': 1000,
+                    },
+                })
+                .then(({ data }) => {
+                    data.forEach(storeRecord);
+                    isLoading.value = false;
+                })
+                .catch((errors) => {
+                    console.error('fetching decks', errors);
+                    errors.value = errors;
+                })
+                .finally(() => (isLoading.value = false));
+        }
+
+        function fetchContext() {
+            return fetchDecksOf(contextStore.type, contextStore.id);
+        }
+
+        function fetchWorkplace() {
+            return fetchDecksOf('users', contextStore.userId);
         }
 
         async function fetchById(id) {
             isLoading.value = true;
             try {
                 const { data } = await api.fetch(`lernkarten-decks/${id}`, {
-                    params: { include: 'folder,owner,shared-with,template.owner' },
+                    params: {
+                        include: 'folder,owner,shared-with,template.owner',
+                    },
                 });
                 storeRecord(data);
             } catch (errors) {
@@ -101,6 +116,7 @@ export const useDecksStore = defineStore(
             errors,
             fetchById,
             fetchContext,
+            fetchWorkplace,
             isLoading,
             updateDeck,
         };

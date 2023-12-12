@@ -27,7 +27,10 @@ export const useCourseMembershipsStore = defineStore(
 
             try {
                 const { data } = await api.fetch(`users/${userId.value}/course-memberships`, {
-                    params: { include: 'course', 'page[limit]': 1000 },
+                    params: {
+                        include: 'course',
+                        'page[limit]': 1000,
+                    },
                 });
                 data.forEach(storeRecord);
             } catch (errors) {
@@ -40,9 +43,12 @@ export const useCourseMembershipsStore = defineStore(
         async function fetchContext() {
             isLoading.value = true;
             try {
-                const { data } = await api.fetch(`course-memberships/${contextStore.id}_${contextStore.userId}`, {
-                    params: { include: 'course' },
-                });
+                const { data } = await api.fetch(
+                    `course-memberships/${contextStore.id}_${contextStore.userId}`,
+                    {
+                        params: { include: 'course' },
+                    }
+                );
                 storeRecord(data);
             } catch (errors) {
                 console.error('fetching course-membership', errors);
@@ -71,5 +77,5 @@ export const useCourseMembershipsStore = defineStore(
     },
     {
         persist: true,
-    },
+    }
 );

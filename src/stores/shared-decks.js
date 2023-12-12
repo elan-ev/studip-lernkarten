@@ -26,7 +26,9 @@ export const useSharedDecksStore = defineStore(
             isLoading.value = true;
             try {
                 const { data } = await api.fetch(`lernkarten-shared-decks/${id}`, {
-                    params: { include: 'colearning-deck.owner,deck,sharer' },
+                    params: {
+                        include: 'colearning-deck.owner,deck,sharer',
+                    },
                 });
                 storeRecord(data);
             } catch (errors) {
@@ -41,7 +43,12 @@ export const useSharedDecksStore = defineStore(
 
             const { data } = await api.fetch(
                 `${contextStore.type}/${contextStore.id}/lernkarten-shared-decks`,
-                { params: { include: 'colearning-deck.owner,deck,sharer' } }
+                {
+                    params: {
+                        include: 'colearning-deck.owner,deck,sharer',
+                        'page[limit]': 1000,
+                    },
+                }
             );
             isLoading.value = false;
             data.forEach(storeRecord);

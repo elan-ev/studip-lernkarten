@@ -33,8 +33,11 @@ export const useFoldersStore = defineStore('folders', () => {
     async function fetch() {
         isLoading.value = true;
         try {
-            const { data } = await api.fetch('lernkarten-folders',
-                { params: { 'page[limit]': 1000 }});
+            const { data } = await api.fetch('lernkarten-folders', {
+                params: {
+                    'page[limit]': 1000,
+                },
+            });
             data.forEach(storeRecord);
         } catch (errors) {
             console.error('fetching folders', errors);
@@ -73,9 +76,11 @@ export const useFoldersStore = defineStore('folders', () => {
     }
 
     function updateFolder(folder, attributes) {
-        return api.patch('lernkarten-folders', { id: folder.id, ...attributes}).then(({ data }) => {
-            storeRecord(data);
-        });
+        return api
+            .patch('lernkarten-folders', { id: folder.id, ...attributes })
+            .then(({ data }) => {
+                storeRecord(data);
+            });
     }
 
     function deleteFolder(folder) {

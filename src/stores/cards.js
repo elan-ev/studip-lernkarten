@@ -29,7 +29,11 @@ export const useCardsStore = defineStore(
 
         async function fetchByDeck(deck) {
             isLoading.value = true;
-            const { data } = await api.fetch(`lernkarten-decks/${deck.id}/cards`);
+            const { data } = await api.fetch(`lernkarten-decks/${deck.id}/cards`, {
+                params: {
+                    'page[limit]': 1000,
+                },
+            });
             isLoading.value = false;
             data.forEach(storeRecord);
         }
@@ -94,5 +98,5 @@ export const useCardsStore = defineStore(
     },
     {
         persist: true,
-    },
+    }
 );
