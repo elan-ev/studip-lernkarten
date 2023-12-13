@@ -46,11 +46,11 @@ const addTopFolder = () => {
 const editFolder = (folder) => {
     editDialogOpen.value = true;
     editFolderObject.value = folder;
-}
+};
 
 const onEditDialog = (folder, name) => {
     editDialogOpen.value = false;
-    foldersStore.updateFolder(folder, {name: name});
+    foldersStore.updateFolder(folder, { name });
 };
 
 const onCreateDialog = (name) => {
@@ -90,7 +90,7 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
             <template #empty>
                 <StudipCompanion :msgCompanion="$gettext('Es gibt noch keinen Ordner.')">
                     <template #companionActions>
-                        <IconButton icon="add"  @click="addTopFolder">
+                        <IconButton icon="add" @click="addTopFolder">
                             {{ $gettext('Ordner anlegen') }}
                         </IconButton>
                     </template>
@@ -125,7 +125,11 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
 
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="decks" />
     <DialogCreateFolder v-model:open="createDialogOpen" @confirm="onCreateDialog" />
-    <DialogEditFolder v-model:open="editDialogOpen" :folder="editFolderObject" @confirm="onEditDialog" />
+    <DialogEditFolder
+        v-model:open="editDialogOpen"
+        :folder="editFolderObject"
+        @confirm="onEditDialog"
+    />
     <DialogConfirmDeleteFolder
         v-model:open="confirmDeleteDialogOpen"
         @confirm="onConfirmDeleteDialog"
