@@ -25,6 +25,10 @@ export const useDecksStore = defineStore(
             return all.value.filter((deck) => deck.context.data.id === context);
         });
 
+        const fromWorkplace = computed(() => {
+            return all.value.filter((deck) => deck.context.data.type === 'users');
+        });
+
         function fetchDecksOf(type, id) {
             isLoading.value = true;
             return api
@@ -117,6 +121,7 @@ export const useDecksStore = defineStore(
             fetchById,
             fetchContext,
             fetchWorkplace,
+            fromWorkplace,
             isLoading,
             updateDeck,
         };
