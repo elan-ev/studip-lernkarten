@@ -11,6 +11,9 @@ import './assets/main.css';
 
 const mountLernkarten = (el, data) => {
     const app = createApp(App);
+
+    app.provide('initialState', data);
+
     const pinia = createPinia();
     pinia.use(piniaPluginPersistedstate);
 

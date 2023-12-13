@@ -78,7 +78,11 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
         PageLayout::addStylesheet($pluginUrl . '/dist/style.css');
         PageLayout::addScript($pluginUrl . '/dist/lernkarten.js', ['type' => 'module']);
 
-        $initialState = [];
+        $initialState = [
+            'isTeacher' => Context::isCourse()
+                ? $GLOBALS['perm']->have_studip_perm('tutor', Context::getId())
+                : $GLOBALS['perm']->have_perm('tutor'),
+        ];
 
         echo $GLOBALS['template_factory']->render('layouts/base', [
             'content_for_layout' => $this->bootstrapHtml($initialState),
