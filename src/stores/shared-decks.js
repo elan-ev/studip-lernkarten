@@ -54,6 +54,14 @@ export const useSharedDecksStore = defineStore(
             data.forEach(storeRecord);
         }
 
+        const byContext = computed(() =>
+            all.value.filter(
+                ({ recipient }) =>
+                    recipient.data.type === contextStore.type &&
+                    recipient.data.id === contextStore.id
+            )
+        );
+
         function byId(id) {
             return records.value.get(id);
         }
@@ -78,9 +86,8 @@ export const useSharedDecksStore = defineStore(
                 recipient: { data: { id: recipient.id, type: recipient.type } },
             };
             const { data } = await api.create('lernkarten-shared-decks', record);
-            storeRecord(data);
 
-            return data;
+            return fetchById(data.id);
         }
 
         async function colearn(sharedDeck) {
@@ -103,6 +110,7 @@ export const useSharedDecksStore = defineStore(
 
         return {
             all,
+            byContext,
             byId,
             colearn,
             copy,
