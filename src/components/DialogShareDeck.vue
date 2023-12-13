@@ -97,9 +97,9 @@ const onConfirm = () => {
 
 <template>
     <StudipDialog
-        :confirm-text="$gettext('Teilen')"
         :close-text="$gettext('Schließen')"
         :confirm-disabled="confirmDisabled"
+        :confirm-text="$gettext('Teilen')"
         :height="600"
         :initial-focus="initialFocus"
         :open="open"
