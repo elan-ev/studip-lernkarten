@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue';
-import Button from './IconButton.vue';
 import CourseAvatar from './CourseAvatar.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipDate from '../components/base/StudipDate.vue';
@@ -11,6 +10,12 @@ const props = defineProps(['deck']);
 const avatarUrl = computed(() => props.deck.owner.data.meta.avatar.small);
 const formattedName = computed(() => props.deck.owner.data['formatted-name']);
 
+const progress = computed(() => {
+    const total = props.deck.progress.reduce((sum, n) => sum + n, 0);
+
+    return Math.floor((total ? props.deck.progress[2] / total : 0) * 100);
+});
+
 const sharedWithCourses = computed(() =>
     props.deck['shared-with'].data.filter(({ type }) => type === 'courses'),
 );
@@ -19,7 +24,7 @@ const sharedWithUsers = computed(() =>
 );
 
 const courseUrl = (course) =>
-    window.STUDIP.URLHelper.getURL(`dispatch.php/course/details/index/${course.id}`);
+    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin', { cid: course.id });
 const userUrl = (user) =>
     window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username: user.username });
 </script>
@@ -58,7 +63,7 @@ const userUrl = (user) =>
                         {{ $gettext('Gesamtfortschritt') }}
                     </th>
                     <td>
-                        <span>0%</span>
+                        <span>{{ progress }}%</span>
                     </td>
                 </tr>
             </table>
@@ -72,12 +77,19 @@ const userUrl = (user) =>
         <section>
             {{ deck.description }}
         </section>
-        <footer>
-            <Button disabled type="button" icon="edit">{{ $gettext('Bearbeiten') }}</Button>
-        </footer>
     </article>
 
     <article class="studip">
+        <header>
+            <h1>{{ $gettext('Metadaten') }}</h1>
+        </header>
+        <section>
+            <span v-if="deck.metadata.length">{{ deck.metadata }}</span>
+            <span v-else>–</span>
+        </section>
+    </article>
+
+    <article class="studip" v-if="sharedWithCourses.length || sharedWithUsers.length">
         <header>
             <h1>{{ $gettext('Geteilt mit') }}</h1>
         </header>

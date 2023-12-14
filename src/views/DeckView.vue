@@ -1,13 +1,14 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
-import Button from '../components/IconButton.vue';
+import IconButton from '../components/IconButton.vue';
 import DeckCardsPanel from '../components/DeckCardsPanel.vue';
 import DeckInfoPanel from '../components/DeckInfoPanel.vue';
 import DeckSettingsPanel from '../components/DeckSettingsPanel.vue';
 import DeckStatisticsPanel from '../components/DeckStatisticsPanel.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
+import DialogEditDeck from '../components/DialogEditDeck.vue';
 import DialogShareDeck from '../components/DialogShareDeck.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
@@ -16,11 +17,11 @@ import { useDecksStore } from '../stores/decks.js';
 
 const cardsStore = useCardsStore();
 const decksStore = useDecksStore();
-const router = useRouter();
 
 const props = defineProps(['id']);
 
-const showLearnDialog = ref(false);
+const showEditDialog = ref(false);
+const showAdjustLearningDialog = ref(false);
 const showShareDialog = ref(false);
 
 decksStore.fetchById(props.id);
@@ -30,19 +31,9 @@ const deck = computed(() => decksStore.byId(props.id));
 const cards = computed(() => cardsStore.byDeck({ id: props.id }));
 const folder = computed(() => deck.value?.folder.data ?? null);
 
-const onAdjustLearn = () => {
-    showLearnDialog.value = true;
-};
-
-const onLearn = (options) => {
-    console.debug('onLearn', options);
-    showLearnDialog.value = false;
-    router.push({ name: 'study', params: { id: deck.value.id } });
-};
-
-const onShowShareDialog = () => {
-    showShareDialog.value = true;
-};
+const onAdjustLearn = () => (showAdjustLearningDialog.value = true);
+const onShowEditDialog = () => (showEditDialog.value = true);
+const onShowShareDialog = () => (showShareDialog.value = true);
 </script>
 
 <template>
@@ -52,35 +43,59 @@ const onShowShareDialog = () => {
     <div v-else>
         <div class="tw-mb-6 tw-flex tw-flex-row tw-items-center">
             <div class="tw-grow">
-                <div v-if="folder">
+                <div v-if="folder" :title="$gettext('Zurück zum Ordner')">
                     <RouterLink
                         :to="{ name: 'folder', params: { id: folder.id } }"
                         class="tw-flex tw-items-center tw-gap-2"
                     >
-                        <StudipIcon shape="folder-empty" role="info" />
+                    <StudipIcon
+                        shape="arr_1left"
+                        :height="30"
+                        :width="30"
+                        class="tw-align-middle tw-mb-1"
+                    />
+                    <StudipIcon
+                        shape="folder-empty"
+                        :height="30"
+                        :width="30"
+                        class="tw-align-middle tw-mb-1"
+                    />
+                    <span class="breadcrumb">
                         {{ folder.name }}
+                    </span>
                     </RouterLink>
                 </div>
-                <div v-else>
+                <div v-else :title="$gettext('Zurück zur Ordnerübersicht')">
                     <RouterLink to="/" class="tw-flex tw-items-center tw-gap-2 tw-italic">
-                        <StudipIcon shape="folder-empty" role="info" />
-                        {{ $gettext('Kein Ordner') }}
+                        <StudipIcon
+                            shape="arr_1left"
+                            :height="30"
+                            :width="30"
+                            class="tw-align-middle tw-mb-1"
+                        />
+                        <StudipIcon
+                            shape="folder-home-empty"
+                            :height="30"
+                            :width="30"
+                            class="tw-align-middle tw-mb-1"
+                        />
+                        <span class="breadcrumb">
+                            {{ $gettext('Kein Ordner') }}
+                        </span>
                     </RouterLink>
                 </div>
                 <div class="tw-mt-3 tw-font-bold tw-text-lg">{{ deck.name }}</div>
-                <div>
-                    <Button icon="edit" type="button" class="!tw-m-0 !tw-border-0">{{
-                        $gettext('Bearbeiten')
-                    }}</Button>
-                </div>
             </div>
             <div>
-                <Button icon="refresh" type="button" @click="onAdjustLearn">
+                <IconButton icon="refresh" type="button" @click="onAdjustLearn">
                     {{ $gettext('Lernen') }}
-                </Button>
-                <Button icon="share" type="button" @click="onShowShareDialog">
+                </IconButton>
+                <IconButton icon="share" type="button" @click="onShowShareDialog">
                     {{ $gettext('Teilen') }}
-                </Button>
+                </IconButton>
+                <IconButton icon="edit" type="button" @click="onShowEditDialog">
+                    {{ $gettext('Bearbeiten') }}
+                </IconButton>
             </div>
         </div>
 
@@ -123,6 +138,15 @@ const onShowShareDialog = () => {
             </TabPanels>
         </TabGroup>
     </div>
-    <DialogAdjustLearningOptions v-model:open="showLearnDialog" :deck="deck" @confirm="onLearn" />
-    <DialogShareDeck v-model:open="showShareDialog" :deck="deck" />
+    <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[deck]" />
+    <DialogEditDeck v-model:open="showEditDialog" :deck="deck" />
+    <DialogShareDeck v-if="showShareDialog" v-model:open="showShareDialog" :deck="deck" />
 </template>
+
+<style scoped>
+span.breadcrumb {
+    color: var(--headings-color);
+    font-size: 1.4em;
+    text-align: left;
+}
+</style>

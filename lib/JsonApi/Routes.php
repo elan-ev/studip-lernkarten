@@ -8,12 +8,14 @@ trait Routes
     {
         $group->get('/lernkarten-folders', Routes\FoldersIndex::class);
         $group->post('/lernkarten-folders', Routes\FoldersCreate::class);
+        $group->patch('/lernkarten-folders/{id}', Routes\FoldersUpdate::class);
         $group->get('/lernkarten-folders/{id}', Routes\FoldersShow::class);
         $group->delete('/lernkarten-folders/{id}', Routes\FoldersDelete::class);
 
         $group->get('/lernkarten-decks', Routes\DecksIndex::class);
         $group->post('/lernkarten-decks', Routes\DecksCreate::class);
         $group->get('/lernkarten-decks/{id}', Routes\DecksShow::class);
+        $group->patch('/lernkarten-decks/{id}', Routes\DecksUpdate::class);
         $group->delete('/lernkarten-decks/{id}', Routes\DecksDelete::class);
 
         // not a real JSONAPI route
@@ -33,8 +35,8 @@ trait Routes
         $group->post('/lernkarten-shared-decks/{id}/colearn', Routes\SharedDecksColearn::class);
         $group->post('/lernkarten-shared-decks/{id}/copy', Routes\SharedDecksCopy::class);
 
-        $group->get('/lernkarten-folders/{id}/decks', Routes\DecksOfFoldersShow::class);
-        $group->get('/lernkarten-decks/{id}/cards', Routes\CardsOfDecksShow::class);
+        $group->get('/lernkarten-folders/{id}/decks', Routes\DecksOfFoldersIndex::class);
+        $group->get('/lernkarten-decks/{id}/cards', Routes\CardsOfDecksIndex::class);
 
         $group->get('/courses/{id}/lernkarten-decks', Routes\DecksOfCoursesIndex::class);
         $group->get('/users/{id}/lernkarten-decks', Routes\DecksOfUsersIndex::class);

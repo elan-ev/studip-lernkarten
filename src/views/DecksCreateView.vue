@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
 import FolderSelector from '../components/FolderSelector.vue';
@@ -13,28 +13,31 @@ const foldersStore = useFoldersStore();
 
 const props = defineProps(['folder']);
 
+const folder = computed(() => foldersStore.byId(props.folder));
+
 const description = ref('');
-const folder = ref(null);
+const selectedFolder = ref(folder.value);
+const metadata = ref('');
 const name = ref('');
 const nameRef = ref(null);
 
 watch(
     () => foldersStore.isLoading,
-    (newV, oldV) => {
-        if (oldV && !newV) {
-            onSelectFolder(foldersStore.byId(props.folder));
+    (isLoading) => {
+        if (!isLoading) {
+            selectedFolder.value = folder.value;
         }
     }
 );
 
 const onSelectFolder = (selected) => {
-    folder.value = selected;
+    selectedFolder.value = selected;
 };
 
 const onSubmit = () => {
-    if (validateName) {
+    if (validateName()) {
         decksStore
-            .createDeck(folder.value, name.value, description.value)
+            .createDeck(selectedFolder.value, name.value, description.value, metadata.value)
             .then(({ id }) => router.push({ name: 'deck', params: { id } }));
     }
 };
@@ -70,7 +73,7 @@ function validateName() {
                         aria-hidden="true"
                         >*</span
                     >
-                    <FolderSelector :folder="folder" @select="onSelectFolder" />
+                    <FolderSelector :folder="selectedFolder" @select="onSelectFolder" />
                 </label>
             </div>
 
@@ -101,6 +104,15 @@ function validateName() {
                         >*</span
                     >
                     <textarea v-model="description" required aria-required="true" />
+                </label>
+            </div>
+
+            <div class="formpart">
+                <label>
+                    <span class="textlabel">
+                        {{ $gettext('Metadaten des Kartensatzes') }}
+                    </span>
+                    <textarea v-model="metadata" />
                 </label>
             </div>
 

@@ -24,7 +24,9 @@ export const useInstancesStore = defineStore(
 
             try {
                 const { data } = await api.fetch(`users/${userId.value}/lernkarten-instances`, {
-                    params: {},
+                    params: {
+                        'page[limit]': 1000,
+                    },
                 });
                 data.forEach(storeRecord);
             } catch (errors) {
@@ -48,5 +50,5 @@ export const useInstancesStore = defineStore(
     },
     {
         persist: true,
-    },
+    }
 );

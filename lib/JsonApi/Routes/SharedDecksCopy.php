@@ -2,6 +2,7 @@
 
 namespace Lernkarten\JsonApi\Routes;
 
+use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
 use Lernkarten\Models\Deck;
@@ -25,6 +26,10 @@ class SharedDecksCopy extends JsonApiController
         $sharedDeck = SharedDeck::find($args['id']);
         if (!$sharedDeck) {
             throw new RecordNotFoundException('Could not find SharedDeck.');
+        }
+
+        if ($this->cannot($request, 'copy', $sharedDeck)) {
+            throw new AuthorizationFailedException();
         }
 
         $user = $this->getUser($request);

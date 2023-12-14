@@ -3,6 +3,7 @@
 namespace Lernkarten\Models;
 
 use Course;
+use DBManager;
 use RuntimeException;
 use SimpleORMap;
 use User;
@@ -42,6 +43,26 @@ class SharedDeck extends SimpleORMap
         parent::configure($config);
     }
 
+    public static function findByUser(User $user): iterable
+    {
+        $sharedByMe = self::findBySql('sharer_id = ?', [$user->id]);
+        $sharedWithMe = self::findBySql('recipient_id = ? AND recipient_type = ?', [
+            $user->id,
+            User::class,
+        ]);
+
+        $ids = DBManager::get()->fetchFirst(
+            'SELECT seminar_id FROM seminar_user WHERE user_id = ?',
+            [$user->id]
+        );
+        $sharedWithCourse = self::findBySql('recipient_id IN (?) AND recipient_type = ?', [
+            $ids,
+            Course::class,
+        ]);
+
+        return array_merge($sharedByMe, $sharedWithMe, $sharedWithCourse);
+    }
+
     /**
      * @param User|Course|null $recipient
      */
@@ -67,6 +88,7 @@ class SharedDeck extends SimpleORMap
             'context_type' => $this->recipient_type,
             'name' => $this->deck->name,
             'description' => $this->deck->description,
+            'metadata' => $this->deck->metadata,
             'owner_id' => $user->id,
             'shared_deck_id' => $this->id,
             'template_id' => $this->deck_id,
@@ -106,5 +128,22 @@ class SharedDeck extends SimpleORMap
         }
 
         throw new RuntimeException('Unknown recipient_type.');
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function isSharedWith(User $user): bool
+    {
+        switch ($this->recipient_type) {
+            case Course::class:
+                return $GLOBALS['perm']->have_studip_perm(
+                    'autor',
+                    $this->recipient_id,
+                    $user->id
+                );
+            case User::class:
+                return $this->recipient_id === $user->id;
+        }
     }
 }

@@ -36,7 +36,12 @@ class SharedDecksIndex extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $resources = SharedDeck::findBySql("1");
+        if ($this->cannot($request, 'viewAny', SharedDeck::class)) {
+            throw new AuthorizationFailedException();
+        }
+
+        $resources = SharedDeck::findByUser($this->getUser($request));
+
         return $this->getPaginatedContentResponse(
             array_slice($resources, ...$this->getOffsetAndLimit()),
             count($resources)

@@ -1,13 +1,15 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { RouterLink } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
+import IconButton from './IconButton.vue';
 import RadialProgress from './RadialProgress.vue';
 import StudipActionMenu from './base/StudipActionMenu.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipIcon from './base/StudipIcon.vue';
+import DialogAdjustLearningOptions from './DialogAdjustLearningOptions.vue';
 import DialogConfirmCopyDeck from './DialogConfirmCopyDeck.vue';
 import DialogConfirmDeleteDeck from './DialogConfirmDeleteDeck.vue';
+import DialogShareDeck from './DialogShareDeck.vue';
 import { useDecksStore } from '../stores/decks.js';
 
 const { $gettext } = useGettext();
@@ -16,8 +18,10 @@ const decksStore = useDecksStore();
 const props = defineProps(['deck']);
 const emit = defineEmits(['deleted', 'select']);
 
+const showAdjustLearningDialog = ref(false);
 const showConfirmCopy = ref(false);
 const showConfirmDelete = ref(false);
+const showShareDialog = ref(false);
 
 const deckOwner = computed(() => props.deck.owner.data);
 const avatarUrl = computed(() => deckOwner.value.meta.avatar.small);
@@ -39,6 +43,12 @@ const actionMenuItems = computed(() => {
         ...(editable.value
             ? [
                   {
+                      id: 'share',
+                      label: $gettext('Kartensatz teilen'),
+                      icon: 'share',
+                      emit: 'share',
+                  },
+                  {
                       id: 'delete',
                       label: $gettext('Kartensatz löschen'),
                       icon: 'trash',
@@ -55,9 +65,10 @@ const progress = computed(() => {
     return total ? props.deck.progress[2] / total : 0;
 });
 
+const onAdjustLearning = () => (showAdjustLearningDialog.value = true);
 const onCopyDeck = () => (showConfirmCopy.value = true);
 const onDeleteDeck = () => (showConfirmDelete.value = true);
-
+const onShareDeck = () => (showShareDialog.value = true);
 const deleteDeck = () => {
     showConfirmDelete.value = false;
     decksStore.deleteDeck(props.deck).then(() => {
@@ -68,7 +79,7 @@ const deleteDeck = () => {
 
 <template>
     <section
-        class="tw-flex tw-gap-2 tw-h-24 tw-py-2 tw-border tw-border-solid tw-border-[var(--light-gray-color-20)]"
+        class="tw-flex tw-gap-2 tw-py-2 tw-border tw-border-solid tw-border-[var(--light-gray-color-20)]"
     >
         <div
             class="tw-flex tw-items-center tw-justify-center tw-w-24 tw-aspect-square tw-cursor-pointer"
@@ -91,27 +102,30 @@ const deleteDeck = () => {
             <div class="tw-cursor-pointer tw-flex-grow" @click="$emit('select', deck)">
                 <span class="tw-text-lg tw-font-bold">{{ deck.name }}</span>
             </div>
-            <div class="tw-flex tw-items-end tw-justify-between">
+            <div class="tw-flex tw-items-center tw-justify-between">
                 <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
-                <div class="tw-px-4 tw-flex tw-gap-2">
-                    <RouterLink
-                        :to="{ name: 'study', params: { id: deck.id } }"
-                        class="tw-flex tw-items-center tw-gap-1"
-                    >
-                        <StudipIcon shape="refresh" role="info" />
+                <div>
+                    <StudipIcon shape="dialog-cards" role="info" />
+                    {{ deck.meta['cards-count'] }}
+                </div>
+                <div class="tw-px-4 tw-flex tw-gap-2 tw-items-center">
+                    <IconButton icon="refresh" type="button" @click="onAdjustLearning">
                         {{ $gettext('Lernen') }}
-                    </RouterLink>
+                    </IconButton>
                     <StudipActionMenu
                         v-if="actionMenuItems.length"
                         :items="actionMenuItems"
                         :collapseAt="0"
                         @copy="onCopyDeck"
                         @delete="onDeleteDeck"
+                        @share="onShareDeck"
                     />
                 </div>
             </div>
         </div>
     </section>
+    <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[deck]" />
     <DialogConfirmCopyDeck v-model:open="showConfirmCopy" :deck="deck" />
     <DialogConfirmDeleteDeck v-model:open="showConfirmDelete" @confirm="deleteDeck" />
+    <DialogShareDeck v-if="showShareDialog" v-model:open="showShareDialog" :deck="deck" />
 </template>

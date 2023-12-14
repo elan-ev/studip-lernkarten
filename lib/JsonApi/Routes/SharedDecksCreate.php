@@ -37,6 +37,10 @@ class SharedDecksCreate extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
+        if ($this->cannot($request, 'create', SharedDeck::class)) {
+            throw new AuthorizationFailedException();
+        }
+
         $json = $this->validate($request);
 
         $resource = $this->create($this->getUser($request), $json);

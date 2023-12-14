@@ -24,7 +24,7 @@ class LernkartenBlock extends BlockType
     {
         return dgettext(
             'lernkarten-plugin',
-            'TODO'
+            'Lernkarten aus dem eigenen Arbeitsplatz einbinden.'
         );
     }
 

@@ -44,6 +44,10 @@ class SharedDecksOfCoursesIndex extends JsonApiController
             throw new RecordNotFoundException();
         }
 
+        if ($this->cannot($request, 'viewAnyOfCourse', SharedDeck::class, $resource)) {
+            throw new AuthorizationFailedException();
+        }
+
         $resources = SharedDeck::findBySql("recipient_id = ? AND recipient_type = ?", [$resource->id, Course::class]);
         return $this->getPaginatedContentResponse(
             array_slice($resources, ...$this->getOffsetAndLimit()),

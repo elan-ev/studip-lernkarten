@@ -1,6 +1,7 @@
 <script setup>
 import Papa from 'papaparse';
 import { computed, ref } from 'vue';
+import StudipCompanion from './base/StudipCompanion.vue';
 import DialogImportCards from './DialogImportCards.vue';
 import IconButton from './IconButton.vue';
 import { useCardsStore } from '../stores/cards.js';
@@ -10,6 +11,7 @@ const cardsStore = useCardsStore();
 const props = defineProps(['deck']);
 
 const showImportDialog = ref(false);
+const countImported = ref(null);
 
 const cards = computed(() => cardsStore.byDeck(props.deck));
 
@@ -31,6 +33,10 @@ const chdate = computed(() => {
 
 const onImport = () => {
     showImportDialog.value = true;
+};
+
+const onImportSuccessful = (records) => {
+    countImported.value = records;
 };
 
 const onExport = () => {
@@ -72,6 +78,14 @@ function download(filename, data) {
             <h1>{{ $gettext('Importieren') }}</h1>
         </header>
         <section>
+            <StudipCompanion
+                v-if="countImported !== null"
+                :msg-companion="
+                    $gettext('Es wurden erfolgreich %{ count } Karten importiert', {
+                        count: countImported,
+                    })
+                "
+            />
             <p>
                 {{ $gettext('Importiere Karten aus einer CSV-Datei.') }}
             </p>
@@ -93,5 +107,5 @@ function download(filename, data) {
             </IconButton>
         </section>
     </article>
-    <DialogImportCards v-model:open="showImportDialog" :deck="deck" />
+    <DialogImportCards v-model:open="showImportDialog" :deck="deck" @success="onImportSuccessful" />
 </template>

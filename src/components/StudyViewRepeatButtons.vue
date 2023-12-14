@@ -11,13 +11,13 @@ console.debug(Rating);
 <template>
     <div>
         <IconButton icon="accept" @click="$emit('repeat', Rating.Easy)">
-            {{ $gettext('Einfach') }}
+            {{ $gettext('Genau gewusst') }}
         </IconButton>
         <IconButton icon="accept" @click="$emit('repeat', Rating.Good)">
-            {{ $gettext('Gut') }}
+            {{ $gettext('Gewusst') }}
         </IconButton>
         <IconButton icon="accept" @click="$emit('repeat', Rating.Hard)">
-            {{ $gettext('Schwer') }}
+            {{ $gettext('Teilweise gewusst') }}
         </IconButton>
         <IconButton icon="decline" @click="$emit('repeat', Rating.Again)">
             {{ $gettext('Nochmal') }}

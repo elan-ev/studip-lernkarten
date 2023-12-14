@@ -5,9 +5,7 @@ import { useFsrs } from '../composables/fsrs.js';
 
 const { State } = useFsrs();
 
-const props = defineProps(['cardStates', 'dueCards']);
-
-const cardsLeft = computed(() => props.dueCards.length);
+const props = defineProps(['cardStates', 'cardsLeft', 'order']);
 
 const newCards = computed(() => props.cardStates.get(State.New));
 const learningCards = computed(() => props.cardStates.get(State.Learning));
@@ -21,9 +19,9 @@ const relearningCards = computed(() => props.cardStates.get(State.Relearning));
             <span>
                 <span class="">
                     <StudipIcon class="tw-align-middle tw-mr-1" shape="dialog-cards" role="info" />
-                    <span>Alle Karten</span>
+                    <span>{{ order.text }}</span>
                 </span>
-                <span>
+                <span v-if="false">
                     <span class="tw-bg-[new]">{{ newCards }}</span>
                     <span class="tw-bg-[red]">{{ learningCards }}</span>
                     <span class="tw-bg-[green]">{{ reviewCards }}</span>

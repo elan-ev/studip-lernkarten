@@ -2,6 +2,7 @@
 
 namespace Lernkarten\JsonApi\Routes;
 
+use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
 use JsonApi\Errors\RecordNotFoundException;
 use Lernkarten\Models\Deck;
@@ -22,6 +23,10 @@ class DecksCopy extends JsonApiController
         $deck = Deck::find($args['id']);
         if (!$deck) {
             throw new RecordNotFoundException('Could not find Deck.');
+        }
+
+        if ($this->cannot($request, 'copy', $deck)) {
+            throw new AuthorizationFailedException();
         }
 
         $user = $this->getUser($request);

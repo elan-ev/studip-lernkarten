@@ -37,9 +37,11 @@ class FoldersCreate extends JsonApiController
     {
         $json = $this->validate($request);
 
-        // if (!Authority::canCreatePeerReviewProcesses($user, $taskGroup)) {
-        //     throw new AuthorizationFailedException();
-        // }
+        /** @var Course|User */
+        $context = $this->getContextFromJson($json);
+        if ($this->cannot($request, 'create', Folder::class, $context)) {
+            throw new AuthorizationFailedException();
+        }
 
         $resource = $this->create($json);
 

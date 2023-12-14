@@ -22,7 +22,11 @@ export const useSemestersStore = defineStore(
             isLoading.value = true;
 
             try {
-                const { data } = await api.fetch(`semesters`, { params: {} });
+                const { data } = await api.fetch(`semesters`, {
+                    params: {
+                        'page[limit]': 1000,
+                    },
+                });
                 data.forEach(storeRecord);
             } catch (errors) {
                 console.error('fetching semesters', errors);
@@ -45,5 +49,5 @@ export const useSemestersStore = defineStore(
     },
     {
         persist: true,
-    },
+    }
 );

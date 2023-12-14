@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import DashboardView from '../views/DashboardView.vue';
+import SharedDecksView from '../views/SharedDecksView.vue';
 import DecksCreateView from '../views/DecksCreateView.vue';
 import DeckView from '../views/DeckView.vue';
 import FolderView from '../views/FolderView.vue';
@@ -11,24 +11,21 @@ const absoluteUriStudip = new URL(window.STUDIP.ABSOLUTE_URI_STUDIP);
 const cid = window.STUDIP.URLHelper.parameters.cid;
 const baseUrl = `${absoluteUriStudip.pathname}plugins.php/lernkartenplugin/`;
 
+const isCourse = 'cid' in window.STUDIP.URLHelper.parameters;
+
 const router = createRouter({
     history: createWebHistory(baseUrl),
     routes: [
         {
             path: '/',
             name: 'home',
-            component: DashboardView,
+            component: isCourse ? SharedDecksView : FoldersView,
         },
         {
             path: '/search',
             name: 'search',
             component: SearchView,
             props: (route) => ({ query: route.query.q }),
-        },
-        {
-            path: '/folders',
-            name: 'folders',
-            component: FoldersView,
         },
         {
             path: '/folders/:id',
@@ -49,10 +46,15 @@ const router = createRouter({
             props: (route) => ({ folder: route.query.f }),
         },
         {
-            path: '/study/:id',
+            path: '/study',
             name: 'study',
             component: StudyView,
-            props: true,
+            props: (route) => {
+                return {
+                    decks: route?.query?.decks ?? [],
+                    order: route?.query?.order ?? null
+                }
+            },
         },
     ],
 });

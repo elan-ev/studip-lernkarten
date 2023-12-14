@@ -34,7 +34,12 @@ class FoldersIndex extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $resources = Folder::findBySql("1");
+        if ($this->cannot($request, 'viewAny', Folder::class)) {
+            throw new AuthorizationFailedException();
+        }
+
+        $resources = Folder::findByUser($this->getUser($request));
+
         return $this->getPaginatedContentResponse(
             array_slice($resources, ...$this->getOffsetAndLimit()),
             count($resources)

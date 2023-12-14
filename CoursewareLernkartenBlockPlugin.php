@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
-
 use Courseware\CoursewarePlugin;
 use Lernkarten\Courseware\LernkartenBlock;
 
@@ -14,8 +12,12 @@ class CoursewareLernkartenBlockPlugin extends StudIPPlugin implements SystemPlug
     {
         parent::__construct();
 
-        $this->addJavascript();
-        $this->addStyles();
+        require_once __DIR__ . '/vendor/autoload.php';
+
+        if (match_route('dispatch.php/*/courseware')) {
+            $this->addJavascript();
+            $this->addStyles();
+        }
     }
 
     private function addJavascript(): void

@@ -29,14 +29,15 @@ const showConfirmDelete = ref(false);
 const cardView = computed(() => cardViews[cardViewMode.value]);
 const readableState = computed(() => translatedStates[props.card.state]);
 
-const reset = () => {};
+const reset = () => {
+    cardViewMode.value = 'show'
+};
 const setIsOpen = (value) => {
     emit('update:open', value);
     reset();
 };
 const onSubmit = () => {};
 const onEdit = () => {
-    console.debug('onEdit', props.card, cardViewMode.value);
     cardViewMode.value = 'edit';
 };
 const onMove = () => {
@@ -104,8 +105,10 @@ const deleteCard = () => {
                     </div>
                     <div>
                         <div class="tw-flex tw-gap-2">
+                            <div class="tw-grow tw-p-2 tw-bg-[var(--content-color-20)]">
+                                {{ readableState }}
+                            </div>
                             <div class="tw-grow tw-p-2 tw-text-[#00A279]">
-                                <StudipIcon shape="accept" />
                                 {{
                                     $gettext('%{ count } genau gewusst', {
                                         count: card['easy-count'],
@@ -121,7 +124,7 @@ const deleteCard = () => {
                             </div>
                             <div class="tw-grow tw-p-2 tw-text-[#e79e3d]">
                                 {{
-                                    $gettext('%{ count } kaum gewusst', {
+                                    $gettext('%{ count } teilweise gewusst', {
                                         count: card['hard-count'],
                                     })
                                 }}
@@ -132,9 +135,6 @@ const deleteCard = () => {
                                         count: card['again-count'],
                                     })
                                 }}
-                            </div>
-                            <div class="tw-grow tw-p-2 tw-bg-slate-100">
-                                {{ readableState }}
                             </div>
                         </div>
 

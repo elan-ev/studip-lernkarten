@@ -2,19 +2,36 @@ import { State, Rating, Card, FSRS } from 'fsrs.js';
 import { useGettext } from 'vue3-gettext';
 
 export function useFsrs() {
-    const createCard = (flashCard) => {
-        const card = new Card();
-        card.due = new Date(flashCard.due);
-        card.stability = flashCard.stability;
-        card.difficulty = flashCard.difficulty;
-        card.elapsed_days = flashCard['elapsed-days'];
-        card.scheduled_days = flashCard['scheduled-days'];
-        card.reps = flashCard.reps;
-        card.lapses = flashCard.lapses;
-        card.state = flashCard.state;
-        card.last_review = new Date(flashCard['last-review']);
+    const fromFlashcard = (flashCard) => {
+        return {
+            due: new Date(flashCard.due),
+            stability: flashCard.stability,
+            difficulty: flashCard.difficulty,
+            elapsed_days: flashCard['elapsed-days'],
+            scheduled_days: flashCard['scheduled-days'],
+            reps: flashCard.reps,
+            lapses: flashCard.lapses,
+            state: flashCard.state,
+            last_review: new Date(flashCard['last-review']),
+        };
+    };
 
-        return card;
+    const toFlashcard = (card) => {
+        return {
+            due: card.due,
+            stability: card.stability,
+            difficulty: card.difficulty,
+            'elapsed-days': Math.floor(card.elapsed_days),
+            'scheduled-days': card.scheduled_days,
+            reps: card.reps,
+            lapses: card.lapses,
+            state: card.state,
+            'last-review': card.last_review,
+        };
+    };
+
+    const createCard = (flashCard) => {
+        return Object.assign(new Card(), fromFlashcard(flashCard));
     };
 
     const fsrs = new FSRS();
@@ -29,7 +46,7 @@ export function useFsrs() {
         const card = createCard(flashCard);
         const schedulingInfos = fsrs.repeat(card, new Date());
 
-        return schedulingInfos[rating].card;
+        return toFlashcard(schedulingInfos[rating].card);
     };
 
     const { $gettext } = useGettext();

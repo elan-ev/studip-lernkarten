@@ -1,18 +1,28 @@
 <script setup>
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
 import Button from './IconButton.vue';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipIcon from './base/StudipIcon.vue';
+import { useSchedulerOptions } from '../composables/scheduler.js';
 
-const { $gettext } = useGettext();
+const router = useRouter();
+const schedulerOptions = useSchedulerOptions();
 
-const props = defineProps(['open', 'deck']);
-const emit = defineEmits(['update:open', 'confirm']);
+const props = defineProps(['open', 'decks']);
+const emit = defineEmits(['update:open']);
 
 const initialFocus = ref(null);
+const selectedOrder = ref(schedulerOptions.defaultOrder.value);
 
-const reset = () => {};
+const selectableOrders = computed(() => {
+    return schedulerOptions.orders.value;
+});
+
+const reset = () => {
+    selectedOrder.value = schedulerOptions.defaultOrder.value;
+};
 
 const setIsOpen = (value) => {
     emit('update:open', value);
@@ -20,7 +30,10 @@ const setIsOpen = (value) => {
 };
 
 const onConfirm = () => {
-    emit('confirm', {});
+    const decks = props.decks.map(({ id }) => id).join(',');
+    const order = selectedOrder.value;
+    router.push({ name: 'study', query: { decks, order } });
+    setIsOpen(false);
 };
 </script>
 
@@ -49,8 +62,28 @@ const onConfirm = () => {
                             aria-hidden="true"
                             >*</span
                         >
-                        <select>
-                            <option>{{ deck.name }}</option>
+                        <ul>
+                            <li v-for="deck in decks" :key="deck.id">
+                                {{ deck.name }}
+                            </li>
+                        </ul>
+                    </label>
+                </div>
+                <div class="formpart">
+                    <label class="studiprequired">
+                        <span class="textlabel">
+                            {{ $gettext('Lernreihenfolge') }}
+                        </span>
+                        <span
+                            class="asterisk"
+                            :title="$gettext('Dies ist ein Pflichtfeld')"
+                            aria-hidden="true"
+                            >*</span
+                        >
+                        <select v-model="selectedOrder" ref="initialFocus">
+                            <option v-for="[value, { text }] in selectableOrders" :value="value">
+                                {{ text }}
+                            </option>
                         </select>
                     </label>
                 </div>

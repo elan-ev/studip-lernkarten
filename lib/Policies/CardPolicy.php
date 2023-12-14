@@ -3,6 +3,7 @@
 namespace Lernkarten\Policies;
 
 use Lernkarten\Models\Card;
+use Lernkarten\Models\Deck;
 use User;
 
 /**
@@ -17,6 +18,16 @@ class CardPolicy
     {
         // The cards will be filtered by this user.
         return true;
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function viewAnyOfDeck(User $user, Deck $observed): bool
+    {
+        return $observed->owner_id === $user->id;
     }
 
     /**

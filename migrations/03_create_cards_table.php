@@ -14,7 +14,7 @@ class CreateCardsTable extends Migration
             CREATE TABLE `lernkarten_cards` (
               `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
               `note_id` int(11) UNSIGNED NOT NULL,
-              `original_note_id` int(11) UNSIGNED NOT NULL,
+              `original_card_id` int(11) UNSIGNED NOT NULL,
               `deck_id` int(11) UNSIGNED NOT NULL,
               `due` int(11) NULL,
               `stability` float NULL,

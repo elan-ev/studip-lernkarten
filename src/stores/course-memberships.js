@@ -6,6 +6,8 @@ import { useContextStore } from './context.js';
 export const useCourseMembershipsStore = defineStore(
     'courseMemberships',
     () => {
+        const contextStore = useContextStore();
+
         const records = ref(new Map());
         const isLoading = ref(false);
         const errors = ref(false);
@@ -25,7 +27,10 @@ export const useCourseMembershipsStore = defineStore(
 
             try {
                 const { data } = await api.fetch(`users/${userId.value}/course-memberships`, {
-                    params: { include: 'course' },
+                    params: {
+                        include: 'course',
+                        'page[limit]': 1000,
+                    },
                 });
                 data.forEach(storeRecord);
             } catch (errors) {
@@ -35,19 +40,42 @@ export const useCourseMembershipsStore = defineStore(
             isLoading.value = false;
         }
 
+        async function fetchContext() {
+            isLoading.value = true;
+            try {
+                const { data } = await api.fetch(
+                    `course-memberships/${contextStore.id}_${contextStore.userId}`,
+                    {
+                        params: { include: 'course' },
+                    }
+                );
+                storeRecord(data);
+            } catch (errors) {
+                console.error('fetching course-membership', errors);
+                errors.value = errors;
+            }
+            isLoading.value = false;
+        }
+
+        function byContext() {
+            return byId(`${contextStore.id}_${contextStore.userId}`);
+        }
+
         function byId(id) {
             return records.value.get(id);
         }
 
         return {
             all,
+            byContext,
             byId,
             errors,
             fetch,
+            fetchContext,
             isLoading,
         };
     },
     {
         persist: true,
-    },
+    }
 );

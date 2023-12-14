@@ -78,7 +78,11 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
         PageLayout::addStylesheet($pluginUrl . '/dist/style.css');
         PageLayout::addScript($pluginUrl . '/dist/lernkarten.js', ['type' => 'module']);
 
-        $initialState = [];
+        $initialState = [
+            'isTeacher' => Context::isCourse()
+                ? $GLOBALS['perm']->have_studip_perm('tutor', Context::getId())
+                : $GLOBALS['perm']->have_perm('tutor'),
+        ];
 
         echo $GLOBALS['template_factory']->render('layouts/base', [
             'content_for_layout' => $this->bootstrapHtml($initialState),
@@ -118,18 +122,14 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
         $params = $cid ? ['cid' => $cid] : [];
         $navigation = new Navigation($this->_('Lernkarten'));
         $navigation->setDescription(
-            $this->_('Lorem ipsum dolor sit amet, consectetur adipisicing elit.')
+            // TODO
+            $this->_('Eigene Kartensätze erstellen, teilen und in Kurse einbinden')
         );
         $navigation->setImage(Icon::create('dialog-cards', 'navigation'));
         $navigation->setURL(PluginEngine::getURL($this, $params, '', true));
 
         // subnavigation
         $navigation->addSubnavigation('index', clone $navigation);
-        // TODO: Das dürfen abhängig vom Kontext wohl nicht alle sehen?
-        $folders = new Navigation($this->_('Ordnerverwaltung'));
-        $folders->setImage(Icon::create('folder-full', 'navigation'));
-        $folders->setURL(PluginEngine::getURL($this, $params, 'folders', true));
-        $navigation->addSubnavigation('folders', $folders);
 
         return $navigation;
     }

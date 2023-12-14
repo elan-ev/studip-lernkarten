@@ -25,26 +25,45 @@ export const useDecksStore = defineStore(
             return all.value.filter((deck) => deck.context.data.id === context);
         });
 
-        async function fetchContext() {
+        const fromWorkplace = computed(() => {
+            return all.value.filter((deck) => deck.context.data.type === 'users');
+        });
+
+        function fetchDecksOf(type, id) {
             isLoading.value = true;
-            try {
-                const { data } = await api.fetch(
-                    `${contextStore.type}/${contextStore.id}/lernkarten-decks`,
-                    { params: { include: 'folder,owner,shared-with,template.owner' } }
-                );
-                data.forEach(storeRecord);
-            } catch (errors) {
-                console.error('fetching decks', errors);
-                errors.value = errors;
-            }
-            isLoading.value = false;
+            return api
+                .fetch(`${type}/${id}/lernkarten-decks`, {
+                    params: {
+                        include: 'folder,owner,shared-with,template.owner',
+                        'page[limit]': 1000,
+                    },
+                })
+                .then(({ data }) => {
+                    data.forEach(storeRecord);
+                    isLoading.value = false;
+                })
+                .catch((errors) => {
+                    console.error('fetching decks', errors);
+                    errors.value = errors;
+                })
+                .finally(() => (isLoading.value = false));
+        }
+
+        function fetchContext() {
+            return fetchDecksOf(contextStore.type, contextStore.id);
+        }
+
+        function fetchWorkplace() {
+            return fetchDecksOf('users', contextStore.userId);
         }
 
         async function fetchById(id) {
             isLoading.value = true;
             try {
                 const { data } = await api.fetch(`lernkarten-decks/${id}`, {
-                    params: { include: 'folder,owner,shared-with,template.owner' },
+                    params: {
+                        include: 'folder,owner,shared-with,template.owner',
+                    },
                 });
                 storeRecord(data);
             } catch (errors) {
@@ -59,18 +78,16 @@ export const useDecksStore = defineStore(
         }
 
         async function copyDeck(deck) {
-            const { data } = await api.post(
-                `lernkarten-decks/${deck.id}/copy`,
-                deck,
-            );
+            const { data } = await api.post(`lernkarten-decks/${deck.id}/copy`, deck);
 
             return fetchById(data.id);
         }
 
-        async function createDeck(folder, name, description) {
+        async function createDeck(folder, name, description, metadata) {
             const record = {
                 name,
                 description,
+                metadata,
                 context: { data: { id: contextStore.id, type: contextStore.type } },
                 folder: {
                     data: folder ? { id: folder.id, type: 'lernkarten-folders' } : null,
@@ -88,6 +105,11 @@ export const useDecksStore = defineStore(
                 .then(() => records.value.delete(deck.id));
         }
 
+        async function updateDeck(deck, attributes) {
+            const { data } = await api.patch('lernkarten-decks', { id: deck.id, ...attributes });
+            return fetchById(deck.id);
+        }
+
         return {
             all,
             byContext,
@@ -98,7 +120,10 @@ export const useDecksStore = defineStore(
             errors,
             fetchById,
             fetchContext,
+            fetchWorkplace,
+            fromWorkplace,
             isLoading,
+            updateDeck,
         };
     },
     {

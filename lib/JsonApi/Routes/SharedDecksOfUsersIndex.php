@@ -2,6 +2,7 @@
 
 namespace Lernkarten\JsonApi\Routes;
 
+use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
 use Lernkarten\JsonApi\Schemas\SharedDeck as SharedDeckSchema;
@@ -39,6 +40,10 @@ class SharedDecksOfUsersIndex extends JsonApiController
         $resource = \User::find($args['id']);
         if (!$resource) {
             throw new RecordNotFoundException();
+        }
+
+        if ($this->cannot($request, 'viewAnyOfUser', SharedDeck::class, $resource)) {
+            throw new AuthorizationFailedException();
         }
 
         $resources = SharedDeck::findBySql('recipient_id = ? AND recipient_type = ?', [
