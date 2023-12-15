@@ -1,9 +1,6 @@
 <script setup>
 import { computed } from 'vue';
 import BarChart from './BarChart.vue';
-import Button from './IconButton.vue';
-import StudipAvatar from './base/StudipAvatar.vue';
-import StudipDate from '../components/base/StudipDate.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import { useFsrs } from '../composables/fsrs.js';
 import { useCardsStore } from '../stores/cards.js';
@@ -40,7 +37,7 @@ const cardsByState = computed(() => {
         <section>
             <table>
                 <tbody>
-                    <tr v-for="(bucket, index) in cardsByState.reverse()">
+                    <tr v-for="(bucket, index) in cardsByState.reverse()" :key="index">
                         <td>{{ bucket.name }}</td>
                         <td class="tw-w-32">
                             <BarChart :percent="Math.floor((100 * bucket.count) / cards.length)" />

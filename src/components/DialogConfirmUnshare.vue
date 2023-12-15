@@ -1,5 +1,4 @@
 <script setup>
-import { computed, ref } from 'vue';
 import StudipDialog from './base/StudipDialog.vue';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 

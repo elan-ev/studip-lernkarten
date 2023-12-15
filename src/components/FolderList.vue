@@ -11,8 +11,7 @@ const sortOrder = ref('asc');
 const sortBy = ref('name');
 
 const sortData = (sortOrder, sortBy) => {
-    return function(a,b) {
-
+    return function (a, b) {
         let modifier = 1;
         if (sortOrder === 'desc') {
             modifier = -1;
@@ -29,8 +28,8 @@ const sortData = (sortOrder, sortBy) => {
         } else if (a[sortBy] > b[sortBy]) {
             return 1 * modifier;
         }
-    }
-}
+    };
+};
 
 const sortedFolders = computed(() => {
     if (props.folders && props.folders.length) {
@@ -43,74 +42,78 @@ const sortedFolders = computed(() => {
 
 const toggleSort = (field) => {
     if (sortBy.value == field) {
-        sortOrder.value = (sortOrder.value == 'asc') ? 'desc' : 'asc';
+        sortOrder.value = sortOrder.value == 'asc' ? 'desc' : 'asc';
     } else {
         sortOrder.value = 'asc';
     }
 
     sortBy.value = field;
-}
+};
 </script>
 
 <template>
     <colgroup>
-        <col style="width: 36px;">
-        <col>
-        <col style="width: 64px;">
+        <col style="width: 36px" />
+        <col />
+        <col style="width: 64px" />
     </colgroup>
     <thead>
         <tr class="sortable">
             <th></th>
-            <th :class="{
-                    'sortasc' : sortBy == 'name' && sortOrder == 'asc',
-                    'sortdesc' : sortBy == 'name' && sortOrder == 'desc'
+            <th
+                :class="{
+                    sortasc: sortBy == 'name' && sortOrder == 'asc',
+                    sortdesc: sortBy == 'name' && sortOrder == 'desc',
                 }"
                 @click="toggleSort('name')"
                 class="tw-cursor-pointer"
-            >{{ $gettext('Name') }}</th>
+            >
+                {{ $gettext('Name') }}
+            </th>
             <th class="actions">{{ $gettext('Aktionen') }}</th>
         </tr>
     </thead>
 
     <tbody>
-        <tr
-            v-if="sortedFolders.length > 0"
-            class="studip toggle tw-my-2"
-            v-for="folder in folders"
-            :key="folder.id"
-        >
-            <td>
-                <StudipIcon
-                    shape="folder-empty"
-                    :height="26"
-                    :width="26"
-                    class="tw-align-middle tw-mr-1 tw-mb-1"
-                />
-            </td>
-            <td>
-                <RouterLink :to="{ name: 'folder', params: { id: folder.id } }">{{
-                    folder.name
-                }}</RouterLink>
-            </td>
-            <td class="actions">
-                <nav>
-                    <button type="button" @click="editFolder(folder)"
-                        class="tw-border-0 tw-p-0 tw-bg-transparent tw-cursor-pointer tw-mr-2"
-                        :title="$gettext('Bearbeiten')"
-                    >
-                        <StudipIcon shape="edit" class="tw-align-middle" />
-                        <span class="sr-only">{{ $gettext('Bearbeiten') }}</span>
-                    </button>
-                    <button type="button" @click="deleteFolder(folder)"
-                        class="tw-border-0 tw-p-0 tw-bg-transparent tw-cursor-pointer"
-                        :title="$gettext('Löschen')"
-                    >
-                        <StudipIcon shape="trash" class="tw-align-middle" />
-                        <span class="sr-only">{{ $gettext('Löschen') }}</span>
-                    </button>
-                </nav>
-            </td>
-        </tr>
+        <template v-if="sortedFolders.length > 0">
+            <tr class="studip toggle tw-my-2" v-for="folder in folders" :key="folder.id">
+                <td>
+                    <StudipIcon
+                        shape="folder-empty"
+                        :height="26"
+                        :width="26"
+                        class="tw-align-middle tw-mr-1 tw-mb-1"
+                    />
+                </td>
+                <td>
+                    <RouterLink :to="{ name: 'folder', params: { id: folder.id } }">{{
+                        folder.name
+                    }}</RouterLink>
+                </td>
+                <td class="actions">
+                    <nav>
+                        <button
+                            type="button"
+                            @click="editFolder(folder)"
+                            class="tw-border-0 tw-p-0 tw-bg-transparent tw-cursor-pointer tw-mr-2"
+                            :title="$gettext('Bearbeiten')"
+                        >
+                            <StudipIcon shape="edit" class="tw-align-middle" />
+                            <span class="sr-only">{{ $gettext('Bearbeiten') }}</span>
+                        </button>
+                        <button
+                            type="button"
+                            @click="deleteFolder(folder)"
+                            class="tw-border-0 tw-p-0 tw-bg-transparent tw-cursor-pointer"
+                            :title="$gettext('Löschen')"
+                        >
+                            <StudipIcon shape="trash" class="tw-align-middle" />
+                            <span class="sr-only">{{ $gettext('Löschen') }}</span>
+                        </button>
+                    </nav>
+                </td>
+            </tr>
+        </template>
         <tr v-else>
             <td colspan="3">
                 <slot name="empty">

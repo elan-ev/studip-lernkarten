@@ -1,12 +1,11 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import BasicBack from './cards/BasicBack.vue';
 import BasicFront from './cards/BasicFront.vue';
 import ImageBack from './cards/ImageBack.vue';
 import ImageFront from './cards/ImageFront.vue';
 import IconButton from './IconButton.vue';
-import RadialProgress from './RadialProgress.vue';
 import StudipCompanion from './base/StudipCompanion.vue';
 import StudipIcon from './base/StudipIcon.vue';
 import StudipProgressIndicator from './base/StudipProgressIndicator.vue';
@@ -15,7 +14,6 @@ import StudyViewRepeatButtons from './StudyViewRepeatButtons.vue';
 import StudyViewStatistics from './StudyViewStatistics.vue';
 import { useFsrs } from '../composables/fsrs.js';
 import { useScheduler } from '../composables/scheduler.js';
-import { useDecksStore } from '../stores/decks.js';
 
 const { translatedStates } = useFsrs();
 
@@ -33,7 +31,6 @@ const { cardStates, cards, cardsLeft, decks, isLoading, order, queuedCard, ratin
         order: props.order,
     });
 
-const decksStore = useDecksStore();
 const showAnswer = ref(false);
 const showCongratulations = ref(false);
 
@@ -68,7 +65,7 @@ const onCancel = () => emit('cancel');
 const onContinue = () => ( showCongratulations.value = false);
 const onShowAnswer = () => (showAnswer.value = true);
 const onRepeat = (rating) => {
-    const card = repeat(rating);
+    repeat(rating);
     showAnswer.value = false;
     if (!queuedCard.value) {
         showCongratulations.value = true;

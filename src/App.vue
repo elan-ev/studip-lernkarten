@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import SidebarActions from './components/SidebarActions.vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipMessageBox from './base/StudipMessageBox.vue';
 
-const props = defineProps(['open']);
+defineProps(['open']);
 const emit = defineEmits(['update:open', 'confirm']);
 
 const invalid = ref(false);

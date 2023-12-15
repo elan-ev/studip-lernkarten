@@ -6,7 +6,6 @@ import StudipDialog from './base/StudipDialog.vue';
 import StudipProgressIndicator from './base/StudipProgressIndicator.vue';
 import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
-import { useFoldersStore } from '../stores/folders.js';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 
 const contextStore = useContextStore();
@@ -17,7 +16,7 @@ const sharedDecksStore = useSharedDecksStore();
 decksStore.fetchWorkplace();
 sharedDecksStore.fetchContext();
 
-const props = defineProps(['open']);
+defineProps(['open']);
 const emit = defineEmits(['update:open']);
 
 const initialFocus = ref(null);

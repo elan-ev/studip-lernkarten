@@ -1,12 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
 import StudipDialog from './base/StudipDialog.vue';
-import StudipMessageBox from './base/StudipMessageBox.vue';
 
-const props = defineProps(['open']);
-const emit = defineEmits(['update:open', 'confirm']);
-
-const setIsOpen = (value) => emit('update:open', value);
+defineProps(['open']);
+defineEmits(['update:open', 'confirm']);
 </script>
 
 <template>

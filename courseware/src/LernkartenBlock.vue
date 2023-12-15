@@ -30,7 +30,6 @@
 </template>
 
 <script>
-const get = window._.get.bind(window._);
 import { mapActions, mapGetters } from 'vuex';
 
 export default {

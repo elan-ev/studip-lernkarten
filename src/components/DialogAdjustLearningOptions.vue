@@ -1,10 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useGettext } from 'vue3-gettext';
-import Button from './IconButton.vue';
 import StudipDialog from './base/StudipDialog.vue';
-import StudipIcon from './base/StudipIcon.vue';
 import { useSchedulerOptions } from '../composables/scheduler.js';
 
 const router = useRouter();
@@ -81,7 +78,7 @@ const onConfirm = () => {
                             >*</span
                         >
                         <select v-model="selectedOrder" ref="initialFocus">
-                            <option v-for="[value, { text }] in selectableOrders" :value="value">
+                            <option v-for="[value, { text }] in selectableOrders" :key="value" :value="value">
                                 {{ text }}
                             </option>
                         </select>

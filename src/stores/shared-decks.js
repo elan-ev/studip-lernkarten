@@ -31,9 +31,9 @@ export const useSharedDecksStore = defineStore(
                     },
                 });
                 storeRecord(data);
-            } catch (errors) {
-                console.error('fetching shared deck', errors);
-                errors.value = errors;
+            } catch (err) {
+                console.error('fetching shared deck', err);
+                errors.value = err;
             }
             isLoading.value = false;
         }

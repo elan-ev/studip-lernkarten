@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 
 import StudyView from '../components/StudyView.vue';
 
-const props = defineProps(['decks', 'order']);
+defineProps(['decks', 'order']);
 
 const router = useRouter();
 onMounted(enableCompactNavigation);

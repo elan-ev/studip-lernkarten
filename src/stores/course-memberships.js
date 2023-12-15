@@ -33,9 +33,9 @@ export const useCourseMembershipsStore = defineStore(
                     },
                 });
                 data.forEach(storeRecord);
-            } catch (errors) {
-                console.error('fetching course-memberships', errors);
-                errors.value = errors;
+            } catch (err) {
+                console.error('fetching course-memberships', err);
+                errors.value = err;
             }
             isLoading.value = false;
         }
@@ -50,9 +50,9 @@ export const useCourseMembershipsStore = defineStore(
                     }
                 );
                 storeRecord(data);
-            } catch (errors) {
-                console.error('fetching course-membership', errors);
-                errors.value = errors;
+            } catch (err) {
+                console.error('fetching course-membership', err);
+                errors.value = err;
             }
             isLoading.value = false;
         }

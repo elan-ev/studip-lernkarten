@@ -1,7 +1,7 @@
 <script setup>
 import ListItem from './SharedDeckListItem.vue';
 
-const props = defineProps(['sharedDecks']);
+defineProps(['sharedDecks']);
 </script>
 
 <template>

@@ -1,9 +1,6 @@
 <script setup>
-import { computed, ref } from 'vue';
 import { useGettext } from 'vue3-gettext';
-import Button from './IconButton.vue';
 import StudipDialog from './base/StudipDialog.vue';
-import StudipIcon from './base/StudipIcon.vue';
 import { useDecksStore } from '../stores/decks.js';
 
 const { $gettext } = useGettext();

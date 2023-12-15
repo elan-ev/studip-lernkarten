@@ -42,9 +42,9 @@ export const useDecksStore = defineStore(
                     data.forEach(storeRecord);
                     isLoading.value = false;
                 })
-                .catch((errors) => {
-                    console.error('fetching decks', errors);
-                    errors.value = errors;
+                .catch((err) => {
+                    console.error('fetching decks', err);
+                    errors.value = err;
                 })
                 .finally(() => (isLoading.value = false));
         }
@@ -66,9 +66,9 @@ export const useDecksStore = defineStore(
                     },
                 });
                 storeRecord(data);
-            } catch (errors) {
-                console.error('fetching decks', errors);
-                errors.value = errors;
+            } catch (err) {
+                console.error('fetching decks', err);
+                errors.value = err;
             }
             isLoading.value = false;
         }
@@ -106,7 +106,7 @@ export const useDecksStore = defineStore(
         }
 
         async function updateDeck(deck, attributes) {
-            const { data } = await api.patch('lernkarten-decks', { id: deck.id, ...attributes });
+            await api.patch('lernkarten-decks', { id: deck.id, ...attributes });
             return fetchById(deck.id);
         }
 

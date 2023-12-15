@@ -50,7 +50,7 @@ const actionList = computed(() => {
         <div class="sidebar-widget-content">
             <form method="post">
                 <ul class="widget-list widget-links" :aria-label="$gettext('Aktionen')">
-                    <li v-for="action in actionList" class="!tw-pl-0">
+                    <li v-for="(action, index) in actionList" :key="index" class="!tw-pl-0">
                         <button type="button" @click="action.click">
                             <StudipIcon :shape="action.icon" class="!tw-align-middle" />
                             {{ action.text }}

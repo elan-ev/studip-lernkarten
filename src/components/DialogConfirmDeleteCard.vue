@@ -1,9 +1,8 @@
 <script setup>
 import StudipDialog from './base/StudipDialog.vue';
 
-const props = defineProps(['open']);
-const emit = defineEmits(['update:open', 'confirm']);
-
+defineProps(['open']);
+defineEmits(['update:open', 'confirm']);
 </script>
 
 <template>

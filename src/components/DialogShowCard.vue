@@ -36,7 +36,6 @@ const setIsOpen = (value) => {
     emit('update:open', value);
     reset();
 };
-const onSubmit = () => {};
 const onEdit = () => {
     cardViewMode.value = 'edit';
 };

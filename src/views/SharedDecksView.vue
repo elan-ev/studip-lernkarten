@@ -1,11 +1,7 @@
 <script setup>
 import { computed } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
-import DeckList from '../components/DeckList.vue';
-import IconButton from '../components/IconButton.vue';
 import SharedDeckList from '../components/SharedDeckList.vue';
 import StudipCompanion from '../components/base/StudipCompanion.vue';
-import StudipIcon from '../components/base/StudipIcon.vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
 import { useContextStore } from '../stores/context.js';
 import { useCourseMembershipsStore } from '../stores/course-memberships.js';
@@ -17,8 +13,6 @@ const courseMembershipsStore = useCourseMembershipsStore();
 const decksStore = useDecksStore();
 const sharedDecksStore = useSharedDecksStore();
 
-const router = useRouter();
-
 courseMembershipsStore.fetchContext();
 decksStore.fetchContext();
 sharedDecksStore.fetchContext();
@@ -26,9 +20,6 @@ sharedDecksStore.fetchContext();
 const isAtLeastTutor = computed(() =>
     ['tutor', 'dozent'].includes(courseMembershipsStore.byContext()?.permission)
 );
-
-const allDecks = computed(() => decksStore.byContext);
-const sharedDecks = computed(() => sharedDecksStore.all);
 
 const sharedByMe = computed(() =>
     sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId)
@@ -38,7 +29,6 @@ const sharedWithMe = computed(() =>
     sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId)
 );
 
-const allStandardDecks = computed(() => allDecks.value.filter(({ colearning }) => !colearning));
 const doneLoading = computed(
     () => !courseMembershipsStore.isLoading && !decksStore.isLoading && !sharedDecksStore.isLoading
 );

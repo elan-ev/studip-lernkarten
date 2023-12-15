@@ -29,9 +29,9 @@ export const useInstancesStore = defineStore(
                     },
                 });
                 data.forEach(storeRecord);
-            } catch (errors) {
-                console.error('fetching lernkarten-instances', errors);
-                errors.value = errors;
+            } catch (err) {
+                console.error('fetching lernkarten-instances', err);
+                errors.value = err;
             }
             isLoading.value = false;
         }

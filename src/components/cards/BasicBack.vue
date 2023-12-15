@@ -1,5 +1,5 @@
 <script setup>
-const props = defineProps(['card']);
+defineProps(['card']);
 </script>
 
 <template>

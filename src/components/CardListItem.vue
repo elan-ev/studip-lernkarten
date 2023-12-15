@@ -1,7 +1,7 @@
 <script setup>
 import CardSmallImage from "./CardSmallImage.vue";
 
-const props = defineProps(['card', 'index']);
+defineProps(['card', 'index']);
 const emit = defineEmits(['select']);
 
 const extractContent = (html) => {

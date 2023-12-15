@@ -28,7 +28,7 @@ const setIsOpen = (value) => {
     emit('update:open', value);
     reset();
 };
-const onConfirm = (...args) => {
+const onConfirm = () => {
     if (!errorsFound.value.length) {
         cardsStore.importCards(props.deck, records.value).then(() => {
             setIsOpen(false);
@@ -37,12 +37,12 @@ const onConfirm = (...args) => {
         });
     }
 };
-const setImport = (...args) => {
+const setImport = () => {
     reset();
     Papa.parse(importFile.value.files[0], {
         header: false,
         skipEmptyLines: true,
-        step({ data, errors, meta }, parser) {
+        step({ data, errors }) {
             if (errors.length) {
                 console.error('Could not parse CSV file.', { errors, data });
                 errorsFound.value.push([errors, data]);

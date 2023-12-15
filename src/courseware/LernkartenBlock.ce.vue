@@ -1,5 +1,5 @@
 <script setup>
-import { computed, getCurrentInstance, nextTick, onMounted, ref, toRaw, watch } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 import StudyView from '../components/StudyView.vue';

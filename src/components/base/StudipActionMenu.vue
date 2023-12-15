@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import StudipIcon from './StudipIcon.vue';
 
@@ -19,8 +19,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['']);
-
-const open = ref(false);
 
 const linkAttributes = (item) => {
     let attributes = item.attributes;

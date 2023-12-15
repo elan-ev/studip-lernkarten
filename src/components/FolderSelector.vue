@@ -10,7 +10,7 @@ const selectedFolder = ref(props.folder ?? null);
 
 watch(
     () => props.folder,
-    (newV, oldV) => {
+    () => {
         selectedFolder.value = props.folder ?? null;
     }
 );

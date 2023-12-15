@@ -60,7 +60,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (cid && !('cid' in to?.query)) {
+    if (cid && !('cid' in to.query)) {
         next({ ...to, query: { ...to.query, cid } });
     } else {
         next();

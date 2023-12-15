@@ -3,9 +3,7 @@ import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import CardDeck from './CardDeck.vue';
 import CardSharedDeck from './CardSharedDeck.vue';
-import { useDecksStore } from '../stores/decks.js';
 
-const decksStore = useDecksStore();
 const router = useRouter();
 
 const props = defineProps(['sharedDeck']);

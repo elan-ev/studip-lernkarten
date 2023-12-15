@@ -1,7 +1,6 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { api } from '../api.js';
-import { useContextStore } from './context.js';
 
 export const useSemestersStore = defineStore(
     'semesters',
@@ -28,9 +27,9 @@ export const useSemestersStore = defineStore(
                     },
                 });
                 data.forEach(storeRecord);
-            } catch (errors) {
-                console.error('fetching semesters', errors);
-                errors.value = errors;
+            } catch (err) {
+                console.error('fetching semesters', err);
+                errors.value = err;
             }
             isLoading.value = false;
         }

@@ -1,8 +1,6 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
-import IconButton from './IconButton.vue';
+import { ref, watch } from 'vue';
 import StudipDialog from './base/StudipDialog.vue';
-import StudipIcon from './base/StudipIcon.vue';
 import FolderSelector from '../components/FolderSelector.vue';
 import { useDecksStore } from '../stores/decks.js';
 import { useFoldersStore } from '../stores/folders.js';
@@ -44,7 +42,7 @@ watch(
 
 watch(
     () => props.deck,
-    (newV, oldV) => {
+    (newV) => {
         folder.value = foldersStore.byId(newV.folder?.data?.id);
     }
 )

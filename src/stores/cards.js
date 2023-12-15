@@ -1,7 +1,6 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { api } from '../api.js';
-import { useContextStore } from './context.js';
 
 export const useCardsStore = defineStore(
     'cards',
@@ -64,9 +63,9 @@ export const useCardsStore = defineStore(
             try {
                 const { data } = await api.patch('lernkarten-cards', { id: card.id, fields });
                 storeRecord(data);
-            } catch (errors) {
-                errors.value = errors;
-                console.error('Could not update fields', errors);
+            } catch (err) {
+                errors.value = err;
+                console.error('Could not update fields', err);
             }
         }
 
@@ -74,9 +73,9 @@ export const useCardsStore = defineStore(
             try {
                 const { data } = await api.patch('lernkarten-cards', { id: card.id, ...stats });
                 storeRecord(data);
-            } catch (errors) {
-                errors.value = errors;
-                console.error('Could not update stats', errors);
+            } catch (err) {
+                errors.value = err;
+                console.error('Could not update stats', err);
             }
         }
 

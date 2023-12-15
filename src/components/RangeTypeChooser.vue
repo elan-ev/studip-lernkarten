@@ -1,7 +1,7 @@
 <script setup>
 import StudipIcon from './base/StudipIcon.vue';
 
-const emits = defineEmits('update:modelValue');
+defineEmits('update:modelValue');
 </script>
 <template>
     <fieldset class="radiobutton-set">

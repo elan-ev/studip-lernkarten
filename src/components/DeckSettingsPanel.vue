@@ -55,7 +55,7 @@ const onExport = () => {
     const csv = Papa.unparse(data);
 
     const filename = `kartensatz-${props.deck.name}-${chdate.value}.csv`.replace(
-        /[\/|\\:*?"<>]/g,
+        /[/|\\:*?"<>]/g,
         ''
     );
 

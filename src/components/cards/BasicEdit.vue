@@ -38,7 +38,7 @@ const onStore = () => {
 const onCancel = () => emit('update:mode', 'show');
 
 const setImage = (base64, fileid) => {
-    images.values[fileid] = base64;
+    images.value.values[fileid] = base64;
 };
 
 watch(

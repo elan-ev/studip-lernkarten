@@ -1,8 +1,8 @@
 <script setup>
 import CardImage from "../CardImage.vue";
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 
-const props = defineProps(['card']);
+defineProps(['card']);
 
 const answer = ref('');
 const textarea = ref(null);

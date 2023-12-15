@@ -1,7 +1,5 @@
 <script setup>
-import { computed, ref, useSlots } from 'vue';
-
-const slots = useSlots();
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     type: {

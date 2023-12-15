@@ -1,7 +1,7 @@
 <script setup>
 import CardImage from "../CardImage.vue";
 
-const props = defineProps(['card']);
+defineProps(['card']);
 </script>
 
 <template>

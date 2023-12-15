@@ -1,7 +1,7 @@
 <script setup>
 import CardListItem from './CardListItem.vue';
 
-const props = defineProps(['cards']);
+defineProps(['cards']);
 const emit = defineEmits(['select']);
 
 const onSelect = (card) => emit('select', card);

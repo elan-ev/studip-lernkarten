@@ -1,7 +1,7 @@
 <script setup>
 import StudipIcon from './base/StudipIcon.vue';
 
-const props = defineProps(['icon', 'variant']);
+defineProps(['icon', 'variant']);
 </script>
 
 <template>

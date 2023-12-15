@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
-const props = defineProps(['course']);
+
+defineProps(['course']);
 const style = computed(() => {
     return {
         'background-image': `url('${window.STUDIP.ABSOLUTE_URI_STUDIP}pictures/course/nobody_medium.png')`,

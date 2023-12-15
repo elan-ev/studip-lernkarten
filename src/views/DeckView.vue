@@ -28,7 +28,6 @@ decksStore.fetchById(props.id);
 cardsStore.fetchByDeck({ id: props.id });
 
 const deck = computed(() => decksStore.byId(props.id));
-const cards = computed(() => cardsStore.byDeck({ id: props.id }));
 const folder = computed(() => deck.value?.folder.data ?? null);
 
 const onAdjustLearn = () => (showAdjustLearningDialog.value = true);

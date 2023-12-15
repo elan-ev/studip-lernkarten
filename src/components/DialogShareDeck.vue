@@ -1,9 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useGettext } from 'vue3-gettext';
-import Button from './IconButton.vue';
 import StudipDialog from './base/StudipDialog.vue';
-import StudipIcon from './base/StudipIcon.vue';
 import StudipMultiPersonSearch from './base/StudipMultiPersonSearch.vue';
 import RangeTypeChooser from './RangeTypeChooser.vue';
 import { useContextStore } from '../stores/context.js';

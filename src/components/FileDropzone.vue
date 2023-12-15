@@ -47,7 +47,7 @@ const onDragover = () => {
     hover.value = false;
 }
 
-const { getRootProps, getInputProps, open, ...rest } = useDropzone({
+const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     onDragenter,
     onDragleave,

@@ -4,7 +4,7 @@ import CardDeck from './CardDeck.vue';
 
 const router = useRouter();
 
-const props = defineProps(['decks']);
+defineProps(['decks']);
 
 const onSelectDeck = (deck) => {
     router.push({ name: 'deck', params: { id: deck.id } });

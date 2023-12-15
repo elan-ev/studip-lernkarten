@@ -1,15 +1,12 @@
 <script setup>
-import { computed, getCurrentInstance, onMounted, ref } from 'vue';
-import { api } from '../api.js';
-import CardSharedDeck from '../components/CardSharedDeck.vue';
-import IconButton from '../components/IconButton.vue';
+import { computed, onMounted, ref } from 'vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 
 const sharedDecksStore = useSharedDecksStore();
 
 const props = defineProps(["deck"]);
-const emit = defineEmits(['change']);
+defineEmits(['change']);
 
 const selectedSharedDeck = ref(null);
 

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
 import FolderSelector from '../components/FolderSelector.vue';

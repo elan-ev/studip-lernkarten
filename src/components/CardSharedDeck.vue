@@ -1,8 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { RouterLink } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
-import CardDeck from './CardDeck.vue';
 import DialogColearnSharedDeck from './DialogColearnSharedDeck.vue';
 import DialogConfirmUnshare from './DialogConfirmUnshare.vue';
 import DialogCopySharedDeck from './DialogCopySharedDeck.vue';

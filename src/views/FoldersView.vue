@@ -1,10 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
-import { useContextStore } from '../stores/context.js';
-import { useDecksStore } from '../stores/decks.js';
-import { useFoldersStore } from '../stores/folders.js';
-import CardDeck from '../components/CardDeck.vue';
+import { RouterLink } from 'vue-router';
 import DeckList from '../components/DeckList.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import DialogCreateFolder from '../components/DialogCreateFolder.vue';
@@ -12,11 +8,10 @@ import DialogEditFolder from '../components/DialogEditFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
 import IconButton from '../components/IconButton.vue';
-import Ribbon from '../components/Ribbon.vue';
 import StudipCompanion from '../components/base/StudipCompanion.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
-
-const router = useRouter();
+import { useDecksStore } from '../stores/decks.js';
+import { useFoldersStore } from '../stores/folders.js';
 
 const createDialogOpen = ref(false);
 const editDialogOpen = ref(false);
@@ -24,7 +19,6 @@ const confirmDeleteDialogOpen = ref(false);
 const selectedFolder = ref(null);
 const showAdjustLearningDialog = ref(false);
 
-const contextStore = useContextStore();
 const decksStore = useDecksStore();
 const foldersStore = useFoldersStore();
 const editFolderObject = ref(null);
@@ -72,19 +66,21 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
 
 <template>
     <table class="default">
-        <Ribbon>
-            <span :title="$gettext('Zum Hauptordner')">
-                <RouterLink :to="{ name: 'home' }">
-                    <StudipIcon
-                        shape="folder-home-empty"
-                        :height="30"
-                        :width="30"
-                        class="tw-align-middle tw-mr-2 tw-mb-1"
-                    />
-                    <span class="">{{ $gettext('Lernkarten') }}</span>
-                </RouterLink>
-            </span>
-        </Ribbon>
+        <caption>
+            <nav>
+                <span :title="$gettext('Zum Hauptordner')">
+                    <RouterLink :to="{ name: 'home' }">
+                        <StudipIcon
+                            shape="folder-home-empty"
+                            :height="30"
+                            :width="30"
+                            class="tw-align-middle tw-mr-2 tw-mb-1"
+                        />
+                        <span class="">{{ $gettext('Lernkarten') }}</span>
+                    </RouterLink>
+                </span>
+            </nav>
+        </caption>
 
         <FolderList :folders="topFolders" @delete-folder="deleteFolder" @edit-folder="editFolder">
             <template #empty>

@@ -1,5 +1,5 @@
 <script setup>
-import { Dialog, DialogTitle, DialogDescription, DialogPanel } from '@headlessui/vue';
+import { Dialog, DialogTitle, DialogPanel } from '@headlessui/vue';
 import { computed, nextTick, ref } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import VueResizable from 'vue-resizable';
@@ -104,13 +104,6 @@ const contentHeight = computed(() => {
 });
 const headerHeight = computed(() => {
     return headerRef.value?.offsetHeight ?? 0;
-});
-
-const contentStyle = computed(() => {
-    return {
-        height: dialogHeight.value + 'px',
-        width: dialogWidth.value + 'px',
-    };
 });
 
 const initSize = () => {

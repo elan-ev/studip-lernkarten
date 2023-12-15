@@ -39,9 +39,9 @@ export const useFoldersStore = defineStore('folders', () => {
                 },
             });
             data.forEach(storeRecord);
-        } catch (errors) {
-            console.error('fetching folders', errors);
-            errors.value = errors;
+        } catch (err) {
+            console.error('fetching folders', err);
+            errors.value = err;
         }
         isLoading.value = false;
     }
@@ -92,6 +92,7 @@ export const useFoldersStore = defineStore('folders', () => {
     return {
         all,
         ancestors,
+        byContext,
         byId,
         children,
         createFolder,
