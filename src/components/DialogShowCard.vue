@@ -67,7 +67,7 @@ const deleteCard = () => {
     >
         <template #dialogContent>
             <div class="tw-flex tw-items-stretch">
-                <div class="tw-w-12 tw-flex tw-items-center tw-justify-start">
+                <div class="tw-w-16 tw-shrink-0 tw-flex tw-items-center tw-justify-start">
                     <button
                         type="button"
                         @click="emit('show-prev')"
@@ -152,7 +152,7 @@ const deleteCard = () => {
                         />
                     </div>
                 </div>
-                <div class="tw-w-12 tw-flex tw-items-center tw-justify-end">
+                <div class="tw-w-16 tw-shrink-0 tw-flex tw-items-center tw-justify-end">
                     <button
                         type="button"
                         @click="emit('show-next')"
