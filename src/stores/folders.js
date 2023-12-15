@@ -22,7 +22,7 @@ export const useFoldersStore = defineStore('folders', () => {
     const topFolders = computed(() => {
         return _.sortBy(
             all.value.filter((folder) => !folder.parent.data && folder.context.data.id === context),
-            'name',
+            'name'
         );
     });
 
@@ -38,6 +38,27 @@ export const useFoldersStore = defineStore('folders', () => {
                     'page[limit]': 1000,
                 },
             });
+            data.forEach(storeRecord);
+        } catch (err) {
+            console.error('fetching folders', err);
+            errors.value = err;
+        }
+        isLoading.value = false;
+    }
+
+    async function fetchWorkplace() {
+        isLoading.value = true;
+        try {
+            const { data } = await api.fetch(
+                // TODO: Diese Route fehlt noch. Aktuell macht sie aber dasselbe
+                // `users/${contextStore.userId}/lernkarten-folders`,
+                `lernkarten-folders`,
+                {
+                    params: {
+                        'page[limit]': 1000,
+                    },
+                }
+            );
             data.forEach(storeRecord);
         } catch (err) {
             console.error('fetching folders', err);
@@ -99,6 +120,7 @@ export const useFoldersStore = defineStore('folders', () => {
         updateFolder,
         deleteFolder,
         fetch,
+        fetchWorkplace,
         isLoading,
         topFolders,
     };

@@ -96,7 +96,7 @@ const onStop = () => (showCongratulations.value = true);
                 mood="sad"
             >
                 <template #companionActions>
-                    <IconButton icon="decline" type="button" @click="onCancel">
+                    <IconButton v-if="!standalone" icon="decline" type="button" @click="onCancel">
                         {{ $gettext('Beenden') }}
                     </IconButton>
                 </template>

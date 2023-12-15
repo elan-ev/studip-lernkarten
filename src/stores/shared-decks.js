@@ -22,20 +22,23 @@ export const useSharedDecksStore = defineStore(
             return [...records.value.values()];
         });
 
-        async function fetchById(id) {
+        function fetchById(id) {
             isLoading.value = true;
-            try {
-                const { data } = await api.fetch(`lernkarten-shared-decks/${id}`, {
+            return api
+                .fetch(`lernkarten-shared-decks/${id}`, {
                     params: {
                         include: 'colearning-deck.owner,deck,sharer',
                     },
-                });
-                storeRecord(data);
-            } catch (err) {
-                console.error('fetching shared deck', err);
-                errors.value = err;
-            }
-            isLoading.value = false;
+                })
+                .then(({ data }) => {
+                    storeRecord(data);
+                    return byId(data.id);
+                })
+                .catch((err) => {
+                    console.error('fetching shared deck', err);
+                    errors.value = err;
+                })
+                .finally(() => (isLoading.value = false));
         }
 
         async function fetchContext() {

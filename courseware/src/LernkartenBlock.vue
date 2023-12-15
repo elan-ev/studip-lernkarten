@@ -12,13 +12,18 @@
             @closeEdit="initCurrentData"
         >
             <template #content>
-                <translate v-if="!isBlockInitialized">
-                    Die Lernkarten werden angezeigt, nachdem der Block gespeichert wurde.
-                </translate>
+                <span v-if="!isBlockInitialized" class="sr-only">
+                    {{
+                        $gettext(
+                            'Die Lernkarten werden angezeigt, nachdem der Block gespeichert wurde.'
+                        )
+                    }}
+                </span>
                 <div v-else>
                     <lernkarten-block :deck="sharedDeckId"></lernkarten-block>
                 </div>
             </template>
+
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="onSubmit">
                     <lernkarten-deck-selector
@@ -27,7 +32,10 @@
                     ></lernkarten-deck-selector>
                 </form>
             </template>
-            <template #info><translate>Informationen zum Lernkartenblock</translate></template>
+
+            <template #info>
+                {{ $gettext('Informationen zum Lernkartenblock') }}
+            </template>
         </component>
     </div>
 </template>
@@ -45,7 +53,7 @@ export default {
     },
     data() {
         return {
-            blockHeight: 0,
+            callback: null,
             sharedDeckId: null,
         };
     },
@@ -62,29 +70,35 @@ export default {
             updateBlock: 'updateBlockInContainer',
         }),
         initCurrentData() {
-            this.blockHeight = this.block.attributes.payload.height || 500;
             this.sharedDeckId = this.block.attributes.payload.shareddeck || null;
         },
-        onSelectDeck({ detail: [deckId = null] }) {
-            this.sharedDeckId = deckId;
+        onSelectDeck({ detail: [callback = null] }) {
+            this.callback = callback;
         },
         storeBlock() {
-            const attributes = {
-                ...this.block.attributes,
-                payload: {
-                    ...this.block.attributes.payload,
-                    initialized: true,
-                    shareddeck: this.sharedDeckId,
-                },
-            };
-            this.updateBlock({
-                attributes,
-                blockId: this.block.id,
-                containerId: this.block.relationships.container.data.id,
-            }).then(() => {
-                // close the edit menu
-                this.$refs.defaultBlock.displayFeature(false);
-            });
+            if (!this.callback) {
+                return;
+            }
+            this.callback()
+                .then((sharedDeck) => (this.sharedDeckId = sharedDeck.id))
+                .then(() =>
+                    this.updateBlock({
+                        attributes: {
+                            ...this.block.attributes,
+                            payload: {
+                                ...this.block.attributes.payload,
+                                initialized: true,
+                                shareddeck: this.sharedDeckId,
+                            },
+                        },
+                        blockId: this.block.id,
+                        containerId: this.block.relationships.container.data.id,
+                    })
+                )
+                .then(() => this.$refs.defaultBlock.displayFeature(false))
+                .catch((error) => {
+                    console.debug('Error selecting deck', error);
+                });
         },
     },
     watch: {

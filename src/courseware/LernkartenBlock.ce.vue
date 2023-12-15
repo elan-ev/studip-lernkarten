@@ -1,5 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref } from 'vue';
+import CardSharedDeck from './CardSharedDeck.vue';
+import StudipCompanion from '../components/base/StudipCompanion.vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 import StudyView from '../components/StudyView.vue';
@@ -9,25 +11,19 @@ const props = defineProps(['deck']);
 const sharedDecksStore = useSharedDecksStore();
 
 const initialized = ref(false);
+const showColearn = ref(false);
 
-const sharedDeck = computed(() => {
-    if (!props.deck) {
-        return null;
-    }
-
-    const deck = sharedDecksStore.byId(props.deck);
-
-    return deck;
-});
-const decks = computed(() => '' + sharedDeck.value.deck.data.id);
+const colearningDeck = computed(() => sharedDeck.value?.['colearning-deck'].data ?? null);
+const sharedDeck = computed(() => (props.deck ? sharedDecksStore.byId(props.deck) : null));
+const deckIds = computed(() => '' + (colearningDeck.value?.id ?? ''));
 
 onMounted(() => {
     nextTick(() => {
         if (!props.deck) {
             initialized.value = true;
-        } else {
-            sharedDecksStore.fetchById(props.deck).then(() => (initialized.value = true));
+            return;
         }
+        sharedDecksStore.fetchById(props.deck).finally(() => (initialized.value = true));
     });
 });
 
@@ -37,7 +33,17 @@ const externalCss = computed(() => {
         'plugins_packages/elan-ev/LernkartenPlugin/dist/style.css'
     );
 });
+
+const onColearn = () => {
+    if (colearningDeck.value) {
+        showColearn.value = true;
+        return;
+    }
+
+    sharedDecksStore.colearn(sharedDeck.value).then(() => (showColearn.value = true));
+};
 </script>
+
 <template>
     <link media="screen" rel="stylesheet" :href="externalCss" />
     <StudipProgressIndicator
@@ -45,14 +51,15 @@ const externalCss = computed(() => {
         :description="$gettext('Initialisiere Lernkarten-Block …')"
     />
 
-    <div v-else>
-        <StudyView v-if="sharedDeck" :decks="decks" order="basic" :standalone="true" />
-        <div v-else>TODO: Hier fehlt ein geteiltes deck</div>
-    </div>
+    <StudipCompanion
+        v-else-if="!sharedDeck"
+        :msg-companion="$gettext('Es wurden bisher noch keine Inhalte eingepflegt.')"
+    />
 
-    <article class="studip tw-hidden">
-        <header>
-            <h1>Lernkarten-Block (deck: {{ props.deck }})</h1>
-        </header>
-    </article>
+    <template v-else>
+        <div v-if="!showColearn">
+            <CardSharedDeck :shared-deck="sharedDeck" @colearn="onColearn" />
+        </div>
+        <StudyView v-else :decks="deckIds" order="progress" :standalone="true" />
+    </template>
 </template>
