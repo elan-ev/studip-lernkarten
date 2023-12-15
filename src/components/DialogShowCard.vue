@@ -39,14 +39,9 @@ const setIsOpen = (value) => {
 const onEdit = () => {
     cardViewMode.value = 'edit';
 };
-const onMove = () => {
-    console.debug('onMove', props.card);
-};
-const onReverse = () => {
-    console.debug('onReverse', props.card);
-};
+const onMove = () => {};
+const onReverse = () => {};
 const onDelete = () => {
-    console.debug('onDelete', props.card);
     showConfirmDelete.value = true;
 };
 
@@ -63,7 +58,7 @@ const deleteCard = () => {
 <template>
     <StudipDialog
         :close-text="$gettext('Schließen')"
-        :height="600"
+        :height="800"
         :initial-focus="initialFocus"
         :open="open"
         :title="$gettext('Kartendetails')"
@@ -87,10 +82,22 @@ const deleteCard = () => {
                             <Button icon="edit" type="button" @click="onEdit">
                                 {{ $gettext('Bearbeiten') }}
                             </Button>
-                            <Button disabled icon="arr_1right" type="button" @click="onMove">
+                            <Button
+                                v-if="false"
+                                disabled
+                                icon="arr_1right"
+                                type="button"
+                                @click="onMove"
+                            >
                                 {{ $gettext('Verschieben') }}
                             </Button>
-                            <Button disabled icon="refresh" type="button" @click="onReverse">
+                            <Button
+                                v-if="false"
+                                disabled
+                                icon="refresh"
+                                type="button"
+                                @click="onReverse"
+                            >
                                 {{ $gettext('Umdrehen') }}
                             </Button>
                             <Button icon="trash" type="button" @click="onDelete">
