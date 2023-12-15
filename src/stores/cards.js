@@ -54,8 +54,9 @@ export const useCardsStore = defineStore(
         }
 
         async function importCards(deck, cards) {
-            for (const card of cards) {
-                await createCard(deck, card);
+            const chunks = _.chunk(cards, 8);
+            for (const chunk of chunks) {
+                await Promise.all(chunk.map((card) => createCard(deck, card)))
             }
         }
 
