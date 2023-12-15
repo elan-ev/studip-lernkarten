@@ -39,7 +39,7 @@ const onImportSuccessful = (records) => {
     countImported.value = records;
 };
 
-const onExport = () => {
+const onExportCsv = () => {
     const data = cards.value
         .map((card) => {
             switch (card.model) {
@@ -61,6 +61,11 @@ const onExport = () => {
 
     download(filename, csv);
 };
+
+const onExportPdf = () => {
+    // TODO
+    alert("Not yet implemented");
+}
 
 function download(filename, data) {
     const blob = new Blob([data], { type: 'text/csv' });
@@ -100,10 +105,16 @@ function download(filename, data) {
         </header>
         <section>
             <p>
-                {{ $gettext('Exportiere Karten in eine CSV-Datei') }}
+                {{ $gettext('Exportiere Karten in eine CSV-Datei (Microsoft Excel, LibreOffice Calc, …)') }}
             </p>
-            <IconButton icon="export" type="button" @click="onExport">
-                {{ $gettext('Exportieren') }}
+            <IconButton icon="export" type="button" @click="onExportCsv">
+                {{ $gettext('CSV exportieren') }}
+            </IconButton>
+            <p class="tw-mt-8">
+                {{ $gettext('Exportiere Karten in eine PDF-Datei') }}
+            </p>
+            <IconButton icon="export" type="button" @click="onExportPdf">
+                {{ $gettext('PDF exportieren') }}
             </IconButton>
         </section>
     </article>
