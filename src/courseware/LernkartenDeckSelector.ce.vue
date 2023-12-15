@@ -5,7 +5,7 @@ import { useSharedDecksStore } from '../stores/shared-decks.js';
 
 const sharedDecksStore = useSharedDecksStore();
 
-const props = defineProps(["deck"]);
+const props = defineProps(['deck']);
 defineEmits(['change']);
 
 const selectedSharedDeck = ref(null);

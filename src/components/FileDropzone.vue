@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useDropzone } from "vue3-dropzone";
+import { useDropzone } from 'vue3-dropzone';
 
 const emit = defineEmits(['update:files']);
 const props = defineProps(['fileid']);
@@ -9,10 +9,9 @@ const hover = ref(false);
 const reject = ref('');
 
 const onDrop = (acceptFiles, rejectReasons) => {
-
     if (acceptFiles.length) {
         let reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = function (event) {
             // event.target.result contains base64 encoded image
             var base64String = event.target.result;
             emit('update:files', base64String, props.fileid);
@@ -30,22 +29,22 @@ const onDrop = (acceptFiles, rejectReasons) => {
 
         reject.value = messages.join(', ');
     }
-}
+};
 
 const onDragenter = () => {
     console.log('dragenter');
     hover.value = true;
-}
+};
 
 const onDragleave = () => {
     console.log('dragleave');
     hover.value = false;
-}
+};
 
 const onDragover = () => {
     console.log('dragover');
     hover.value = false;
-}
+};
 
 const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -55,26 +54,26 @@ const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
     maxSize: 8388608, // 8 MB
     // TODO: get the allowed max file size from Stud.IP config!
-    accept: [
-        'image/png',
-        'image/jpeg',
-        'image/webp'
-    ]
+    accept: ['image/png', 'image/jpeg', 'image/webp'],
 });
-
 </script>
 
 <template>
-    <section click="open"
+    <section
+        click="open"
         :classe="{
-            hover: hover
+            hover: hover,
         }"
     >
         <div v-bind="getRootProps()">
             <input v-bind="getInputProps()" />
             <slot name="dropzoneText">
                 <span>{{ $gettext('Titelbild') }}</span>
-                {{ $gettext('Ziehen sie eine Datei hierhin oder klicken Sie, um eine Datei von ihrem Rechner auszuwählen.') }}
+                {{
+                    $gettext(
+                        'Ziehen sie eine Datei hierhin oder klicken Sie, um eine Datei von ihrem Rechner auszuwählen.',
+                    )
+                }}
             </slot>
         </div>
 
@@ -83,7 +82,6 @@ const { getRootProps, getInputProps } = useDropzone({
         </span>
     </section>
 </template>
-
 
 <style scoped>
 section {

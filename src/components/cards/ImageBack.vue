@@ -1,5 +1,5 @@
 <script setup>
-import CardImage from "../CardImage.vue";
+import CardImage from '../CardImage.vue';
 
 defineProps(['card']);
 </script>

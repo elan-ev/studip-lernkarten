@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
             lib: {
                 entry: {
                     lernkarten: resolve(__dirname, 'src/main.js'),
-                    register: resolve(__dirname, 'src/courseware/register.js')
+                    register: resolve(__dirname, 'src/courseware/register.js'),
                 },
             },
             sourcemap: mode === 'development' ? 'inline' : false,

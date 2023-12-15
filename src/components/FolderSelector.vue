@@ -12,7 +12,7 @@ watch(
     () => props.folder,
     () => {
         selectedFolder.value = props.folder ?? null;
-    }
+    },
 );
 
 const sortedFolders = computed(() => {
@@ -21,7 +21,7 @@ const sortedFolders = computed(() => {
             folder,
             path: [..._.reverse(foldersStore.ancestors(folder).map((a) => a.name)), folder.name],
         })),
-        ['path']
+        ['path'],
     );
 });
 </script>

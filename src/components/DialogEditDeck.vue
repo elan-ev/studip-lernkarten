@@ -37,15 +37,15 @@ watch(
         if (oldV && !newV) {
             onSelectFolder(foldersStore.byId(props.deck?.folder?.data?.id));
         }
-    }
+    },
 );
 
 watch(
     () => props.deck,
     (newV) => {
         folder.value = foldersStore.byId(newV.folder?.data?.id);
-    }
-)
+    },
+);
 
 const onSelectFolder = (selected) => {
     folder.value = selected;
@@ -57,7 +57,7 @@ const onConfirm = () => {
             name: name.value,
             description: description.value,
             metadata: metadata.value,
-            folder_id: folder.value.id
+            folder_id: folder.value.id,
         })
         .then(() => setIsOpen(false));
 };

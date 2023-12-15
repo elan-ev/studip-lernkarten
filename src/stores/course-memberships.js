@@ -47,7 +47,7 @@ export const useCourseMembershipsStore = defineStore(
                     `course-memberships/${contextStore.id}_${contextStore.userId}`,
                     {
                         params: { include: 'course' },
-                    }
+                    },
                 );
                 storeRecord(data);
             } catch (err) {
@@ -77,5 +77,5 @@ export const useCourseMembershipsStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

@@ -25,11 +25,21 @@ const props = defineProps({
 const emit = defineEmits(['cancel']);
 
 const { $gettext } = useGettext();
-const { cardStates, cards, cardsLeft, decks, isLoading, order, queuedCard, ratings, repeat, reset } =
-    useScheduler({
-        decks: props.decks,
-        order: props.order,
-    });
+const {
+    cardStates,
+    cards,
+    cardsLeft,
+    decks,
+    isLoading,
+    order,
+    queuedCard,
+    ratings,
+    repeat,
+    reset,
+} = useScheduler({
+    decks: props.decks,
+    order: props.order,
+});
 
 const showAnswer = ref(false);
 const showCongratulations = ref(false);
@@ -55,14 +65,16 @@ const deckName = computed(() => {
 });
 const hasCards = computed(() => !!cards.value.length);
 
-const readableState = computed(() => queuedCard.value ? translatedStates[queuedCard.value.state] : null);
+const readableState = computed(() =>
+    queuedCard.value ? translatedStates[queuedCard.value.state] : null,
+);
 
 const onAgain = () => {
     reset();
     showCongratulations.value = false;
 };
 const onCancel = () => emit('cancel');
-const onContinue = () => ( showCongratulations.value = false);
+const onContinue = () => (showCongratulations.value = false);
 const onShowAnswer = () => (showAnswer.value = true);
 const onRepeat = (rating) => {
     repeat(rating);

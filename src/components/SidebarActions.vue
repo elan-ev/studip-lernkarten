@@ -29,14 +29,14 @@ const actionList = computed(() => {
         actions.push({
             icon: 'add',
             text: $gettext('Neuen Kartensatz erstellen'),
-            click: onCreateDeck
+            click: onCreateDeck,
         });
     }
     if (isTeacher.value) {
         actions.push({
             icon: 'share',
             text: $gettext('Kartensatz hierhin teilen'),
-            click: onShareDeck
+            click: onShareDeck,
         });
     }
 

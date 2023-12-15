@@ -94,5 +94,5 @@ export const useCardsStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

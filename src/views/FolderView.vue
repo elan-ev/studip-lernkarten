@@ -39,7 +39,7 @@ const children = computed(() => {
 const decks = computed(() =>
     folder.value
         ? decksStore.byContext.filter((deck) => deck.folder.data?.id === folder.value.id)
-        : []
+        : [],
 );
 
 const onAddChild = () => {

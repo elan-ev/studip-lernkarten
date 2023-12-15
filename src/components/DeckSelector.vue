@@ -15,7 +15,7 @@ const emit = defineEmits(['update:modelValue']);
 const selectedDeck = ref(props.modelValue ?? null);
 
 const workplaceDecks = computed(() =>
-    decksStore.fromWorkplace.filter(({ colearning }) => !colearning)
+    decksStore.fromWorkplace.filter(({ colearning }) => !colearning),
 );
 
 const folderedDecks = computed(() => {
@@ -25,7 +25,7 @@ const folderedDecks = computed(() => {
     return [
         ...sortFoldersAndDecks(
             foldersStore.all.filter(({ id }) => deckIds.has(id)),
-            groupedDecks
+            groupedDecks,
         ),
         { decks: _.sortBy(groupedDecks.get(null), ['name']), folder: null, path: null },
     ];
@@ -55,13 +55,13 @@ function sortFoldersAndDecks(folders, groupedDecks) {
             folder,
             path: [..._.reverse(path(folder)), folder.name],
         })),
-        ['path']
+        ['path'],
     );
 }
 
 watch(
     () => props.modelValue,
-    () => (selectedDeck.value = props.modelValue)
+    () => (selectedDeck.value = props.modelValue),
 );
 watch(selectedDeck, () => emit('update:modelValue', selectedDeck.value));
 </script>

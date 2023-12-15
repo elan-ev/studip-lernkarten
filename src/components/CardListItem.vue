@@ -1,5 +1,5 @@
 <script setup>
-import CardSmallImage from "./CardSmallImage.vue";
+import CardSmallImage from './CardSmallImage.vue';
 
 defineProps(['card', 'index']);
 const emit = defineEmits(['select']);

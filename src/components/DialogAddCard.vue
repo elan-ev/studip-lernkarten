@@ -57,7 +57,7 @@ watch(
         if (open) {
             reset();
         }
-    }
+    },
 );
 </script>
 
@@ -84,7 +84,11 @@ watch(
                             >*</span
                         >
                         <select v-model="cardType">
-                            <option v-for="option in cardTypes" :key="option.value" :value="option.value">
+                            <option
+                                v-for="option in cardTypes"
+                                :key="option.value"
+                                :value="option.value"
+                            >
                                 {{ option.text }}
                             </option>
                         </select>

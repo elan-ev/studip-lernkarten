@@ -4,7 +4,7 @@ import StudipProgressIndicator from '../components/base/StudipProgressIndicator.
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 import StudyView from '../components/StudyView.vue';
 
-const props = defineProps(["deck"]);
+const props = defineProps(['deck']);
 
 const sharedDecksStore = useSharedDecksStore();
 

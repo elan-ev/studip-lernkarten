@@ -78,7 +78,11 @@ const onConfirm = () => {
                             >*</span
                         >
                         <select v-model="selectedOrder" ref="initialFocus">
-                            <option v-for="[value, { text }] in selectableOrders" :key="value" :value="value">
+                            <option
+                                v-for="[value, { text }] in selectableOrders"
+                                :key="value"
+                                :value="value"
+                            >
                                 {{ text }}
                             </option>
                         </select>

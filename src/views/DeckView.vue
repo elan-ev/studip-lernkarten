@@ -47,21 +47,21 @@ const onShowShareDialog = () => (showShareDialog.value = true);
                         :to="{ name: 'folder', params: { id: folder.id } }"
                         class="tw-flex tw-items-center tw-gap-2"
                     >
-                    <StudipIcon
-                        shape="arr_1left"
-                        :height="30"
-                        :width="30"
-                        class="tw-align-middle tw-mb-1"
-                    />
-                    <StudipIcon
-                        shape="folder-empty"
-                        :height="30"
-                        :width="30"
-                        class="tw-align-middle tw-mb-1"
-                    />
-                    <span class="breadcrumb">
-                        {{ folder.name }}
-                    </span>
+                        <StudipIcon
+                            shape="arr_1left"
+                            :height="30"
+                            :width="30"
+                            class="tw-align-middle tw-mb-1"
+                        />
+                        <StudipIcon
+                            shape="folder-empty"
+                            :height="30"
+                            :width="30"
+                            class="tw-align-middle tw-mb-1"
+                        />
+                        <span class="breadcrumb">
+                            {{ folder.name }}
+                        </span>
                     </RouterLink>
                 </div>
                 <div v-else :title="$gettext('Zurück zur Ordnerübersicht')">

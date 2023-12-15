@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed } from 'vue';
 const props = defineProps(['progress']);
 const percent = computed(() => Math.floor(props.progress * 100));
 const circumference = 30 * 2 * Math.PI;

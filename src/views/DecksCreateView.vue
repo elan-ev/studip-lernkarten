@@ -27,7 +27,7 @@ watch(
         if (!isLoading) {
             selectedFolder.value = folder.value;
         }
-    }
+    },
 );
 
 const onSelectFolder = (selected) => {
@@ -45,7 +45,7 @@ const onSubmit = () => {
 function validateName() {
     if (name.value.trim().length === 0) {
         nameRef.value.setCustomValidity(
-            $gettext('Die Bezeichnung des Kartensatzes darf nicht leer sein.')
+            $gettext('Die Bezeichnung des Kartensatzes darf nicht leer sein.'),
         );
         return false;
     } else {

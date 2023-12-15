@@ -50,5 +50,5 @@ export const useInstancesStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

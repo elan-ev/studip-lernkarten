@@ -41,7 +41,7 @@ export function useSchedulerOptions() {
                     sort: sortProgress,
                 },
             ],
-        ])
+        ]),
     );
     const defaultOrder = ref('basic');
 
@@ -71,7 +71,7 @@ export function useScheduler(options) {
             [Rating.Hard, 0],
             [Rating.Good, 0],
             [Rating.Easy, 0],
-        ])
+        ]),
     );
 
     const cardStates = computed(() => {
@@ -86,7 +86,7 @@ export function useScheduler(options) {
                 [State.Learning, 0],
                 [State.Review, 0],
                 [State.Relearning, 0],
-            ])
+            ]),
         );
     });
 

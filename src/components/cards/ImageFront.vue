@@ -1,5 +1,5 @@
 <script setup>
-import CardImage from "../CardImage.vue";
+import CardImage from '../CardImage.vue';
 import { ref } from 'vue';
 
 defineProps(['card']);
@@ -10,7 +10,7 @@ const textarea = ref(null);
 
 <template>
     <section v-if="card">
-        <CardImage v-if="card.fields.images?.front" :image="card.fields.images['front']"/>
+        <CardImage v-if="card.fields.images?.front" :image="card.fields.images['front']" />
         <div v-html="card.fields.front" class="front"></div>
         <div>
             <textarea ref="textarea" v-model="answer" :placeholder="$gettext('Antwort')" />
@@ -22,7 +22,8 @@ const textarea = ref(null);
 section {
     border: 1px solid var(--content-color-20);
 }
-section > div:first-child, section > div.front {
+section > div:first-child,
+section > div.front {
     background: var(--content-color-10);
     font-size: 20px;
     padding-block: 12px;

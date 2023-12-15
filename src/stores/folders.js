@@ -22,7 +22,7 @@ export const useFoldersStore = defineStore('folders', () => {
     const topFolders = computed(() => {
         return _.sortBy(
             all.value.filter((folder) => !folder.parent.data && folder.context.data.id === context),
-            'name'
+            'name',
         );
     });
 

@@ -45,7 +45,7 @@ watch(
     () => props.card,
     () => {
         reset();
-    }
+    },
 );
 </script>
 <template>

@@ -30,7 +30,7 @@ const cardView = computed(() => cardViews[cardViewMode.value]);
 const readableState = computed(() => translatedStates[props.card.state]);
 
 const reset = () => {
-    cardViewMode.value = 'show'
+    cardViewMode.value = 'show';
 };
 const setIsOpen = (value) => {
     emit('update:open', value);
@@ -57,7 +57,7 @@ const deleteCard = () => {
     cardsStore.deleteCard(props.card).then(() => {
         emit('delete');
     });
-}
+};
 </script>
 
 <template>

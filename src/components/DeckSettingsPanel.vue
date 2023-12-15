@@ -18,7 +18,7 @@ const cards = computed(() => cardsStore.byDeck(props.deck));
 const mostRecentCard = computed(() =>
     cards.value.reduce((memo, card) => {
         return !memo || new Date(card.chdate) > new Date(memo.chdate) ? card : memo;
-    }, null)
+    }, null),
 );
 
 const chdate = computed(() => {
@@ -56,7 +56,7 @@ const onExport = () => {
 
     const filename = `kartensatz-${props.deck.name}-${chdate.value}.csv`.replace(
         /[/|\\:*?"<>]/g,
-        ''
+        '',
     );
 
     download(filename, csv);

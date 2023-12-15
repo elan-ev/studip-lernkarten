@@ -18,23 +18,23 @@ decksStore.fetchContext();
 sharedDecksStore.fetchContext();
 
 const isAtLeastTutor = computed(() =>
-    ['tutor', 'dozent'].includes(courseMembershipsStore.byContext()?.permission)
+    ['tutor', 'dozent'].includes(courseMembershipsStore.byContext()?.permission),
 );
 
 const sharedByMe = computed(() =>
-    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId)
+    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId),
 );
 
 const sharedWithMe = computed(() =>
-    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId)
+    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId),
 );
 
 const doneLoading = computed(
-    () => !courseMembershipsStore.isLoading && !decksStore.isLoading && !sharedDecksStore.isLoading
+    () => !courseMembershipsStore.isLoading && !decksStore.isLoading && !sharedDecksStore.isLoading,
 );
 
 const workingPlaceUrl = computed(() =>
-    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true)
+    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true),
 );
 </script>
 
@@ -60,7 +60,7 @@ const workingPlaceUrl = computed(() =>
                     v-else
                     :msg-companion="
                         $gettext(
-                            'Sie haben noch keinen Kartensatz mit dieser Veranstaltung geteilt.'
+                            'Sie haben noch keinen Kartensatz mit dieser Veranstaltung geteilt.',
                         )
                     "
                     mood="sad"

@@ -52,8 +52,8 @@ const router = createRouter({
             props: (route) => {
                 return {
                     decks: route?.query?.decks ?? [],
-                    order: route?.query?.order ?? null
-                }
+                    order: route?.query?.order ?? null,
+                };
             },
         },
     ],

@@ -48,7 +48,7 @@ const onCheckCardLength = () => {
     if (cards.value.length == 0) {
         showCardDialog.value = false;
     }
-}
+};
 </script>
 
 <template>

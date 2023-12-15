@@ -31,7 +31,7 @@ const onConfirm = () => {
             <p>
                 {{
                     $gettext(
-                        'Wenn Sie den Kartensatz mitlernen, haben Sie keine Möglichkeit, die darin enthaltenen Karten zu bearbeiten.'
+                        'Wenn Sie den Kartensatz mitlernen, haben Sie keine Möglichkeit, die darin enthaltenen Karten zu bearbeiten.',
                     )
                 }}
             </p>

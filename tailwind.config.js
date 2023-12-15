@@ -4,6 +4,6 @@ export default {
     prefix: 'tw-',
     content: ['./src/**/*.{vue,js,ts}'],
     theme: {
-        extend: {}
-    }
+        extend: {},
+    },
 };

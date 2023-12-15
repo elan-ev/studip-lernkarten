@@ -29,11 +29,11 @@ const setIsOpen = (value) => {
 };
 
 const isEmpty = computed(
-    () => decksStore.fromWorkplace.filter(({ colearning }) => !colearning).length === 0
+    () => decksStore.fromWorkplace.filter(({ colearning }) => !colearning).length === 0,
 );
 
 const workingPlaceUrl = computed(() =>
-    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true)
+    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true),
 );
 
 const confirmDisabled = computed(() => !selectedDeck.value);
@@ -47,7 +47,7 @@ const onConfirm = () => {
         sharedDecksStore
             .shareDeckWithCourse(
                 { id: selectedDeck.value },
-                { id: contextStore.id, type: contextStore.type }
+                { id: contextStore.id, type: contextStore.type },
             )
             .then(() => setIsOpen(false));
     }
@@ -78,7 +78,7 @@ const onConfirm = () => {
                             <span class="textlabel">
                                 {{
                                     $gettext(
-                                        'Welchen Kartensatz möchten Sie mit dieser Veranstaltung teilen?'
+                                        'Welchen Kartensatz möchten Sie mit dieser Veranstaltung teilen?',
                                     )
                                 }}
                             </span>

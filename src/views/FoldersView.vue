@@ -29,8 +29,8 @@ const topFolders = computed(() => foldersStore.topFolders);
 const decks = computed(() =>
     _.sortBy(
         decksStore.byContext.filter((deck) => !deck.folder.data && !deck.colearning),
-        ['name']
-    )
+        ['name'],
+    ),
 );
 
 const addTopFolder = () => {

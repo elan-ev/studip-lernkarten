@@ -128,5 +128,5 @@ export const useDecksStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

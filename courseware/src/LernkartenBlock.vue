@@ -21,7 +21,10 @@
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="onSubmit">
-                    <lernkarten-deck-selector :deck="sharedDeckId" @change="onSelectDeck"></lernkarten-deck-selector>
+                    <lernkarten-deck-selector
+                        :deck="sharedDeckId"
+                        @change="onSelectDeck"
+                    ></lernkarten-deck-selector>
                 </form>
             </template>
             <template #info><translate>Informationen zum Lernkartenblock</translate></template>
@@ -62,7 +65,7 @@ export default {
             this.blockHeight = this.block.attributes.payload.height || 500;
             this.sharedDeckId = this.block.attributes.payload.shareddeck || null;
         },
-        onSelectDeck({ detail: [ deckId = null ] }) {
+        onSelectDeck({ detail: [deckId = null] }) {
             this.sharedDeckId = deckId;
         },
         storeBlock() {

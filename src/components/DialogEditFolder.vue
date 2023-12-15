@@ -30,7 +30,7 @@ const onConfirm = () => {
 
 onUpdated(() => {
     name.value = props.folder?.name;
-})
+});
 </script>
 
 <template>

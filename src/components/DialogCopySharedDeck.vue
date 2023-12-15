@@ -31,7 +31,7 @@ const onConfirm = () => {
             <p>
                 {{
                     $gettext(
-                        'Wenn Sie den Kartensatz kopieren, können Sie diesen und die darin enthaltenen Karten beliebig bearbeiten.'
+                        'Wenn Sie den Kartensatz kopieren, können Sie diesen und die darin enthaltenen Karten beliebig bearbeiten.',
                     )
                 }}
             </p>
