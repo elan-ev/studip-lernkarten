@@ -20,7 +20,8 @@
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
         "format": "prettier --write src/",
         "gettext:compile": "vue-gettext-compile",
-        "gettext:extract": "vue-gettext-extract"
+        "gettext:extract": "vue-gettext-extract",
+        "zip": "zip lernkarten-plugin.zip -r composer.json composer.lock courseware CoursewareLernkartenBlockPlugin.php dist examples LernkartenPlugin.php lib locale migrations package.json package-lock.json plugin.manifest public README.md src vendor -x '*node_modules*'"
     },
     "dependencies": {
         "pinia": "^2.1.7",
