@@ -48,7 +48,7 @@ export const useSharedDecksStore = defineStore(
                         include: 'colearning-deck.owner,deck,sharer',
                         'page[limit]': 1000,
                     },
-                },
+                }
             );
             isLoading.value = false;
             data.forEach(storeRecord);
@@ -58,8 +58,8 @@ export const useSharedDecksStore = defineStore(
             all.value.filter(
                 ({ recipient }) =>
                     recipient.data.type === contextStore.type &&
-                    recipient.data.id === contextStore.id,
-            ),
+                    recipient.data.id === contextStore.id
+            )
         );
 
         function byId(id) {
@@ -93,17 +93,14 @@ export const useSharedDecksStore = defineStore(
         async function colearn(sharedDeck) {
             const { data } = await api.post(
                 `lernkarten-shared-decks/${sharedDeck.id}/colearn`,
-                sharedDeck,
+                sharedDeck
             );
 
             return decksStore.fetchById(data.id).then(() => fetchById(sharedDeck.id));
         }
 
         async function copy(sharedDeck) {
-            const { data } = await api.post(
-                `lernkarten-shared-decks/${sharedDeck.id}/copy`,
-                sharedDeck,
-            );
+            const { data } = await api.post(`lernkarten-shared-decks/${sharedDeck.id}/copy`);
 
             return decksStore.fetchById(data.id);
         }
@@ -125,5 +122,5 @@ export const useSharedDecksStore = defineStore(
     },
     {
         persist: true,
-    },
+    }
 );

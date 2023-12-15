@@ -9,6 +9,7 @@ import StudipIcon from './base/StudipIcon.vue';
 import DialogAdjustLearningOptions from './DialogAdjustLearningOptions.vue';
 import DialogConfirmCopyDeck from './DialogConfirmCopyDeck.vue';
 import DialogConfirmDeleteDeck from './DialogConfirmDeleteDeck.vue';
+import DialogCopySharedDeck from './DialogCopySharedDeck.vue';
 import DialogShareDeck from './DialogShareDeck.vue';
 import { useDecksStore } from '../stores/decks.js';
 
@@ -125,7 +126,12 @@ const deleteDeck = () => {
         </div>
     </section>
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[deck]" />
-    <DialogConfirmCopyDeck v-model:open="showConfirmCopy" :deck="deck" />
     <DialogConfirmDeleteDeck v-model:open="showConfirmDelete" @confirm="deleteDeck" />
     <DialogShareDeck v-if="showShareDialog" v-model:open="showShareDialog" :deck="deck" />
+    <DialogConfirmCopyDeck v-if="!deck.colearning" v-model:open="showConfirmCopy" :deck="deck" />
+    <DialogCopySharedDeck
+        v-if="deck.colearning"
+        v-model:open="showConfirmCopy"
+        :shared-deck="{ id: deck['shared-deck'].data.id }"
+    />
 </template>

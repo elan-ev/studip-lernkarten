@@ -8,29 +8,40 @@ import DialogEditFolder from '../components/DialogEditFolder.vue';
 import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.vue';
 import FolderList from '../components/FolderList.vue';
 import IconButton from '../components/IconButton.vue';
+import SharedDeckList from '../components/SharedDeckList.vue';
 import StudipCompanion from '../components/base/StudipCompanion.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
+import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
 import { useFoldersStore } from '../stores/folders.js';
+import { useSharedDecksStore } from '../stores/shared-decks.js';
 
-const createDialogOpen = ref(false);
-const editDialogOpen = ref(false);
-const confirmDeleteDialogOpen = ref(false);
-const selectedFolder = ref(null);
-const showAdjustLearningDialog = ref(false);
-
+const contextStore = useContextStore();
 const decksStore = useDecksStore();
 const foldersStore = useFoldersStore();
-const editFolderObject = ref(null);
+const sharedDecksStore = useSharedDecksStore();
+
 decksStore.fetchContext();
+sharedDecksStore.fetchContext();
+
+const confirmDeleteDialogOpen = ref(false);
+const createDialogOpen = ref(false);
+const editDialogOpen = ref(false);
+const editFolderObject = ref(null);
+const selectedFolder = ref(null);
+const showAdjustLearningDialog = ref(false);
 
 const topFolders = computed(() => foldersStore.topFolders);
 
 const decks = computed(() =>
     _.sortBy(
         decksStore.byContext.filter((deck) => !deck.folder.data && !deck.colearning),
-        ['name'],
-    ),
+        ['name']
+    )
+);
+
+const sharedWithMe = computed(() =>
+    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId)
 );
 
 const addTopFolder = () => {
@@ -117,6 +128,15 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
             </h3>
         </header>
         <DeckList :decks="decks" />
+    </section>
+
+    <section class="tw-mt-12">
+        <header>
+            <h3>
+                {{ $gettext('Mit mir geteilte Kartensätze') }}
+            </h3>
+        </header>
+        <SharedDeckList :shared-decks="sharedWithMe" />
     </section>
 
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="decks" />

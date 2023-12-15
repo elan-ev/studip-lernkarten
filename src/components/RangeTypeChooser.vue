@@ -27,13 +27,13 @@ defineEmits('update:modelValue');
             name="cw-element-copy-source"
             type="radio"
             value="users"
-            :aria-description="$gettext('Arbeitsplatz')"
+            :aria-description="$gettext('Arbeitsplatz anderer Nutzenden')"
         />
         <label for="cw-element-copy-source-users">
             <div class="icon">
                 <StudipIcon shape="content" :height="32" :width="32" />
             </div>
-            <div class="text">{{ $gettext('Arbeitsplatz') }}</div>
+            <div class="text">{{ $gettext('Arbeitsplatz anderer Nutzenden') }}</div>
             <StudipIcon class="unchecked" shape="radiobutton-unchecked" :height="24" :width="24" />
             <StudipIcon class="check" shape="check-circle" :height="24" :width="24" />
         </label>
