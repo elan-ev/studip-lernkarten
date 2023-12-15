@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { useGettext } from 'vue3-gettext';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipMultiPersonSearch from './base/StudipMultiPersonSearch.vue';
-import RangeTypeChooser from './RangeTypeChooser.vue';
+import RangeTypeSelector from './RangeTypeSelector.vue';
 import { useContextStore } from '../stores/context.js';
 import { useCourseMembershipsStore } from '../stores/course-memberships.js';
 import { useDecksStore } from '../stores/decks.js';
@@ -108,7 +108,7 @@ const onConfirm = () => {
     >
         <template #dialogContent>
             <form v-if="!isLoading" class="default studipform" @submit.prevent="onConfirm">
-                <RangeTypeChooser v-model="typeOfSource" />
+                <RangeTypeSelector v-model="typeOfSource" />
 
                 <section v-if="typeOfSource === 'courses'">
                     <div class="formpart">
