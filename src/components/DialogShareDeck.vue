@@ -35,7 +35,7 @@ const reset = () => {
 };
 
 Promise.all([courseMembershipsStore.fetch(), instancesStore.fetch(), semestersStore.fetch()]).then(
-    () => (isLoading.value = false),
+    () => (isLoading.value = false)
 );
 
 const instanceRangeIds = computed(() => {
@@ -122,6 +122,13 @@ const onConfirm = () => {
                                 aria-hidden="true"
                                 >*</span
                             >
+                            <span class="tw-block tw-opacity-70 tw-italic">
+                                {{
+                                    $gettext(
+                                        'Das Lernkarten-Modul muss in den Veranstaltungen aktiv sein, um den Kartensatz mit diesen zu teilen.'
+                                    )
+                                }}
+                            </span>
                             <select v-model="selectedCourse">
                                 <option :value="null" disabled>
                                     {{ $gettext('Veranstaltung auswählen') }}
