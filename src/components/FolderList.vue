@@ -117,7 +117,7 @@ const toggleSort = (field) => {
         <tr v-else>
             <td colspan="3">
                 <slot name="empty">
-                    {{ $gettext('Dieser Ordner ist leer') }}
+                    {{ $gettext('Dieser Ordner enthält keine Unterordner.') }}
                 </slot>
             </td>
         </tr>
