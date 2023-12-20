@@ -91,7 +91,7 @@ const deleteDeck = () => {
         <div class="tw-flex tw-flex-col tw-flex-grow tw-justify-between">
             <div class="tw-italic tw-flex tw-gap-2 tw-items-center" v-if="deck.template.data">
                 <span v-if="deck.colearning">
-                    {{ $gettext('Mitlernen eines Kartensatzes von') }}
+                    {{ $gettext('Geteilter Kartensatz von') }}
                 </span>
                 <span v-else>{{ $gettext('Kopie eines Kartensatzes von') }}</span>
                 <StudipAvatar
