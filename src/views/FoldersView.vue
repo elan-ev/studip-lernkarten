@@ -112,7 +112,7 @@ const onLearnDecks = () => (showAdjustLearningDialog.value = true);
                         <IconButton type="button" icon="add" @click="addTopFolder">
                             {{ $gettext('Ordner anlegen') }}
                         </IconButton>
-                        <IconButton type="button" icon="refresh" @click="onLearnDecks">
+                        <IconButton :disabled="!decks.length" type="button" icon="refresh" @click="onLearnDecks">
                             {{ $gettext('Kartensätze lernen') }}
                         </IconButton>
                     </div>
