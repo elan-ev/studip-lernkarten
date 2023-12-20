@@ -12,9 +12,9 @@ defineProps({
 </script>
 
 <template>
-    <div class="tw-items-center tw-flex tw-gap-2">
+    <div class="tw-items-center tw-flex tw-gap-1">
         <span>
-            <img class="tw-align-middle" :src="avatarUrl" />
+            <img class="tw-align-middle tw-h-4" :src="avatarUrl" />
         </span>
         <span>{{ formattedName }}</span>
     </div>
