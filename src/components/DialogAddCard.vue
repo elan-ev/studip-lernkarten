@@ -21,6 +21,7 @@ const cardTypes = ref([
 const front = ref('');
 const back = ref('');
 const images = ref({});
+const errors = ref({});
 
 const setIsOpen = (value) => {
     emit('update:open', value);
@@ -30,9 +31,13 @@ const reset = () => {
     front.value = '';
     back.value = '';
     images.value = {};
+    errors.value = {};
 };
 
 const createOne = () => {
+    if (!validate()) {
+        return;
+    }
     const card = {
         model: cardType.value,
         fields: { front: front.value, back: back.value, images: images.value },
@@ -40,6 +45,9 @@ const createOne = () => {
     cardsStore.createCard(props.deck, card).then(() => setIsOpen(false));
 };
 const createMore = () => {
+    if (!validate()) {
+        return;
+    }
     const card = {
         model: cardType.value,
         fields: { front: front.value, back: back.value, images: images.value },
@@ -50,6 +58,18 @@ const createMore = () => {
 const setImage = (base64, fileid) => {
     images.value[fileid] = base64;
 };
+
+const validate = () => {
+    errors.value = {};
+    if (!front.value.trim().length) {
+        errors.value.front = $gettext("Dieses Feld muss ausgefüllt werden.");
+    }
+    if (!back.value.trim().length) {
+        errors.value.back = $gettext("Dieses Feld muss ausgefüllt werden.");
+    }
+
+    return Object.keys(errors.value).length === 0;
+}
 
 watch(
     () => props.open,
@@ -120,6 +140,7 @@ watch(
                     </div>
 
                     <StudipWysiwyg v-model="front"></StudipWysiwyg>
+                    <div v-if="errors.front" class="dialog-add-card--error">{{ errors.front }}</div>
                 </div>
 
                 <div class="formpart">
@@ -147,6 +168,7 @@ watch(
                     </div>
 
                     <StudipWysiwyg v-model="back"></StudipWysiwyg>
+                    <div v-if="errors.back" class="dialog-add-card--error">{{ errors.back }}</div>
                 </div>
             </form>
         </template>
@@ -161,3 +183,16 @@ watch(
         </template>
     </StudipDialog>
 </template>
+
+<style scoped>
+.dialog-add-card--error {
+    background-color: var(--red-20);
+    border: 1px solid var(--red-20);
+    color: var(--black);
+    font-size: 0.8em;
+    padding: 0.4em 0.8em;
+}
+:deep(.ck-editor__editable) {
+    max-height: 4rem !important;
+}
+</style>
