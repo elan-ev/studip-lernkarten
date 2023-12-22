@@ -16,7 +16,9 @@ const showAddCardDialog = ref(false);
 const showCardDialog = ref(false);
 
 const cards = computed(() => cardsStore.byDeck(props.deck));
-const isOwner = computed(() => contextStore.userId === props.deck.owner.data.id);
+const mayEdit = computed(
+    () => !props.deck.colearning && contextStore.userId === props.deck.owner.data.id
+);
 const selectedIndex = computed(() => {
     return selectedCard.value
         ? cards.value.findIndex(({ id }) => id === selectedCard.value.id)
@@ -54,7 +56,7 @@ const onCheckCardLength = () => {
 </script>
 
 <template>
-    <div v-if="isOwner">
+    <div v-if="mayEdit">
         <button @click="onAddCard" class="button add" type="button">
             {{ $gettext('Neue Karte anlegen') }}
         </button>

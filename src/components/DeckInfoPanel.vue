@@ -10,8 +10,15 @@ const contextStore = useContextStore();
 
 const props = defineProps(['deck']);
 
-const avatarUrl = computed(() => props.deck.owner.data.meta.avatar.small);
-const formattedName = computed(() => props.deck.owner.data['formatted-name']);
+const creator = computed(() =>
+    props.deck.colearning ? props.deck.template.data.owner.data : props.deck.owner.data
+);
+const mkdate = computed(
+    () => new Date(props.deck.colearning ? props.deck.template.data.mkdate : props.deck.mkdate)
+);
+
+const avatarUrl = computed(() => creator.value.meta.avatar.small);
+const formattedName = computed(() => creator.value['formatted-name']);
 const isOwner = computed(() => contextStore.userId === props.deck.owner.data.id);
 const progress = computed(() => {
     const total = props.deck.progress.reduce((sum, n) => sum + n, 0);
@@ -45,7 +52,7 @@ const userUrl = (user) =>
                         {{ $gettext('Erstellt') }}
                     </th>
                     <td>
-                        <StudipDate :date="new Date(deck.mkdate)" />
+                        <StudipDate :date="mkdate" />
                         {{ $gettext('von') }}
                         <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
                     </td>

@@ -100,7 +100,10 @@ const deleteDeck = () => {
                     :formatted-name="templateFormattedName"
                 />
             </div>
-            <div class="tw-cursor-pointer tw-flex-grow" @click="$emit('select', deck)">
+            <div
+                class="tw-cursor-pointer tw-flex-grow tw-text-[var(--base-color)]"
+                @click="$emit('select', deck)"
+            >
                 <span class="tw-text-lg tw-font-bold">{{ deck.name }}</span>
             </div>
             <div class="tw-flex tw-items-center tw-justify-between">

@@ -14,6 +14,7 @@ const { $gettext } = useGettext();
 const contextStore = useContextStore();
 
 const props = defineProps(['sharedDeck']);
+defineEmits(['select']);
 
 const showColearnDialog = ref(false);
 const showCopyDialog = ref(false);
@@ -61,7 +62,7 @@ const onUnshare = () => (showConfirmUnshareDialog.value = true);
             <StudipIcon shape="share" role="info" :size="32" />
         </div>
         <div class="tw-flex tw-flex-col tw-flex-grow tw-justify-between">
-            <div class="tw-text-lg tw-font-bold" @click="$emit('select', sharedDeck)">
+            <div class="tw-text-lg tw-font-bold tw-text-[var(--base-color)]" @click="$emit('select', sharedDeck)">
                 {{ sharedDeck.deck.data.name }}
             </div>
             <div class="tw-flex tw-items-center tw-justify-between">

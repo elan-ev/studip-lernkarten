@@ -1,31 +1,15 @@
 <script setup>
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
 import CardDeck from './CardDeck.vue';
 import CardSharedDeck from './CardSharedDeck.vue';
 
-const router = useRouter();
-
 const props = defineProps(['sharedDeck']);
+defineEmits(['select']);
 
-const colearningDeck = computed(() => {
-    return props.sharedDeck['colearning-deck'].data;
-});
-
-const onSelect = (deck) => {
-    router.push({
-        name: 'deck',
-        params: {
-            id:
-                deck.type === 'lernkarten-decks'
-                    ? deck.id
-                    : colearningDeck.value?.id ?? deck.deck.data.id,
-        },
-    });
-};
+const colearningDeck = computed(() => props.sharedDeck['colearning-deck'].data);
 </script>
 
 <template>
-    <CardDeck v-if="colearningDeck" :deck="colearningDeck" @select="onSelect(colearningDeck)" />
-    <CardSharedDeck v-else :shared-deck="sharedDeck" @select="onSelect(sharedDeck)" />
+    <CardDeck v-if="colearningDeck" :deck="colearningDeck" @select="$emit('select')" />
+    <CardSharedDeck v-else :shared-deck="sharedDeck" @select="$emit('select')" />
 </template>

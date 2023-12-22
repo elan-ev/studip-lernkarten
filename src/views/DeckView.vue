@@ -1,12 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
+import DeckDetails from '../components/DeckDetails.vue';
 import IconButton from '../components/IconButton.vue';
-import DeckCardsPanel from '../components/DeckCardsPanel.vue';
-import DeckInfoPanel from '../components/DeckInfoPanel.vue';
-import DeckSettingsPanel from '../components/DeckSettingsPanel.vue';
-import DeckStatisticsPanel from '../components/DeckStatisticsPanel.vue';
 import DialogAdjustLearningOptions from '../components/DialogAdjustLearningOptions.vue';
 import DialogEditDeck from '../components/DialogEditDeck.vue';
 import DialogShareDeck from '../components/DialogShareDeck.vue';
@@ -32,6 +28,7 @@ cardsStore.fetchByDeck({ id: props.id });
 const deck = computed(() => decksStore.byId(props.id));
 const deckOwner = computed(() => deck.value?.owner.data);
 const folder = computed(() => deck.value?.folder.data ?? null);
+const isColearning = computed(() => deck.value?.colearning);
 const isOwner = computed(() => deckOwner.value && contextStore.userId === deckOwner.value.id);
 
 const onAdjustLearn = () => (showAdjustLearningDialog.value = true);
@@ -93,53 +90,15 @@ const onShowShareDialog = () => (showShareDialog.value = true);
                 <IconButton icon="refresh" type="button" @click="onAdjustLearn">
                     {{ $gettext('Lernen') }}
                 </IconButton>
-                <IconButton icon="share" type="button" @click="onShowShareDialog">
+                <IconButton v-if="!isColearning" icon="share" type="button" @click="onShowShareDialog">
                     {{ $gettext('Teilen') }}
                 </IconButton>
-                <IconButton icon="edit" type="button" @click="onShowEditDialog">
+                <IconButton v-if="!isColearning" icon="edit" type="button" @click="onShowEditDialog">
                     {{ $gettext('Bearbeiten') }}
                 </IconButton>
             </div>
         </div>
-
-        <TabGroup as="div" class="cw-tabs" :default-index="0">
-            <TabList class="cw-tabs-nav">
-                <Tab as="template" v-slot="{ selected }">
-                    <button :class="{ 'is-active': selected }">
-                        {{ $gettext('Info') }}
-                    </button>
-                </Tab>
-                <Tab as="template" v-slot="{ selected }">
-                    <button :class="{ 'is-active': selected }">
-                        {{ $gettext('Karten') }}
-                    </button>
-                </Tab>
-                <Tab v-if="isOwner" as="template" v-slot="{ selected }">
-                    <button :class="{ 'is-active': selected }">
-                        {{ $gettext('Statistiken') }}
-                    </button>
-                </Tab>
-                <Tab v-if="isOwner" as="template" v-slot="{ selected }">
-                    <button :class="{ 'is-active': selected }">
-                        {{ $gettext('Einstellungen') }}
-                    </button>
-                </Tab>
-            </TabList>
-            <TabPanels class="cw-tabs-content">
-                <TabPanel>
-                    <DeckInfoPanel :deck="deck" />
-                </TabPanel>
-                <TabPanel>
-                    <DeckCardsPanel :deck="deck" />
-                </TabPanel>
-                <TabPanel v-if="isOwner">
-                    <DeckStatisticsPanel :deck="deck" />
-                </TabPanel>
-                <TabPanel v-if="isOwner">
-                    <DeckSettingsPanel :deck="deck" />
-                </TabPanel>
-            </TabPanels>
-        </TabGroup>
+        <DeckDetails :deck="deck" />
     </div>
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[deck]" />
     <DialogEditDeck v-model:open="showEditDialog" :deck="deck" />
