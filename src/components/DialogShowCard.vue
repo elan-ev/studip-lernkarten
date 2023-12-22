@@ -1,16 +1,18 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useGettext } from 'vue3-gettext';
-import Button from './IconButton.vue';
 import CardBasicEdit from './cards/BasicEdit.vue';
 import CardBasicShow from './cards/BasicShow.vue';
+import IconButton from './IconButton.vue';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipIcon from './base/StudipIcon.vue';
 import { useFsrs } from '../composables/fsrs.js';
 import { useCardsStore } from '../stores/cards.js';
+import { useContextStore } from '../stores/context.js';
 import DialogConfirmDeleteCard from './DialogConfirmDeleteCard.vue';
 
 const cardsStore = useCardsStore();
+const contextStore = useContextStore();
 const { $gettext } = useGettext();
 const { translatedStates } = useFsrs();
 
@@ -28,6 +30,7 @@ const showConfirmDelete = ref(false);
 
 const cardView = computed(() => cardViews[cardViewMode.value]);
 const readableState = computed(() => translatedStates[props.card.state]);
+const isOwner = computed(() => props.deck.owner.data.id === contextStore.userId);
 
 const reset = () => {
     cardViewMode.value = 'show';
@@ -77,32 +80,14 @@ const deleteCard = () => {
                     </button>
                 </div>
                 <div class="tw-grow">
-                    <div class="tw-flex tw-justify-between tw-items-center">
+                    <div v-if="isOwner" class="tw-flex tw-justify-between tw-items-center">
                         <div>
-                            <Button icon="edit" type="button" @click="onEdit">
+                            <IconButton icon="edit" type="button" @click="onEdit">
                                 {{ $gettext('Bearbeiten') }}
-                            </Button>
-                            <Button
-                                v-if="false"
-                                disabled
-                                icon="arr_1right"
-                                type="button"
-                                @click="onMove"
-                            >
-                                {{ $gettext('Verschieben') }}
-                            </Button>
-                            <Button
-                                v-if="false"
-                                disabled
-                                icon="refresh"
-                                type="button"
-                                @click="onReverse"
-                            >
-                                {{ $gettext('Umdrehen') }}
-                            </Button>
-                            <Button icon="trash" type="button" @click="onDelete">
+                            </IconButton>
+                            <IconButton icon="trash" type="button" @click="onDelete">
                                 {{ $gettext('Löschen') }}
-                            </Button>
+                            </IconButton>
                         </div>
                         <div>
                             <StudipIcon shape="dialog-cards" role="info" class="tw-align-middle" />
@@ -110,7 +95,7 @@ const deleteCard = () => {
                         </div>
                     </div>
                     <div>
-                        <div class="tw-flex tw-gap-2">
+                        <div v-if="isOwner" class="tw-flex tw-gap-2">
                             <div class="tw-grow tw-p-2 tw-bg-[var(--content-color-20)]">
                                 {{ readableState }}
                             </div>

@@ -4,8 +4,10 @@ import CardList from './CardList.vue';
 import DialogAddCard from './DialogAddCard.vue';
 import DialogShowCard from './DialogShowCard.vue';
 import { useCardsStore } from '../stores/cards.js';
+import { useContextStore } from '../stores/context.js';
 
 const cardsStore = useCardsStore();
+const contextStore = useContextStore();
 
 const props = defineProps(['deck']);
 
@@ -14,7 +16,7 @@ const showAddCardDialog = ref(false);
 const showCardDialog = ref(false);
 
 const cards = computed(() => cardsStore.byDeck(props.deck));
-
+const isOwner = computed(() => contextStore.userId === props.deck.owner.data.id);
 const selectedIndex = computed(() => {
     return selectedCard.value
         ? cards.value.findIndex(({ id }) => id === selectedCard.value.id)
@@ -52,7 +54,7 @@ const onCheckCardLength = () => {
 </script>
 
 <template>
-    <div>
+    <div v-if="isOwner">
         <button @click="onAddCard" class="button add" type="button">
             {{ $gettext('Neue Karte anlegen') }}
         </button>

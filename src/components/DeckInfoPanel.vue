@@ -4,12 +4,15 @@ import CourseAvatar from './CourseAvatar.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipDate from '../components/base/StudipDate.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
+import { useContextStore } from '../stores/context.js';
+
+const contextStore = useContextStore();
 
 const props = defineProps(['deck']);
 
 const avatarUrl = computed(() => props.deck.owner.data.meta.avatar.small);
 const formattedName = computed(() => props.deck.owner.data['formatted-name']);
-
+const isOwner = computed(() => contextStore.userId === props.deck.owner.data.id);
 const progress = computed(() => {
     const total = props.deck.progress.reduce((sum, n) => sum + n, 0);
 
@@ -17,10 +20,10 @@ const progress = computed(() => {
 });
 
 const sharedWithCourses = computed(() =>
-    props.deck['shared-with'].data.filter(({ type }) => type === 'courses'),
+    props.deck['shared-with'].data.filter(({ type }) => type === 'courses')
 );
 const sharedWithUsers = computed(() =>
-    props.deck['shared-with'].data.filter(({ type }) => type === 'users'),
+    props.deck['shared-with'].data.filter(({ type }) => type === 'users')
 );
 
 const courseUrl = (course) =>
@@ -89,7 +92,7 @@ const userUrl = (user) =>
         </section>
     </article>
 
-    <article class="studip" v-if="sharedWithCourses.length || sharedWithUsers.length">
+    <article class="studip" v-if="isOwner && (sharedWithCourses.length || sharedWithUsers.length)">
         <header>
             <h1>{{ $gettext('Geteilt mit') }}</h1>
         </header>

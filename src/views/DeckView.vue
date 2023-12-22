@@ -13,9 +13,11 @@ import DialogShareDeck from '../components/DialogShareDeck.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
 import { useCardsStore } from '../stores/cards.js';
+import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
 
 const cardsStore = useCardsStore();
+const contextStore = useContextStore();
 const decksStore = useDecksStore();
 
 const props = defineProps(['id']);
@@ -28,7 +30,9 @@ decksStore.fetchById(props.id);
 cardsStore.fetchByDeck({ id: props.id });
 
 const deck = computed(() => decksStore.byId(props.id));
+const deckOwner = computed(() => deck.value?.owner.data);
 const folder = computed(() => deck.value?.folder.data ?? null);
+const isOwner = computed(() => deckOwner.value && contextStore.userId === deckOwner.value.id);
 
 const onAdjustLearn = () => (showAdjustLearningDialog.value = true);
 const onShowEditDialog = () => (showEditDialog.value = true);
@@ -40,7 +44,7 @@ const onShowShareDialog = () => (showShareDialog.value = true);
         <StudipProgressIndicator :description="$gettext('Lade Kartensatz…')" />
     </div>
     <div v-else>
-        <div class="tw-mb-6 tw-flex tw-flex-row tw-items-center">
+        <div v-if="isOwner" class="tw-mb-6 tw-flex tw-flex-row tw-items-center">
             <div class="tw-grow">
                 <div v-if="folder" :title="$gettext('Zurück zum Ordner')">
                     <RouterLink
@@ -110,12 +114,12 @@ const onShowShareDialog = () => (showShareDialog.value = true);
                         {{ $gettext('Karten') }}
                     </button>
                 </Tab>
-                <Tab as="template" v-slot="{ selected }">
+                <Tab v-if="isOwner" as="template" v-slot="{ selected }">
                     <button :class="{ 'is-active': selected }">
                         {{ $gettext('Statistiken') }}
                     </button>
                 </Tab>
-                <Tab as="template" v-slot="{ selected }">
+                <Tab v-if="isOwner" as="template" v-slot="{ selected }">
                     <button :class="{ 'is-active': selected }">
                         {{ $gettext('Einstellungen') }}
                     </button>
@@ -128,10 +132,10 @@ const onShowShareDialog = () => (showShareDialog.value = true);
                 <TabPanel>
                     <DeckCardsPanel :deck="deck" />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel v-if="isOwner">
                     <DeckStatisticsPanel :deck="deck" />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel v-if="isOwner">
                     <DeckSettingsPanel :deck="deck" />
                 </TabPanel>
             </TabPanels>

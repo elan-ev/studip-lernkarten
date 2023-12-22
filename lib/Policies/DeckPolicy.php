@@ -52,8 +52,7 @@ class DeckPolicy
      */
     public function view(User $user, Deck $deck): bool
     {
-        // TODO: Stimmt das so? Was ist im Veranstaltungskontext?
-        return $deck->owner_id = $user->id;
+        return $deck->owner_id === $user->id || $deck->isSharedWith($user);
     }
 
     /**

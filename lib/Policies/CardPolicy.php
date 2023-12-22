@@ -27,7 +27,7 @@ class CardPolicy
      */
     public function viewAnyOfDeck(User $user, Deck $observed): bool
     {
-        return $observed->owner_id === $user->id;
+        return $observed->owner_id === $user->id || $observed->isSharedWith($user);
     }
 
     /**

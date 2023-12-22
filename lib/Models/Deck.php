@@ -149,4 +149,15 @@ class Deck extends SimpleORMap
             [$this->id, $deck->id]
         );
     }
+
+    public function isSharedWith(User $user): bool
+    {
+        foreach ($this->shared_decks as $sharedDeck) {
+            if ($sharedDeck->isSharedWith($user)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
