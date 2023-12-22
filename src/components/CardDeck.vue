@@ -11,9 +11,11 @@ import DialogConfirmCopyDeck from './DialogConfirmCopyDeck.vue';
 import DialogConfirmDeleteDeck from './DialogConfirmDeleteDeck.vue';
 import DialogCopySharedDeck from './DialogCopySharedDeck.vue';
 import DialogShareDeck from './DialogShareDeck.vue';
+import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
 
 const { $gettext } = useGettext();
+const contextStore = useContextStore();
 const decksStore = useDecksStore();
 
 const props = defineProps(['deck']);
@@ -34,10 +36,13 @@ const templateAvatarUrl = computed(() => templateOwner.value.meta.avatar.small);
 const templateFormattedName = computed(() => templateOwner.value['formatted-name']);
 
 const actionMenuItems = computed(() => {
+    const ownWorkplaceInTopFolder = !contextStore.isCourse && !props.deck.folder.data;
     return [
         {
             id: 'copy',
-            label: $gettext('Kartensatz kopieren'),
+            label: ownWorkplaceInTopFolder
+                ? $gettext('Kartensatz duplizieren')
+                : $gettext('Kartensatz kopieren'),
             icon: 'copy',
             emit: 'copy',
         },
