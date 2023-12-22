@@ -1,14 +1,23 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { useGettext } from 'vue3-gettext';
 import CourseAvatar from './CourseAvatar.vue';
+import DialogConfirmUnshare from './DialogConfirmUnshare.vue';
+import StudipActionMenu from './base/StudipActionMenu.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipDate from '../components/base/StudipDate.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import { useContextStore } from '../stores/context.js';
+import { useDecksStore } from '../stores/decks.js';
 
 const contextStore = useContextStore();
+const decksStore = useDecksStore();
+const { $gettext } = useGettext();
 
 const props = defineProps(['deck']);
+
+const selectedSharedDeck = ref(null);
+const showConfirmUnshareDialog = ref(false);
 
 const creator = computed(() =>
     props.deck.colearning ? props.deck.template.data.owner.data : props.deck.owner.data
@@ -16,7 +25,6 @@ const creator = computed(() =>
 const mkdate = computed(
     () => new Date(props.deck.colearning ? props.deck.template.data.mkdate : props.deck.mkdate)
 );
-
 const avatarUrl = computed(() => creator.value.meta.avatar.small);
 const formattedName = computed(() => creator.value['formatted-name']);
 const isOwner = computed(() => contextStore.userId === props.deck.owner.data.id);
@@ -25,18 +33,36 @@ const progress = computed(() => {
 
     return Math.floor((total ? props.deck.progress[2] / total : 0) * 100);
 });
-
 const sharedWithCourses = computed(() =>
-    props.deck['shared-with'].data.filter(({ type }) => type === 'courses')
+    props.deck['shared-decks'].data.filter(({ recipient }) => recipient.data.type === 'courses')
 );
 const sharedWithUsers = computed(() =>
-    props.deck['shared-with'].data.filter(({ type }) => type === 'users')
+    props.deck['shared-decks'].data.filter(({ recipient }) => recipient.data.type === 'users')
 );
+const actionMenuItems = computed(() => {
+    return isOwner.value
+        ? [
+              {
+                  id: 'unshare',
+                  label: $gettext('Nicht mehr teilen'),
+                  icon: 'decline',
+                  emit: 'unshare',
+              },
+          ]
+        : [];
+});
 
 const courseUrl = (course) =>
     window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin', { cid: course.id });
 const userUrl = (user) =>
     window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username: user.username });
+const onUnshare = (sharedDeck) => {
+    selectedSharedDeck.value = sharedDeck;
+    showConfirmUnshareDialog.value = true;
+};
+const onDidUnshare = () => {
+    decksStore.fetchById(props.deck.id);
+};
 </script>
 
 <template>
@@ -44,7 +70,7 @@ const userUrl = (user) =>
         <header>
             <h1>{{ $gettext('Allgemeine Informationen') }}</h1>
         </header>
-        <section>
+        <section class="lernkarten-general-infos">
             <table>
                 <tr>
                     <th>
@@ -103,22 +129,63 @@ const userUrl = (user) =>
         <header>
             <h1>{{ $gettext('Geteilt mit') }}</h1>
         </header>
-        <section class="tw-flex tw-flex-col tw-gap-2">
-            <a v-for="course in sharedWithCourses" :key="course.id" :href="courseUrl(course)">
-                <CourseAvatar :course="course" />
-            </a>
-            <a v-for="user in sharedWithUsers" :key="user.id" :href="userUrl(user)">
-                <StudipAvatar
-                    :avatar-url="user.meta.avatar.small"
-                    :formatted-name="user['formatted-name']"
-                />
-            </a>
-        </section>
+
+        <table class="default">
+            <thead>
+                <tr>
+                    <th>
+                        {{ $gettext('Name') }}
+                    </th>
+                    <th class="actions">{{ $gettext('Aktionen') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="sharedDeck in sharedWithCourses" :key="sharedDeck.id">
+                    <td>
+                        <a :href="courseUrl(sharedDeck.recipient.data)">
+                            <CourseAvatar :course="sharedDeck.recipient.data" />
+                        </a>
+                    </td>
+                    <td class="actions">
+                        <StudipActionMenu
+                            v-if="actionMenuItems.length"
+                            :items="actionMenuItems"
+                            :collapseAt="0"
+                            @unshare="onUnshare(sharedDeck)"
+                        />
+                    </td>
+                </tr>
+                <tr v-for="sharedDeck in sharedWithUsers" :key="sharedDeck.id">
+                    <td>
+                        <a :href="userUrl(sharedDeck.recipient.data)">
+                            <StudipAvatar
+                                :avatar-url="sharedDeck.recipient.data.meta.avatar.small"
+                                :formatted-name="sharedDeck.recipient.data['formatted-name']"
+                            />
+                        </a>
+                    </td>
+                    <td class="actions">
+                        <StudipActionMenu
+                            v-if="actionMenuItems.length"
+                            :items="actionMenuItems"
+                            :collapseAt="0"
+                            @unshare="onUnshare(sharedDeck)"
+                        />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </article>
+
+    <DialogConfirmUnshare
+        v-model:open="showConfirmUnshareDialog"
+        :shared-deck="selectedSharedDeck"
+        @confirm="onDidUnshare"
+    />
 </template>
 
 <style scoped>
-th {
+.lernkarten-general-infos th {
     align-items: center;
     display: flex;
     font-weight: normal;
@@ -126,10 +193,10 @@ th {
     opacity: 0.6;
     padding-inline-end: 2rem;
 }
-td {
+.lernkarten-general-infos td {
     font-weight: bold;
 }
-tr + tr > * {
+.lernkarten-general-infos tr + tr > * {
     padding-block-start: 1rem;
 }
 </style>

@@ -34,7 +34,7 @@ export const useDecksStore = defineStore(
             return api
                 .fetch(`${type}/${id}/lernkarten-decks`, {
                     params: {
-                        include: 'folder,owner,shared-with,template.owner',
+                        include: 'folder,owner,shared-decks.recipient,shared-with,template.owner',
                         'page[limit]': 1000,
                     },
                 })
@@ -62,7 +62,7 @@ export const useDecksStore = defineStore(
             try {
                 const { data } = await api.fetch(`lernkarten-decks/${id}`, {
                     params: {
-                        include: 'folder,owner,shared-with,template.owner',
+                        include: 'folder,owner,shared-decks.recipient,shared-with,template.owner',
                     },
                 });
                 storeRecord(data);

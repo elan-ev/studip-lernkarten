@@ -5,6 +5,7 @@ namespace Lernkarten\JsonApi\Routes;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\BadRequestException;
 use Lernkarten\JsonApi\Schemas\Deck as DeckSchema;
+use Lernkarten\JsonApi\Schemas\SharedDeck as SharedDeckSchema;
 use Lernkarten\Models\Deck;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -24,6 +25,8 @@ class DecksIndex extends JsonApiController
         DeckSchema::REL_FOLDER,
         DeckSchema::REL_OWNER,
         DeckSchema::REL_SHARED_DECK,
+        DeckSchema::REL_SHARED_DECKS,
+        DeckSchema::REL_SHARED_DECKS . '.' . SharedDeckSchema::REL_RECIPIENT,
         DeckSchema::REL_SHARED_WITH,
         DeckSchema::REL_TEMPLATE,
         DeckSchema::REL_TEMPLATE . '.' . DeckSchema::REL_OWNER,

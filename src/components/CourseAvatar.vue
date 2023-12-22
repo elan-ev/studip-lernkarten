@@ -2,21 +2,15 @@
 import { computed } from 'vue';
 
 defineProps(['course']);
-const style = computed(() => {
-    return {
-        'background-image': `url('${window.STUDIP.ABSOLUTE_URI_STUDIP}pictures/course/nobody_medium.png')`,
-    };
-});
+const avatarUrl = computed(() => `${window.STUDIP.ABSOLUTE_URI_STUDIP}pictures/course/nobody_medium.png`);
 </script>
 
 <template>
-    <div class="tw-items-center tw-flex tw-gap-2">
-        <span
+    <div class="tw-items-center tw-flex tw-gap-1">
+        <img
             :title="course.title"
             alt=""
-            class="my-courses-avatar course-avatar-small"
-            :style="style"
-        ></span>
+            class="tw-align-middle tw-h-4" :src="avatarUrl" />
         <span>{{ course.title }}</span>
     </div>
 </template>
