@@ -22,8 +22,8 @@ const showConfirmUnshareDialog = ref(false);
 const creator = computed(() =>
     props.deck.colearning ? props.deck.template.data.owner.data : props.deck.owner.data
 );
-const mkdate = computed(
-    () => new Date(props.deck.colearning ? props.deck.template.data.mkdate : props.deck.mkdate)
+const chdate = computed(
+    () => new Date(props.deck.colearning ? props.deck.template.data.chdate : props.deck.chdate)
 );
 const avatarUrl = computed(() => creator.value.meta.avatar.small);
 const formattedName = computed(() => creator.value['formatted-name']);
@@ -75,10 +75,10 @@ const onDidUnshare = () => {
                 <tr>
                     <th>
                         <StudipIcon shape="add" role="info" />
-                        {{ $gettext('Erstellt') }}
+                        {{ $gettext('Zuletzt bearbeitet') }}
                     </th>
                     <td>
-                        <StudipDate :date="mkdate" />
+                        <StudipDate :date="chdate" />
                         {{ $gettext('von') }}
                         <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
                     </td>
