@@ -1,8 +1,10 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import DialogShareDeckHere from '../components/DialogShareDeckHere.vue';
 import DialogShowDeck from '../components/DialogShowDeck.vue';
 import SharedDeckList from '../components/SharedDeckList.vue';
+import SidebarAction from '../components/SidebarAction.vue';
 import StudipCompanion from '../components/base/StudipCompanion.vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
 import { useCardsStore } from '../stores/cards.js';
@@ -24,6 +26,7 @@ sharedDecksStore.fetchContext();
 
 const selectedDeck = ref(null);
 const showDeckDialog = ref(false);
+const showShareDialog = ref(false);
 
 const isAtLeastTutor = computed(() =>
     ['tutor', 'dozent'].includes(courseMembershipsStore.byContext()?.permission)
@@ -40,6 +43,7 @@ const doneLoading = computed(
 const workingPlaceUrl = computed(() =>
     window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true)
 );
+const isTeacher = computed(() => contextStore.isCourse && contextStore.isTeacher);
 
 const onSelectSharedDeck = (sharedDeck) => {
     const deck = sharedDeck['colearning-deck'].data || sharedDeck.deck.data;
@@ -47,9 +51,16 @@ const onSelectSharedDeck = (sharedDeck) => {
     selectedDeck.value = deck;
     showDeckDialog.value = true;
 };
+const onShareDeck = () => (showShareDialog.value = true);
 </script>
 
 <template>
+    <SidebarAction
+        v-if="isTeacher"
+        icon="share"
+        :text="$gettext('Kartensatz hierhin teilen')"
+        @click="onShareDeck"
+    />
     <main>
         <StudipProgressIndicator
             v-if="!doneLoading"
@@ -89,5 +100,6 @@ const onSelectSharedDeck = (sharedDeck) => {
             </article>
         </template>
     </main>
+    <DialogShareDeckHere v-if="showShareDialog" v-model:open="showShareDialog" />
     <DialogShowDeck v-model:open="showDeckDialog" :deck="selectedDeck" />
 </template>

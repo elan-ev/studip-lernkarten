@@ -10,6 +10,7 @@ import DialogShowDeck from '../components/DialogShowDeck.vue';
 import FolderList from '../components/FolderList.vue';
 import IconButton from '../components/IconButton.vue';
 import SharedDeckList from '../components/SharedDeckList.vue';
+import SidebarAction from '../components/SidebarAction.vue';
 import StudipCompanion from '../components/base/StudipCompanion.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import { useCardsStore } from '../stores/cards.js';
@@ -47,6 +48,8 @@ const decks = computed(() =>
 const sharedWithMe = computed(() =>
     sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId)
 );
+const isWorkplace = computed(() => !contextStore.isCourse);
+
 const addTopFolder = () => (createDialogOpen.value = true);
 const editFolder = (folder) => {
     editDialogOpen.value = true;
@@ -75,9 +78,24 @@ const onSelectSharedDeck = (sharedDeck) => {
     selectedDeck.value = deck;
     showDeckDialog.value = true;
 };
+const onCreateDeck = () => {
+    router.push({ name: 'decks-create', query: { f: null } });
+};
 </script>
 
 <template>
+    <SidebarAction
+        v-if="isWorkplace"
+        icon="add"
+        :text="$gettext('Neuen Kartensatz erstellen')"
+        @click="onCreateDeck"
+    />
+    <SidebarAction
+        v-if="decks.length"
+        icon="refresh"
+        :text="$gettext('Kartensätze lernen')"
+        @click="onLearnDecks"
+    />
     <table class="default">
         <caption>
             <nav>
@@ -113,14 +131,6 @@ const onSelectSharedDeck = (sharedDeck) => {
                     <div class="footer-items">
                         <IconButton type="button" icon="add" @click="addTopFolder">
                             {{ $gettext('Ordner anlegen') }}
-                        </IconButton>
-                        <IconButton
-                            :disabled="!decks.length"
-                            type="button"
-                            icon="refresh"
-                            @click="onLearnDecks"
-                        >
-                            {{ $gettext('Eigene Kartensätze lernen') }}
                         </IconButton>
                     </div>
                 </td>
