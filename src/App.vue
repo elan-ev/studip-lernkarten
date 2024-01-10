@@ -3,6 +3,7 @@ import { RouterView } from 'vue-router';
 import SidebarActions from './components/SidebarActions.vue';
 import SidebarNavigation from './components/SidebarNavigation.vue';
 import SidebarSearch from './components/SidebarSearch.vue';
+import StudipCompanionOverlay from './components/base/StudipCompanionOverlay.vue';
 import { useFoldersStore } from './stores/folders.js';
 
 const foldersStore = useFoldersStore();
@@ -20,6 +21,8 @@ function hideOriginalSidebarNavigation() {
 
 <template>
     <RouterView />
+
+    <StudipCompanionOverlay />
 
     <Teleport to="#sidebar-navigation form">
         <SidebarNavigation />
