@@ -57,7 +57,7 @@ const onConfirm = () => {
             name: name.value,
             description: description.value,
             metadata: metadata.value,
-            folder_id: folder.value.id,
+            folder_id: folder.value?.id ?? null,
         })
         .then(() => setIsOpen(false));
 };
