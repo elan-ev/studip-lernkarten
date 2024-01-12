@@ -1,6 +1,7 @@
 {
     "name": "lernkarten",
     "type": "module",
+    "version": "1.0.3",
     "files": [
         "dist"
     ],
