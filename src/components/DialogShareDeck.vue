@@ -4,6 +4,7 @@ import { useGettext } from 'vue3-gettext';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipMultiPersonSearch from './base/StudipMultiPersonSearch.vue';
 import RangeTypeSelector from './RangeTypeSelector.vue';
+import { useCompanionOverlay } from '../composables/companion-overlay.js';
 import { useContextStore } from '../stores/context.js';
 import { useCourseMembershipsStore } from '../stores/course-memberships.js';
 import { useDecksStore } from '../stores/decks.js';
@@ -18,6 +19,7 @@ const decksStore = useDecksStore();
 const instancesStore = useInstancesStore();
 const semestersStore = useSemestersStore();
 const sharedDecksStore = useSharedDecksStore();
+const { showCompanionOverlay } = useCompanionOverlay();
 
 const props = defineProps(['open', 'deck']);
 const emit = defineEmits(['update:open']);
@@ -88,7 +90,11 @@ const onConfirm = () => {
             promise = sharedDecksStore.shareDeckWithUserIds(props.deck, selectedUsers.value);
             break;
     }
-    promise.then(() => decksStore.fetchById(props.deck.id));
+    promise
+        .then(() =>
+            showCompanionOverlay($gettext('Kartensatz erfolgreich geteilt'), { mood: 'happy' })
+        )
+        .then(() => decksStore.fetchById(props.deck.id));
     setIsOpen(false);
 };
 </script>

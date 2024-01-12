@@ -1,30 +1,31 @@
 import { ref } from 'vue';
 
-const show = ref(false);
-const message = ref('');
-const mood = ref('default');
+const companionOverlayShow = ref(false);
+const companionOverlayMessage = ref('');
+const companionOverlayMood = ref('default');
 
 export function useCompanionOverlay() {
-    let timeout = null;
+    let timer = null;
 
     function hideCompanionOverlay() {
-        message.value = '';
-        show.value = false;
+        companionOverlayMessage.value = '';
+        companionOverlayShow.value = false;
     }
 
-    function showCompanionOverlay(msg) {
-        message.value = msg;
-        show.value = true;
-        if (timeout) {
-            clearTimeout(timeout);
+    function showCompanionOverlay(msg, { timeout = 4000, mood = 'default' } = {}) {
+        companionOverlayMessage.value = msg;
+        companionOverlayMood.value = mood;
+        companionOverlayShow.value = true;
+        if (timer) {
+            clearTimeout(timer);
         }
-        timeout = setTimeout(hideCompanionOverlay, 4000);
+        timer = setTimeout(hideCompanionOverlay, timeout);
     }
 
     return {
-        message,
-        mood,
-        show,
+        message: companionOverlayMessage,
+        mood: companionOverlayMood,
+        show: companionOverlayShow,
         hideCompanionOverlay,
         showCompanionOverlay,
     };
