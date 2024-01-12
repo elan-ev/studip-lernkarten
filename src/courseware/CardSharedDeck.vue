@@ -19,7 +19,6 @@ const deckUrl = computed(() =>
     )
 );
 const formattedName = computed(() => sharer.value['formatted-name']);
-const isSharer = computed(() => sharer.value.id === contextStore.userId);
 const sharer = computed(() => props.sharedDeck.sharer.data);
 </script>
 
@@ -43,16 +42,12 @@ const sharer = computed(() => props.sharedDeck.sharer.data);
                 </div>
                 <div class="tw-px-4">
                     <IconButton
-                        v-if="!isSharer"
                         icon="refresh"
                         type="button"
                         @click="$emit('colearn')"
                     >
                         {{ $gettext('Lernen') }}
                     </IconButton>
-                    <a v-else class="button" :href="deckUrl">
-                        {{ $gettext('Kartensatz ansehen') }}
-                    </a>
                 </div>
             </div>
         </div>
