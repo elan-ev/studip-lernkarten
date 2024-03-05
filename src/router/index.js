@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import SharedDecksView from '../views/SharedDecksView.vue';
+import SharedDecksToCourseView from '../views/SharedDecksToCourseView.vue';
+import SharedDecksToWorkplaceView from '../views/SharedDecksToWorkplaceView.vue';
 import DecksCreateView from '../views/DecksCreateView.vue';
 import DeckView from '../views/DeckView.vue';
 import FolderView from '../views/FolderView.vue';
@@ -19,19 +20,13 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: isCourse ? SharedDecksView : FoldersView,
+            component: isCourse ? SharedDecksToCourseView : FoldersView,
         },
         {
-            path: '/search',
-            name: 'search',
-            component: SearchView,
-            props: (route) => ({ query: route.query.q }),
-        },
-        {
-            path: '/folders/:id',
-            name: 'folder',
-            component: FolderView,
-            props: true,
+            path: '/decks/create',
+            name: 'decks-create',
+            component: DecksCreateView,
+            props: (route) => ({ folder: route.query.f }),
         },
         {
             path: '/decks/:id',
@@ -40,10 +35,22 @@ const router = createRouter({
             props: true,
         },
         {
-            path: '/decks/create',
-            name: 'decks-create',
-            component: DecksCreateView,
-            props: (route) => ({ folder: route.query.f }),
+            path: '/folders/:id',
+            name: 'folder',
+            component: FolderView,
+            props: true,
+        },
+        {
+            path: '/search',
+            name: 'search',
+            component: SearchView,
+            props: (route) => ({ query: route.query.q }),
+        },
+        {
+            path: '/shared',
+            name: 'shared',
+            component: SharedDecksToWorkplaceView,
+            props: true,
         },
         {
             path: '/study',

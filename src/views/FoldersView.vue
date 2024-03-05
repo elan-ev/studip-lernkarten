@@ -9,17 +9,14 @@ import DialogConfirmDeleteFolder from '../components/DialogConfirmDeleteFolder.v
 import DialogShowDeck from '../components/DialogShowDeck.vue';
 import FolderList from '../components/FolderList.vue';
 import IconButton from '../components/IconButton.vue';
-import SharedDeckList from '../components/SharedDeckList.vue';
 import SidebarAction from '../components/SidebarAction.vue';
 import StudipCompanion from '../components/base/StudipCompanion.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
-import { useCardsStore } from '../stores/cards.js';
 import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
 import { useFoldersStore } from '../stores/folders.js';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 
-const cardsStore = useCardsStore();
 const contextStore = useContextStore();
 const decksStore = useDecksStore();
 const foldersStore = useFoldersStore();
@@ -45,9 +42,6 @@ const decks = computed(() =>
         ['name']
     )
 );
-const sharedWithMe = computed(() =>
-    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId)
-);
 const isWorkplace = computed(() => !contextStore.isCourse);
 
 const addTopFolder = () => (createDialogOpen.value = true);
@@ -72,12 +66,6 @@ const onConfirmDeleteDialog = () => {
     foldersStore.deleteFolder(selectedFolder.value);
 };
 const onLearnDecks = () => (showAdjustLearningDialog.value = true);
-const onSelectSharedDeck = (sharedDeck) => {
-    const deck = sharedDeck['colearning-deck'].data || sharedDeck.deck.data;
-    cardsStore.fetchByDeck({ id: deck.id });
-    selectedDeck.value = deck;
-    showDeckDialog.value = true;
-};
 const onCreateDeck = () => {
     router.push({ name: 'decks-create', query: { f: null } });
 };
@@ -141,19 +129,10 @@ const onCreateDeck = () => {
     <section class="tw-mt-12" v-if="decks.length">
         <header>
             <h3>
-                {{ $gettext('Kartensätze ohne Ordner') }}
+                {{ $gettext('Kartensätze in diesem Ordner') }}
             </h3>
         </header>
         <DeckList :decks="decks" />
-    </section>
-
-    <section class="tw-mt-12" v-if="sharedWithMe.length">
-        <header>
-            <h3>
-                {{ $gettext('Mit mir geteilte Kartensätze') }}
-            </h3>
-        </header>
-        <SharedDeckList :shared-decks="sharedWithMe" @select="onSelectSharedDeck" />
     </section>
 
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="decks" />
