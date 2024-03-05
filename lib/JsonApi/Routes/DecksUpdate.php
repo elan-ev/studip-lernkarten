@@ -60,7 +60,7 @@ class DecksUpdate extends JsonApiController
         if (!self::arrayHas($json, 'data.id')) {
             return 'Document must have an `id`.';
         }
-        if (self::arrayGet($json, 'data.id') !== $data->id) {
+        if (self::arrayGet($json, 'data.id') !== (string) $data->id) {
             return 'Differing `id`';
         }
 
