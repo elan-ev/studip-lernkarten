@@ -96,14 +96,18 @@ const onCreateDeck = () => {
     <table class="default">
         <caption v-if="folder">
             <nav>
-                <span :title="$gettext('Zum Hauptordner')">
+                <span>
                     <RouterLink :to="{ name: 'home' }">
                         <StudipIcon
                             shape="folder-home-empty"
                             :height="30"
                             :width="30"
                             class="tw-align-middle tw-mr-1 tw-mb-1"
-                        />
+                            ariaRole="none"
+                            />
+                        <span class="sr-only">
+                            {{ $gettext('Zum Hauptordner') }}
+                        </span>
                     </RouterLink>
                     <span v-for="ancestor in foldersStore.ancestors(folder)" :key="ancestor.id">
                         /

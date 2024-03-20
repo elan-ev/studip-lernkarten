@@ -37,7 +37,7 @@ const onUnshare = () => (showConfirmUnshareDialog.value = true);
             class="tw-flex tw-items-center tw-justify-center tw-w-24 tw-aspect-square"
             @click="$emit('select', sharedDeck)"
         >
-            <StudipIcon shape="share" role="info" :size="32" />
+            <StudipIcon shape="share" role="info" :size="32" ariaRole="none" />
         </div>
         <div class="tw-flex tw-flex-col tw-flex-grow tw-justify-between">
             <div
@@ -49,7 +49,7 @@ const onUnshare = () => (showConfirmUnshareDialog.value = true);
             <div class="tw-flex tw-items-center tw-justify-between">
                 <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
                 <div>
-                    <StudipIcon shape="dialog-cards" role="info" />
+                    <StudipIcon shape="dialog-cards" role="info" ariaRole="none" />
                     {{ sharedDeck.deck.data.meta['cards-count'] }}
                 </div>
                 <div class="tw-px-4">

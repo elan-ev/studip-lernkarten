@@ -114,7 +114,7 @@ const deleteDeck = () => {
             <div class="tw-flex tw-items-center tw-justify-between">
                 <StudipAvatar :avatar-url="avatarUrl" :formatted-name="formattedName" />
                 <div>
-                    <StudipIcon shape="dialog-cards" role="info" />
+                    <StudipIcon shape="dialog-cards" role="info" ariaRole="none" />
                     {{ deck.meta['cards-count'] }}
                 </div>
                 <div class="tw-px-4 tw-flex tw-gap-2 tw-items-center">

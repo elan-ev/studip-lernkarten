@@ -74,7 +74,7 @@ const onDidUnshare = () => {
             <table>
                 <tr>
                     <th>
-                        <StudipIcon shape="add" role="info" />
+                        <StudipIcon shape="add" role="info" ariaRole="none" />
                         {{ $gettext('Zuletzt bearbeitet') }}
                     </th>
                     <td>
@@ -86,7 +86,7 @@ const onDidUnshare = () => {
 
                 <tr>
                     <th>
-                        <StudipIcon shape="dialog-cards" role="info" />
+                        <StudipIcon shape="dialog-cards" role="info" ariaRole="none" />
                         {{ $gettext('Anzahl Karten') }}
                     </th>
                     <td>
@@ -95,7 +95,7 @@ const onDidUnshare = () => {
                 </tr>
                 <tr>
                     <th>
-                        <StudipIcon shape="vote" role="info" />
+                        <StudipIcon shape="vote" role="info" ariaRole="none" />
                         {{ $gettext('Gesamtfortschritt') }}
                     </th>
                     <td>

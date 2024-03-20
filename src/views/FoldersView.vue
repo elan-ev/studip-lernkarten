@@ -87,15 +87,16 @@ const onCreateDeck = () => {
     <table class="default">
         <caption>
             <nav>
-                <span :title="$gettext('Zum Hauptordner')">
+                <span>
                     <RouterLink :to="{ name: 'home' }">
                         <StudipIcon
                             shape="folder-home-empty"
                             :height="30"
                             :width="30"
                             class="tw-align-middle tw-mr-2 tw-mb-1"
+                            ariaRole="none"
                         />
-                        <span class="">{{ $gettext('Lernkarten') }}</span>
+                        <span>{{ $gettext('Lernkarten') }}</span>
                     </RouterLink>
                 </span>
             </nav>

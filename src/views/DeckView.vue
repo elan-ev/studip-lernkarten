@@ -41,7 +41,10 @@ const onShowShareDialog = () => (showShareDialog.value = true);
         <StudipProgressIndicator :description="$gettext('Lade Kartensatz…')" />
     </div>
     <div v-else>
-        <div v-if="isOwner" class="tw-mb-6 tw-flex tw-flex-row tw-items-center tw-flex-wrap sm:tw-flex-nowrap">
+        <div
+            v-if="isOwner"
+            class="tw-mb-6 tw-flex tw-flex-row tw-items-center tw-flex-wrap sm:tw-flex-nowrap"
+        >
             <div class="tw-grow">
                 <div v-if="folder" :title="$gettext('Zurück zum Ordner')">
                     <RouterLink
@@ -72,12 +75,14 @@ const onShowShareDialog = () => (showShareDialog.value = true);
                             :height="30"
                             :width="30"
                             class="tw-align-middle tw-mb-1"
+                            ariaRole="none"
                         />
                         <StudipIcon
                             shape="folder-home-empty"
                             :height="30"
                             :width="30"
                             class="tw-align-middle tw-mb-1"
+                            ariaRole="none"
                         />
                         <span class="breadcrumb">
                             {{ $gettext('Kein Ordner') }}
@@ -90,10 +95,20 @@ const onShowShareDialog = () => (showShareDialog.value = true);
                 <IconButton icon="refresh" type="button" @click="onAdjustLearn">
                     {{ $gettext('Lernen') }}
                 </IconButton>
-                <IconButton v-if="!isColearning" icon="share" type="button" @click="onShowShareDialog">
+                <IconButton
+                    v-if="!isColearning"
+                    icon="share"
+                    type="button"
+                    @click="onShowShareDialog"
+                >
                     {{ $gettext('Teilen') }}
                 </IconButton>
-                <IconButton v-if="!isColearning" icon="edit" type="button" @click="onShowEditDialog">
+                <IconButton
+                    v-if="!isColearning"
+                    icon="edit"
+                    type="button"
+                    @click="onShowEditDialog"
+                >
                     {{ $gettext('Bearbeiten') }}
                 </IconButton>
             </div>
