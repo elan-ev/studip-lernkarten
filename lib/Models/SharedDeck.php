@@ -113,6 +113,14 @@ class SharedDeck extends SimpleORMap
         ]);
     }
 
+    public function getCopiedDecks(User $user): iterable
+    {
+        return Deck::findBySql('template_id = ? AND owner_id = ? AND colearning = 0', [
+            $this->deck_id,
+            $user->id,
+        ]);
+    }
+
     /**
      * @return User|Course|null
      */
