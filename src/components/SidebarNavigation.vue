@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useContextStore } from '../stores/context.js';
-import { useRoute } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
 
 const contextStore = useContextStore();
 const route = useRoute();

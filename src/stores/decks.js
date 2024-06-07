@@ -73,6 +73,10 @@ export const useDecksStore = defineStore(
             isLoading.value = false;
         }
 
+        function byFolder(folder) {
+            return folder ? byContext.value.filter((deck) => deck.folder.data?.id === folder.id) : [];
+        }
+
         function byId(id) {
             return records.value.get(id);
         }
@@ -113,6 +117,7 @@ export const useDecksStore = defineStore(
         return {
             all,
             byContext,
+            byFolder,
             byId,
             copyDeck,
             createDeck,

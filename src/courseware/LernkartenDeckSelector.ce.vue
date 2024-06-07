@@ -29,7 +29,6 @@ defineEmits(['change']);
 // custom elements specifics
 const externalCss = window.STUDIP.ASSETS_URL + 'stylesheets/studip-base.css';
 const emitChange = (root, callback) => {
-    console.debug('emitting to the host document', root, callback);
     root.$emit('change', callback);
 };
 

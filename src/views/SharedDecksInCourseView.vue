@@ -1,9 +1,11 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import DialogColearnSharedDeck from '../components/DialogColearnSharedDeck.vue';
 import DialogShareDeckHere from '../components/DialogShareDeckHere.vue';
 import DialogShowDeck from '../components/DialogShowDeck.vue';
-import SharedDeckList from '../components/SharedDeckList.vue';
+import SharedByMeDeckList from '../components/SharedByMeDeckList.vue';
+import SharedWithMeDeckList from '../components/SharedWithMeDeckList.vue';
 import SidebarAction from '../components/SidebarAction.vue';
 import StudipCompanion from '../components/base/StudipCompanion.vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
@@ -13,24 +15,25 @@ import { useCourseMembershipsStore } from '../stores/course-memberships.js';
 import { useDecksStore } from '../stores/decks.js';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 
+const router = useRouter();
+
 const cardsStore = useCardsStore();
 const contextStore = useContextStore();
 const courseMembershipsStore = useCourseMembershipsStore();
 const decksStore = useDecksStore();
 const sharedDecksStore = useSharedDecksStore();
-const router = useRouter();
 
 courseMembershipsStore.fetchContext();
 decksStore.fetchContext();
+decksStore.fetchWorkplace();
 sharedDecksStore.fetchContext();
 
 const selectedDeck = ref(null);
+const selectedSharedDeck = ref(null);
+const showColearnDialog = ref(false);
 const showDeckDialog = ref(false);
 const showShareDialog = ref(false);
 
-const isAtLeastTutor = computed(() =>
-    ['tutor', 'dozent'].includes(courseMembershipsStore.byContext()?.permission)
-);
 const sharedByMe = computed(() =>
     sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId)
 );
@@ -43,10 +46,18 @@ const doneLoading = computed(
 const workingPlaceUrl = computed(() =>
     window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true)
 );
+const isAtLeastTutor = computed(() =>
+    ['tutor', 'dozent'].includes(courseMembershipsStore.byContext()?.permission)
+);
 const isTeacher = computed(() => contextStore.isCourse && contextStore.isTeacher);
 
+const onColearnSharedDeck = (sharedDeck) => {
+    selectedSharedDeck.value = sharedDeck
+    showColearnDialog.value = true;
+};
+
 const onSelectSharedDeck = (sharedDeck) => {
-    const deck = sharedDeck['colearning-deck'].data || sharedDeck.deck.data;
+    const deck = sharedDeck.deck.data;
     cardsStore.fetchByDeck({ id: deck.id });
     selectedDeck.value = deck;
     showDeckDialog.value = true;
@@ -71,16 +82,19 @@ const onShareDeck = () => (showShareDialog.value = true);
                 <header>
                     <h1>{{ $gettext('Mit mir geteilte Kartensätze') }}</h1>
                 </header>
-                <SharedDeckList :shared-decks="sharedWithMe" @select="onSelectSharedDeck" />
+                <SharedWithMeDeckList
+                    :shared-decks="sharedWithMe"
+                    @colearn="onColearnSharedDeck"
+                    @select="onSelectSharedDeck"
+                    />
             </article>
             <article class="studip" v-if="isAtLeastTutor">
                 <header>
                     <h1>{{ $gettext('Von mir geteilte Kartensätze') }}</h1>
                 </header>
-                <SharedDeckList
+                <SharedByMeDeckList
                     v-if="sharedByMe.length"
                     :shared-decks="sharedByMe"
-                    @select="onSelectSharedDeck"
                 />
                 <StudipCompanion
                     v-else
@@ -100,6 +114,7 @@ const onShareDeck = () => (showShareDialog.value = true);
             </article>
         </template>
     </main>
+    <DialogColearnSharedDeck v-model:open="showColearnDialog" :shared-deck="selectedSharedDeck" />
     <DialogShareDeckHere v-if="showShareDialog" v-model:open="showShareDialog" />
     <DialogShowDeck v-model:open="showDeckDialog" :deck="selectedDeck" />
 </template>

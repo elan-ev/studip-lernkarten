@@ -45,5 +45,6 @@ button:not(:hover) > span > img:nth-child(2) {
 
 .button-link {
     background: transparent;
+    border: none;
 }
 </style>

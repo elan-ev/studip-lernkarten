@@ -35,16 +35,10 @@ const children = computed(() => {
     if (!folder.value) {
         return [];
     }
-    const children = foldersStore.children(props.id);
-
-    return _.sortBy(children, 'name');
+    return _.sortBy(foldersStore.children(props.id), 'name');
 });
 
-const decks = computed(() =>
-    folder.value
-        ? decksStore.byContext.filter((deck) => deck.folder.data?.id === folder.value.id)
-        : []
-);
+const decks = computed(() => folder.value ? decksStore.byContext.filter((deck) => deck.folder.data?.id === folder.value.id) : []);
 const isWorkplace = computed(() => !contextStore.isCourse);
 
 const onAddChild = () => {
@@ -138,7 +132,6 @@ const onCreateDeck = () => {
             </tr>
         </tfoot>
     </table>
-
     <section class="tw-mt-12" v-if="decks.length">
         <header>
             <h3 class="tw-mt-12">

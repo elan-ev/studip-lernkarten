@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import SharedDecksToCourseView from '../views/SharedDecksToCourseView.vue';
-import SharedDecksToWorkplaceView from '../views/SharedDecksToWorkplaceView.vue';
+import SharedDecksInCourseView from '../views/SharedDecksInCourseView.vue';
+import SharedDecksInWorkplaceView from '../views/SharedDecksInWorkplaceView.vue';
 import DecksCreateView from '../views/DecksCreateView.vue';
 import DeckView from '../views/DeckView.vue';
 import FolderView from '../views/FolderView.vue';
@@ -20,7 +20,7 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: isCourse ? SharedDecksToCourseView : FoldersView,
+            component: isCourse ? SharedDecksInCourseView : FoldersView,
         },
         {
             path: '/decks/create',
@@ -49,7 +49,7 @@ const router = createRouter({
         {
             path: '/shared',
             name: 'shared',
-            component: SharedDecksToWorkplaceView,
+            component: SharedDecksInWorkplaceView,
             props: true,
         },
         {
@@ -66,11 +66,18 @@ const router = createRouter({
     ],
 });
 
-router.beforeEach((to, from, next) => {
-    if (cid && !('cid' in to.query)) {
-        next({ ...to, query: { ...to.query, cid } });
-    } else {
-        next();
+router.beforeEach((to, from) => {
+    if (cid) {
+        if (!('cid' in to.query)) {
+            return { ...to, query: { ...to.query, cid } }
+        }
+
+        if (to.query.cid === null) {
+            const { cid, ...query } = to.query;
+            const href = router.resolve({ ...to, query }).href;
+            window.location = href;
+            return false;
+        }
     }
 });
 
