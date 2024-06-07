@@ -94,7 +94,7 @@ const deleteDeck = () => {
             <div class="tw-italic tw-flex tw-gap-2 tw-items-center" v-if="deck.template.data"></div>
             <div class="tw-flex tw-items-center tw-justify-between">
                 <div v-if="deck.template.data && deck.colearning" class="tw-italic">
-                    <span> {{ $gettext('Abonnement von') }} </span>
+                    <span> {{ $gettext('Im Abonnement von') }} </span>
                     <StudipAvatar
                         class="tw-inline"
                         :avatar-url="templateAvatarUrl"
