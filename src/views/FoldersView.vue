@@ -34,7 +34,6 @@ const selectedDeck = ref(null);
 const selectedFolder = ref(null);
 const showAdjustLearningDialog = ref(false);
 const showDeckDialog = ref(false);
-const showUnusedSharedDecks = ref(true);
 
 const topFolders = computed(() => foldersStore.topFolders);
 const decks = computed(() =>

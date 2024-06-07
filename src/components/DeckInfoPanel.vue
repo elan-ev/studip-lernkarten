@@ -9,11 +9,9 @@ import StudipDate from '../components/base/StudipDate.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';
 import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
-import { useFoldersStore } from '../stores/folders.js';
 
 const contextStore = useContextStore();
 const decksStore = useDecksStore();
-const foldersStore = useFoldersStore();
 const { $gettext } = useGettext();
 
 const props = defineProps(['deck']);
@@ -54,25 +52,8 @@ const actionMenuItems = computed(() => {
         : [];
 });
 
-const realizedDecks = computed(() => {
-    return decksStore.byContext.filter((deck) => deck.template.data?.id === props.deck.id);
-});
-
-const breadcrumbDeck = (deck) => {
-    return deck.folder?.data
-        ? [
-              { id: -1, name: 'foo' },
-              { id: -2, name: 'bar' },
-              ...foldersStore.ancestors(deck.folder.data),
-              deck.folder.data,
-          ]
-        : [];
-};
-
 const courseUrl = (course) =>
     window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin', { cid: course.id });
-const deckUrl = (deck) =>
-    window.STUDIP.URLHelper.getURL(`plugins.php/lernkartenplugin/decks/${+deck.id}`, {}, true);
 const userUrl = (user) =>
     window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username: user.username });
 const onUnshare = (sharedDeck) => {
@@ -194,25 +175,6 @@ const onDidUnshare = () => {
                 </tr>
             </tbody>
         </table>
-    </article>
-
-    <article class="studip" v-if="!owner && realizedDecks.length">
-        <header>
-            <h1>{{ $gettext('Mit mir geteilt') }}</h1>
-        </header>
-
-        <ul>
-            <li v-for="realized in realizedDecks" :key="realized.id">
-                <a :href="deckUrl(realized)">
-                    {{ realized.colearning ? $gettext('Abonnement in') : $gettext('Kopie in') }}
-                    <span class="lernkarten-breadcrumbs">
-                        <span v-for="breadcrumb in breadcrumbDeck(realized)" :key="breadcrumb.id">
-                            {{ breadcrumb.name }}
-                        </span>
-                    </span>
-                </a>
-            </li>
-        </ul>
     </article>
 
     <DialogConfirmUnshare

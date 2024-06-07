@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import DialogColearnSharedDeck from '../components/DialogColearnSharedDeck.vue';
 import DialogShowDeck from '../components/DialogShowDeck.vue';
 import SharedByMeDeckList from '../components/SharedByMeDeckList.vue';
@@ -11,8 +10,6 @@ import { useCardsStore } from '../stores/cards.js';
 import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
-
-const router = useRouter();
 
 const cardsStore = useCardsStore();
 const contextStore = useContextStore();

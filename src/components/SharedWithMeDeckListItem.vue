@@ -1,22 +1,16 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { RouterLink } from 'vue-router';
 import { useGettext } from 'vue3-gettext';
-import DialogColearnSharedDeck from './DialogColearnSharedDeck.vue';
 import IconButton from './IconButton.vue';
-import StudipActionMenu from './base/StudipActionMenu.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipDate from '../components/base/StudipDate.vue';
 import StudipIcon from './base/StudipIcon.vue';
-import { useDecksStore } from '../stores/decks.js';
 
 const props = defineProps(['sharedDeck']);
-const emit = defineEmits(['colearn', 'select']);
+defineEmits(['colearn', 'select']);
 
 const { $gettext } = useGettext();
-const router = useRouter();
-
-const selectedCopy = ref(null);
 
 const avatarUrl = computed(() => props.sharedDeck.sharer.data.meta.avatar.small);
 const formattedName = computed(() => props.sharedDeck.sharer.data['formatted-name']);
@@ -24,7 +18,6 @@ const colearnDeck = computed(() => props.sharedDeck['colearning-deck']?.data ?? 
 const hasColearn = computed(() => !!colearnDeck.value);
 const copies = computed(() => props.sharedDeck['copied-decks'].data ?? []);
 const isUsed = computed(() => hasColearn.value || copies.value.lenght > 0);
-const numberOfUses = computed(() => (hasColearn.value ? 1 : 0) + copies.value.length);
 </script>
 
 <template>

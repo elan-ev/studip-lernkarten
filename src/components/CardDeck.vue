@@ -9,13 +9,10 @@ import StudipIcon from './base/StudipIcon.vue';
 import DialogAdjustLearningOptions from './DialogAdjustLearningOptions.vue';
 import DialogConfirmCopyDeck from './DialogConfirmCopyDeck.vue';
 import DialogConfirmDeleteDeck from './DialogConfirmDeleteDeck.vue';
-import DialogCopySharedDeck from './DialogCopySharedDeck.vue';
 import DialogShareDeck from './DialogShareDeck.vue';
-import { useContextStore } from '../stores/context.js';
 import { useDecksStore } from '../stores/decks.js';
 
 const { $gettext } = useGettext();
-const contextStore = useContextStore();
 const decksStore = useDecksStore();
 
 const props = defineProps(['deck']);
@@ -26,11 +23,7 @@ const showConfirmCopy = ref(false);
 const showConfirmDelete = ref(false);
 const showShareDialog = ref(false);
 
-const deckOwner = computed(() => props.deck.owner.data);
-const avatarUrl = computed(() => deckOwner.value.meta.avatar.small);
-const formattedName = computed(() => deckOwner.value['formatted-name']);
 const editable = computed(() => props.deck['is-editable']);
-
 const templateOwner = computed(() => props.deck.template.data.owner.data);
 const templateAvatarUrl = computed(() => templateOwner.value.meta.avatar.small);
 const templateFormattedName = computed(() => templateOwner.value['formatted-name']);
@@ -131,10 +124,5 @@ const deleteDeck = () => {
     <DialogAdjustLearningOptions v-model:open="showAdjustLearningDialog" :decks="[deck]" />
     <DialogConfirmDeleteDeck v-model:open="showConfirmDelete" @confirm="deleteDeck" />
     <DialogShareDeck v-if="showShareDialog" v-model:open="showShareDialog" :deck="deck" />
-    <DialogConfirmCopyDeck v-if="!deck.colearning" v-model:open="showConfirmCopy" :deck="deck" />
-    <DialogCopySharedDeck
-        v-if="deck.colearning"
-        v-model:open="showConfirmCopy"
-        :shared-deck="{ id: deck['shared-deck'].data.id }"
-    />
+    <DialogConfirmCopyDeck v-model:open="showConfirmCopy" :deck="deck" />
 </template>
