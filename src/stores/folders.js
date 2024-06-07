@@ -22,7 +22,7 @@ export const useFoldersStore = defineStore('folders', () => {
     const topFolders = computed(() => {
         return _.sortBy(
             all.value.filter((folder) => !folder.parent.data),
-            'name'
+            'name',
         );
     });
 
@@ -57,7 +57,7 @@ export const useFoldersStore = defineStore('folders', () => {
                     params: {
                         'page[limit]': 1000,
                     },
-                }
+                },
             );
             data.forEach(storeRecord);
         } catch (err) {

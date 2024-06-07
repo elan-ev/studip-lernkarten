@@ -74,7 +74,9 @@ export const useDecksStore = defineStore(
         }
 
         function byFolder(folder) {
-            return folder ? byContext.value.filter((deck) => deck.folder.data?.id === folder.id) : [];
+            return folder
+                ? byContext.value.filter((deck) => deck.folder.data?.id === folder.id)
+                : [];
         }
 
         function byId(id) {

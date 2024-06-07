@@ -38,7 +38,11 @@ const children = computed(() => {
     return _.sortBy(foldersStore.children(props.id), 'name');
 });
 
-const decks = computed(() => folder.value ? decksStore.byContext.filter((deck) => deck.folder.data?.id === folder.value.id) : []);
+const decks = computed(() =>
+    folder.value
+        ? decksStore.byContext.filter((deck) => deck.folder.data?.id === folder.value.id)
+        : [],
+);
 const isWorkplace = computed(() => !contextStore.isCourse);
 
 const onAddChild = () => {
@@ -98,7 +102,7 @@ const onCreateDeck = () => {
                             :width="30"
                             class="tw-align-middle tw-mr-1 tw-mb-1"
                             ariaRole="none"
-                            />
+                        />
                         <span class="sr-only">
                             {{ $gettext('Zum Hauptordner') }}
                         </span>

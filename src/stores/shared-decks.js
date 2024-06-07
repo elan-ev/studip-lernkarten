@@ -51,7 +51,7 @@ export const useSharedDecksStore = defineStore(
                         include: 'colearning-deck.owner,deck,sharer,recipient',
                         'page[limit]': 1000,
                     },
-                }
+                },
             );
             isLoading.value = false;
             data.forEach(storeRecord);
@@ -61,8 +61,8 @@ export const useSharedDecksStore = defineStore(
             all.value.filter(
                 ({ recipient }) =>
                     recipient.data.type === contextStore.type &&
-                    recipient.data.id === contextStore.id
-            )
+                    recipient.data.id === contextStore.id,
+            ),
         );
 
         function byId(id) {
@@ -123,5 +123,5 @@ export const useSharedDecksStore = defineStore(
     },
     {
         persist: true,
-    }
+    },
 );

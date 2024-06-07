@@ -32,24 +32,24 @@ const showDeckDialog = ref(false);
 const showShareDialog = ref(false);
 
 const sharedByMe = computed(() =>
-    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId)
+    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId),
 );
 const sharedWithMe = computed(() =>
-    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId)
+    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId),
 );
 const doneLoading = computed(
-    () => !courseMembershipsStore.isLoading && !decksStore.isLoading && !sharedDecksStore.isLoading
+    () => !courseMembershipsStore.isLoading && !decksStore.isLoading && !sharedDecksStore.isLoading,
 );
 const workingPlaceUrl = computed(() =>
-    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true)
+    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true),
 );
 const isAtLeastTutor = computed(() =>
-    ['tutor', 'dozent'].includes(courseMembershipsStore.byContext()?.permission)
+    ['tutor', 'dozent'].includes(courseMembershipsStore.byContext()?.permission),
 );
 const isTeacher = computed(() => contextStore.isCourse && contextStore.isTeacher);
 
 const onColearnSharedDeck = (sharedDeck) => {
-    selectedSharedDeck.value = sharedDeck
+    selectedSharedDeck.value = sharedDeck;
     showColearnDialog.value = true;
 };
 
@@ -83,21 +83,18 @@ const onShareDeck = () => (showShareDialog.value = true);
                     :shared-decks="sharedWithMe"
                     @colearn="onColearnSharedDeck"
                     @select="onSelectSharedDeck"
-                    />
+                />
             </article>
             <article class="studip" v-if="isAtLeastTutor">
                 <header>
                     <h1>{{ $gettext('Von mir geteilte Kartensätze') }}</h1>
                 </header>
-                <SharedByMeDeckList
-                    v-if="sharedByMe.length"
-                    :shared-decks="sharedByMe"
-                />
+                <SharedByMeDeckList v-if="sharedByMe.length" :shared-decks="sharedByMe" />
                 <StudipCompanion
                     v-else
                     :msg-companion="
                         $gettext(
-                            'Sie haben noch keinen Kartensatz mit dieser Veranstaltung geteilt.'
+                            'Sie haben noch keinen Kartensatz mit dieser Veranstaltung geteilt.',
                         )
                     "
                     mood="sad"

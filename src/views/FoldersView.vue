@@ -39,16 +39,16 @@ const topFolders = computed(() => foldersStore.topFolders);
 const decks = computed(() =>
     _.sortBy(
         decksStore.byContext.filter((deck) => !deck.folder.data),
-        ['name']
-    )
+        ['name'],
+    ),
 );
 const hasUnusedSharedDecks = computed(() => unusedSharedDecks.value.length > 0);
 const isWorkplace = computed(() => !contextStore.isCourse);
 const sharedWithMe = computed(() =>
-    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId)
+    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId),
 );
 const unusedSharedDecks = computed(() =>
-    sharedWithMe.value.filter((sharedDeck) => !sharedDeck['colearning-deck'].data)
+    sharedWithMe.value.filter((sharedDeck) => !sharedDeck['colearning-deck'].data),
 );
 
 const addTopFolder = () => (createDialogOpen.value = true);
@@ -99,7 +99,7 @@ const onCreateDeck = () => {
             $gettext(
                 'Mit Ihnen wurde ein neuer Kartensatz geteilt.',
                 'Mit Ihnen wurden %{ count } neue Kartensätze geteilt.',
-                { count: unusedSharedDecks.length }
+                { count: unusedSharedDecks.length },
             )
         "
         class="tw-mb-8"

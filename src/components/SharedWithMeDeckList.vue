@@ -6,7 +6,7 @@ const props = defineProps(['sharedDecks']);
 defineEmits(['colearn', 'select']);
 
 const sortedSharedDecks = computed(() =>
-    _.reverse(_.sortBy(props.sharedDecks, (card) => new Date(card.mkdate)))
+    _.reverse(_.sortBy(props.sharedDecks, (card) => new Date(card.mkdate))),
 );
 </script>
 
@@ -19,8 +19,12 @@ const sortedSharedDecks = computed(() =>
                 <th class="hidden-small-down tw-w-20">{{ $gettext('Karten') }}</th>
                 <th>{{ $gettext('Geteilt von') }}</th>
                 <th class="hidden-small-down tw-w-20">{{ $gettext('Geteilt am') }}</th>
-                <th><span class="sr-only">{{ $gettext('Abonnement') }}</span></th>
-                <th><span class="sr-only">{{ $gettext('Kopien') }}</span></th>
+                <th>
+                    <span class="sr-only">{{ $gettext('Abonnement') }}</span>
+                </th>
+                <th>
+                    <span class="sr-only">{{ $gettext('Kopien') }}</span>
+                </th>
             </tr>
         </thead>
         <tbody>

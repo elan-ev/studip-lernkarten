@@ -33,13 +33,13 @@ const emitChange = (root, callback) => {
 };
 
 const isEmpty = computed(
-    () => decksStore.fromWorkplace.filter(({ colearning }) => !colearning).length === 0
+    () => decksStore.fromWorkplace.filter(({ colearning }) => !colearning).length === 0,
 );
 const workingPlaceUrl = computed(() =>
-    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true)
+    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true),
 );
 const mySharedDecks = computed(() =>
-    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId)
+    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId),
 );
 const sharedDeck = computed(() => (props.deck ? sharedDecksStore.byId(props.deck) : null));
 
@@ -50,7 +50,7 @@ const onSelectDeck = async (root) => {
     const callback = () =>
         new Promise((resolve, reject) => {
             const alreadyShared = mySharedDecks.value.find(
-                ({ deck }) => deck.data.id === selectedDeck.value
+                ({ deck }) => deck.data.id === selectedDeck.value,
             );
             if (alreadyShared) {
                 resolve(alreadyShared);
@@ -59,7 +59,7 @@ const onSelectDeck = async (root) => {
             sharedDecksStore
                 .shareDeckWithCourse(
                     { id: selectedDeck.value },
-                    { id: contextStore.id, type: contextStore.type }
+                    { id: contextStore.id, type: contextStore.type },
                 )
                 .then(resolve)
                 .catch(reject);

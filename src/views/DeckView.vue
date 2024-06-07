@@ -111,12 +111,7 @@ const onShowShareDialog = () => (showShareDialog.value = true);
                 >
                     {{ $gettext('Bearbeiten') }}
                 </IconButton>
-                <IconButton
-                    v-if="isColearning"
-                    icon="edit"
-                    type="button"
-                    @click="onShowMoveDialog"
-                >
+                <IconButton v-if="isColearning" icon="edit" type="button" @click="onShowMoveDialog">
                     {{ $gettext('Verschieben') }}
                 </IconButton>
             </div>

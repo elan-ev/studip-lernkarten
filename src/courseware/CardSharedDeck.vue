@@ -31,11 +31,7 @@ const sharer = computed(() => props.sharedDeck.sharer.data);
                     {{ sharedDeck.deck.data.meta['cards-count'] }}
                 </div>
                 <div class="tw-px-4">
-                    <IconButton
-                        icon="group"
-                        type="button"
-                        @click="$emit('colearn')"
-                    >
+                    <IconButton icon="group" type="button" @click="$emit('colearn')">
                         {{ $gettext('Lernen') }}
                     </IconButton>
                 </div>

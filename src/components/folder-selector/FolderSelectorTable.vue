@@ -39,7 +39,7 @@ const sortedDecks = computed(() => {
 const sortedFolders = computed(() => {
     const folders = _.sortBy(
         props.folder ? foldersStore.children(props.folder.id) : foldersStore.topFolders,
-        comparator.value
+        comparator.value,
     );
 
     return sortASC.value ? folders : _.reverse(folders);

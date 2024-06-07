@@ -20,10 +20,10 @@ const selectedSharedDeck = ref(null);
 const showConfirmUnshareDialog = ref(false);
 
 const creator = computed(() =>
-    props.deck.colearning ? props.deck.template.data.owner.data : props.deck.owner.data
+    props.deck.colearning ? props.deck.template.data.owner.data : props.deck.owner.data,
 );
 const chdate = computed(
-    () => new Date(props.deck.colearning ? props.deck.template.data.chdate : props.deck.chdate)
+    () => new Date(props.deck.colearning ? props.deck.template.data.chdate : props.deck.chdate),
 );
 const avatarUrl = computed(() => creator.value.meta.avatar.small);
 const formattedName = computed(() => creator.value['formatted-name']);
@@ -34,10 +34,10 @@ const progress = computed(() => {
     return Math.floor((total ? props.deck.progress[2] / total : 0) * 100);
 });
 const sharedWithCourses = computed(() =>
-    props.deck['shared-decks'].data.filter(({ recipient }) => recipient.data.type === 'courses')
+    props.deck['shared-decks'].data.filter(({ recipient }) => recipient.data.type === 'courses'),
 );
 const sharedWithUsers = computed(() =>
-    props.deck['shared-decks'].data.filter(({ recipient }) => recipient.data.type === 'users')
+    props.deck['shared-decks'].data.filter(({ recipient }) => recipient.data.type === 'users'),
 );
 const actionMenuItems = computed(() => {
     return isOwner.value

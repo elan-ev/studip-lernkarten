@@ -48,7 +48,9 @@ const actionMenuItems = computed(() => {
         }
         items.push({
             id: 'delete',
-            label: props.deck.colearning ? $gettext('Abonnement aufheben') : $gettext('Kartensatz löschen'),
+            label: props.deck.colearning
+                ? $gettext('Abonnement aufheben')
+                : $gettext('Kartensatz löschen'),
             icon: 'trash',
             emit: 'delete',
         });

@@ -40,7 +40,7 @@ const onSelectFolder = (folderId) => {
 const folderBreadcrumbs = computed(() =>
     selectedFolder.value
         ? [...foldersStore.ancestors(selectedFolder.value), selectedFolder.value]
-        : []
+        : [],
 );
 </script>
 
@@ -59,7 +59,7 @@ const folderBreadcrumbs = computed(() =>
             <p>
                 {{
                     $gettext(
-                        'Wählen Sie einen Ordner, in dem der geteilte Kartensatz abgelegt werden soll!'
+                        'Wählen Sie einen Ordner, in dem der geteilte Kartensatz abgelegt werden soll!',
                     )
                 }}
             </p>

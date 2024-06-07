@@ -5,7 +5,7 @@ import ListItem from './SharedByMeDeckListItem.vue';
 const props = defineProps(['sharedDecks']);
 
 const sortedSharedDecks = computed(() =>
-    _.reverse(_.sortBy(props.sharedDecks, (card) => new Date(card.mkdate)))
+    _.reverse(_.sortBy(props.sharedDecks, (card) => new Date(card.mkdate))),
 );
 </script>
 

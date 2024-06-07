@@ -30,7 +30,7 @@ watch(
         if (oldV && !newV) {
             resetFolder();
         }
-    }
+    },
 );
 
 watch(() => props.deck, resetFolder);

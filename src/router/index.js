@@ -69,7 +69,7 @@ const router = createRouter({
 router.beforeEach((to) => {
     if (cid) {
         if (!('cid' in to.query)) {
-            return { ...to, query: { ...to.query, cid } }
+            return { ...to, query: { ...to.query, cid } };
         }
 
         if (to.query.cid === null) {

@@ -25,10 +25,10 @@ const showColearnDialog = ref(false);
 const showDeckDialog = ref(false);
 
 const sharedByMe = computed(() =>
-    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId)
+    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id === contextStore.userId),
 );
 const sharedWithMe = computed(() =>
-    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId)
+    sharedDecksStore.all.filter((sharedDeck) => sharedDeck.sharer.data.id !== contextStore.userId),
 );
 const doneLoading = computed(() => !decksStore.isLoading && !sharedDecksStore.isLoading);
 
@@ -75,10 +75,7 @@ const onSelectSharedDeck = (sharedDeck) => {
                 <header>
                     <h1>{{ $gettext('Von mir geteilte Kartensätze') }}</h1>
                 </header>
-                <SharedByMeDeckList
-                    v-if="sharedByMe.length"
-                    :shared-decks="sharedByMe"
-                />
+                <SharedByMeDeckList v-if="sharedByMe.length" :shared-decks="sharedByMe" />
                 <StudipCompanion
                     v-if="!sharedByMe.length"
                     mood="sad"
