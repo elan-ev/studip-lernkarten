@@ -9,29 +9,34 @@ import CKEditor from '@ckeditor/ckeditor5-vue';
 import { loadWysiwyg } from './wysiwyg.js';
 import './assets/main.css';
 
-const mountLernkarten = (el, data) => {
-    // The 'courseware' chunk exists and is required since Stud.IP v5.5.
-    // Do not display errors about unknown chunks in Stud.IP v5.3 + v5.4.
+const el = document.getElementById('lernkarten-app');
+
+if (el) {
     STUDIP.loadChunk('courseware', { silent: true }).catch(() => {});
+
+    const initialState = {
+        userId: el.dataset.userId || null,
+        courseId: el.dataset.courseId || null,
+        apiBase: el.dataset.apiBase || 'system',
+        isTeacher: el.dataset.isTeacher || false,
+    };
 
     const app = createApp(App);
 
-    app.provide('initialState', data);
+    app.provide('initialState', initialState);
 
     const pinia = createPinia();
     pinia.use(piniaPluginPersistedstate);
 
     app.use(pinia);
+    
     app.use(router);
-    app.use(createGettext({ translations, silent: true }));
 
+    app.use(createGettext({ translations, silent: true }));
     app.use(CKEditor);
 
     loadWysiwyg()
         .then((wysiwyg) => app.use(wysiwyg))
-        .then(() => app.mount(el));
-};
+        .then(() => app.mount('#lernkarten-app'));
 
-if (window.STUDIP) {
-    window.STUDIP.mountLernkarten = mountLernkarten;
 }

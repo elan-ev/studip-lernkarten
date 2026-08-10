@@ -26,6 +26,18 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
     public function __construct()
     {
         parent::__construct();
+
+        PageLayout::addStylesheet($this->getPluginUrl() . '/dist/style.css');
+
+        PageLayout::addScript($this->getPluginUrl() . '/dist/lernkarten.js', [
+            'type' => 'module',
+            'rel' => 'preload',
+        ]);
+        PageLayout::addScript($this->getPluginUrl() . '/dist/register.js', [
+            'type' => 'module',
+            'rel' => 'preload',
+        ]);
+
         $this->addContentsNavigation();
     }
 
@@ -69,22 +81,12 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
      */
     public function perform($unconsumedPath)
     {
-        $app = $this->getSlimApp();
-        $this->addRoutes($app);
-        $app->run();
+        parent::perform($unconsumedPath);
     }
 
     private function addContentsNavigation(): void
     {
         Navigation::addItem('/contents/lernkarten', $this->createNavigation());
-    }
-
-    private function addRoutes(App $app): App
-    {
-        $app->get('/api/pdf/{id:[0-9]+}', ExportPDF::class);
-        $app->any('{path:.*}', Wildcard::class);
-
-        return $app;
     }
 
     private function createNavigation(string $cid = null): Navigation
@@ -101,23 +103,5 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
         $navigation->addSubnavigation('index', clone $navigation);
 
         return $navigation;
-    }
-
-    private function getSlimApp(): App
-    {
-        $app = AppFactory::createFromContainer($this->getSlimContainer());
-        $app->setBasePath(rtrim(PluginEngine::getLink($this, [], null, true), '/'));
-
-        return $app;
-    }
-
-    private function getSlimContainer(): Container
-    {
-        $builder = new ContainerBuilder();
-        $builder->addDefinitions([
-            'plugin' => $this,
-            User::class => User::findCurrent(),
-        ]);
-        return $builder->build();
     }
 }

@@ -13,6 +13,9 @@ hideOriginalSidebarNavigation();
 
 function hideOriginalSidebarNavigation() {
     const navigation = document.querySelector('#sidebar-navigation form');
+    if (!navigation) {
+        return;
+    }
     navigation.querySelector(
         '.sidebar-navigation:not(.lernkarten-sidebar-navigation)',
     ).hidden = true;
