@@ -41,7 +41,7 @@ const doneLoading = computed(
     () => !courseMembershipsStore.isLoading && !decksStore.isLoading && !sharedDecksStore.isLoading,
 );
 const workingPlaceUrl = computed(() =>
-    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/search', {}, true),
+    window.STUDIP.URLHelper.getURL('plugins.php/lernkartenplugin/', {}, true) + '#/search',
 );
 const isAtLeastTutor = computed(() =>
     ['tutor', 'dozent'].includes(courseMembershipsStore.byContext()?.permission),

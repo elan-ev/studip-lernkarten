@@ -9,7 +9,6 @@ class IndexController extends PluginController
         $cid = Context::getId();
         Navigation::activateItem($cid ? '/course/lernkarten/index' : '/contents/lernkarten/index');
         PageLayout::setHelpKeyword('Lernkarten.Introduction');
-
         PageLayout::setTitle(_('Lernkarten'));
     }
 

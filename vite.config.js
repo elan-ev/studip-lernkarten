@@ -1,5 +1,4 @@
 import { resolve } from 'node:path';
-import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
@@ -9,8 +8,8 @@ export default defineConfig(({ mode }) => {
         build: {
             lib: {
                 entry: {
-                    lernkarten: resolve(__dirname, 'src/main.js'),
-                    register: resolve(__dirname, 'src/courseware/register.js'),
+                    lernkarten: resolve(import.meta.dirname, 'src/main.js'),
+                    register: resolve(import.meta.dirname, 'src/courseware/register.js'),
                 },
             },
             sourcemap: mode === 'development' ? 'inline' : false,
@@ -19,7 +18,7 @@ export default defineConfig(({ mode }) => {
         plugins: [vue()],
         resolve: {
             alias: {
-                '@': fileURLToPath(new URL('./src', import.meta.url)),
+                '@': resolve(import.meta.dirname, 'src'),
             },
         },
     };

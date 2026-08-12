@@ -139,6 +139,7 @@ const title = computed(() => {
                             v-if="item.icon"
                             :shape="item.icon.shape"
                             :role="item.icon.role"
+                            class="action-menu-item-icon"
                         />
                         <span v-else class="action-menu-no-icon"></span>
                         {{ item.label }}
