@@ -27,7 +27,7 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
     {
         parent::__construct();
 
-        PageLayout::addStylesheet($this->getPluginUrl() . '/dist/style.css');
+        PageLayout::addStylesheet($this->getPluginUrl() . '/dist/lernkarten.css');
 
         PageLayout::addScript($this->getPluginUrl() . '/dist/lernkarten.js', [
             'type' => 'module',
