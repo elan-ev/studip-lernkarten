@@ -7,10 +7,7 @@ const emit = defineEmits(['select']);
 const onSelect = (card) => emit('select', card);
 </script>
 <template>
-    <article class="studip">
-        <header>
-            <h1>Card list</h1>
-        </header>
+    <div>
         <CardListItem
             v-for="(card, index) in cards"
             :key="card.id"
@@ -18,5 +15,5 @@ const onSelect = (card) => emit('select', card);
             :index="index"
             @select="() => onSelect(card)"
         />
-    </article>
+    </div>
 </template>

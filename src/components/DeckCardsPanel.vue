@@ -56,12 +56,12 @@ const onCheckCardLength = () => {
 </script>
 
 <template>
-    <div v-if="mayEdit">
+    <div v-if="mayEdit" class="tw-mx-2">
         <button @click="onAddCard" class="button add" type="button">
             {{ $gettext('Neue Karte anlegen') }}
         </button>
     </div>
-    <div>
+    <div v-if="cards.length" class="tw-mx-2">
         <CardList :cards="cards" @select="onSelectCard" />
     </div>
     <DialogAddCard v-model:open="showAddCardDialog" :deck="deck" />

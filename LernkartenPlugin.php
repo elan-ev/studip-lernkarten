@@ -10,7 +10,7 @@ use Lernkarten\StudIP\Datenschutz;
 use JsonApi\Contracts\JsonApiPlugin;
 use Slim\App;
 use Slim\Factory\AppFactory;
-use Slim\Routing\RouteCollectorProxy;
+use Slim\Interfaces\RouteCollectorProxyInterface;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -63,28 +63,23 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
     }
 
     /**
-     * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(UnusedFormalParameter)
-     * @param string $unconsumedPath
      */
-    public function perform($unconsumedPath)
+    public function registerSlimRoutes(RouteCollectorProxyInterface $app, string $unconsumedPath): void
     {
-        $app = $this->getSlimApp();
-        $this->addRoutes($app);
-        $app->run();
+        $app->group(
+            '/' . strtolower(self::class), function (RouteCollectorProxyInterface $routes) {
+                $routes->get('/api/pdf/{id:[0-9]+}', ExportPDF::class);
+                $routes->any('{path:.*}', Wildcard::class);
+            }
+        );
     }
 
     private function addContentsNavigation(): void
     {
-        Navigation::addItem('/contents/lernkarten', $this->createNavigation());
-    }
-
-    private function addRoutes(App $app): App
-    {
-        $app->get('/api/pdf/{id:[0-9]+}', ExportPDF::class);
-        $app->any('{path:.*}', Wildcard::class);
-
-        return $app;
+        if (Navigation::hasItem('/contents')) {
+            Navigation::addItem('/contents/lernkarten', $this->createNavigation());
+        }
     }
 
     private function createNavigation(string $cid = null): Navigation
@@ -101,23 +96,5 @@ class LernkartenPlugin extends StudIPPlugin implements SystemPlugin, StandardPlu
         $navigation->addSubnavigation('index', clone $navigation);
 
         return $navigation;
-    }
-
-    private function getSlimApp(): App
-    {
-        $app = AppFactory::createFromContainer($this->getSlimContainer());
-        $app->setBasePath(rtrim(PluginEngine::getLink($this, [], null, true), '/'));
-
-        return $app;
-    }
-
-    private function getSlimContainer(): Container
-    {
-        $builder = new ContainerBuilder();
-        $builder->addDefinitions([
-            'plugin' => $this,
-            User::class => User::findCurrent(),
-        ]);
-        return $builder->build();
     }
 }

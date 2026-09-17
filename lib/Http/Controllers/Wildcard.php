@@ -30,7 +30,7 @@ class Wildcard
         ResponseInterface $response,
         array $args
     ): ResponseInterface {
-        $plugin = $this->container->get('plugin');
+        $plugin = $this->container->get(\StudIPPlugin::class);
         $cid = Context::getId();
         $pluginUrl = $plugin->getPluginURL();
 

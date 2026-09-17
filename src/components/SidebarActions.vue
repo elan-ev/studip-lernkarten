@@ -14,7 +14,7 @@ const actionList = computed(() => sidebar.actions.value ?? []);
             <form method="post">
                 <ul class="widget-list widget-links" :aria-label="$gettext('Aktionen')">
                     <li v-for="(action, index) in actionList" :key="index" class="!tw-pl-0">
-                        <button type="button" @click="action.handler">
+                        <button type="button" @click="action.handler" class="!tw-pl-0">
                             <StudipIcon
                                 :shape="action.icon"
                                 class="!tw-align-middle"

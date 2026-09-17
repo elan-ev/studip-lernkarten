@@ -27,6 +27,7 @@ const extractContent = (html) => {
     display: flex;
     cursor: pointer;
     border: 1px solid var(--base-color-40);
+    min-height: 6rem;
 }
 .lernkarten-card-list-item + .lernkarten-card-list-item {
     margin-block-start: 0.5rem;
