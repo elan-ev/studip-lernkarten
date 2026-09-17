@@ -86,7 +86,8 @@ function search() {
             data.forEach(function (item) {
                 searchcount += append(
                     item.id,
-                    item.avatar + ' -- ' + item.text,
+                    item.text,
+                    item.avatar,
                     item.selected || props.disabledIds.includes(item.id),
                 );
                 delete item.selected;
@@ -100,6 +101,7 @@ function search() {
                     $gettext('Es wurden keine neuen Ergebnisse für "%{ needle }" gefunden.', {
                         needle: searchTerm.value,
                     }),
+                    null,
                     true,
                 );
                 refresh();
@@ -128,9 +130,17 @@ function resetSearch() {
     removeAllNotSelected();
 }
 
-function append(value, text, disabled = false) {
+function append(value, text, avatar, disabled = false) {
     if (window.$('option[value=' + value + ']', selectbox.value).length === 0) {
-        window.$(selectbox.value).multiSelect('addOption', { value, text, disabled });
+        const option = window
+            .$('<option></option>')
+            .attr('value', value)
+            .text(text)
+            .prop('disabled', disabled);
+        if (avatar) {
+            option.attr('data-avatar', avatar);
+        }
+        window.$(selectbox.value).append(option);
         return 1;
     }
     return 0;

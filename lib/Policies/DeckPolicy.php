@@ -57,11 +57,21 @@ class DeckPolicy
 
     /**
      * Determine whether the user can create models.
+     *
+     * @param Course|User $context
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function create(User $user): bool
+    public function create(User $user, $context): bool
     {
-        // Anyone may create a deck.
-        return true;
+        if ($context instanceof Course) {
+            return $GLOBALS['perm']->have_studip_perm('autor', $context->id, $user->id);
+        }
+        if ($context instanceof User) {
+            return $context->id === $user->id;
+        }
+
+        return false;
     }
 
     /**

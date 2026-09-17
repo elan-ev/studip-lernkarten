@@ -40,7 +40,7 @@ class Wildcard
 
         Navigation::activateItem($cid ? '/course/lernkarten/index' : '/contents/lernkarten/index');
         PageLayout::setHelpKeyword('Lernkarten.Introduction');
-        PageLayout::addStylesheet($pluginUrl . '/dist/style.css');
+        PageLayout::addStylesheet($pluginUrl . '/dist/lernkarten.css');
         PageLayout::addScript($pluginUrl . '/dist/lernkarten.js', ['type' => 'module']);
 
         $initialState = [

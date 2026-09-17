@@ -3,6 +3,7 @@
 namespace Lernkarten\Policies;
 
 use Course;
+use Lernkarten\Models\Deck;
 use Lernkarten\Models\SharedDeck;
 use User;
 
@@ -49,10 +50,9 @@ class SharedDeckPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, Deck $deck): bool
     {
-        // Anyone may share a deck.
-        return true;
+        return $deck->owner_id === $user->id;
     }
 
     /**

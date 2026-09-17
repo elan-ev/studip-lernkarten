@@ -37,13 +37,15 @@ class DecksCreate extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        if ($this->cannot($request, 'create', Deck::class)) {
+        $json = $this->validate($request);
+
+        $context = $this->getContextFromJson($json);
+
+        if ($this->cannot($request, 'create', Deck::class, $context)) {
             throw new AuthorizationFailedException();
         }
 
-        $json = $this->validate($request);
-
-        $resource = $this->create($this->getUser($request), $json);
+        $resource = $this->create($this->getUser($request), $context, $json);
 
         return $this->getCreatedResponse($resource);
     }
@@ -99,10 +101,11 @@ class DecksCreate extends JsonApiController
         }
     }
 
-    private function create(User $user, array $json): Deck
+    /**
+     * @param Course|User $context
+     */
+    private function create(User $user, $context, array $json): Deck
     {
-        /** @var Course|User */
-        $context = $this->getContextFromJson($json);
         $folder = $this->getFolderFromJson($json);
         $name = trim(self::arrayGet($json, 'data.attributes.name'));
         $description = trim(self::arrayGet($json, 'data.attributes.description'));

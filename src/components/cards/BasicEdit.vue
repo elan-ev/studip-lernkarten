@@ -14,15 +14,15 @@ const emit = defineEmits(['update:mode']);
 const isStoring = ref(false);
 const front = ref(props.card.fields.front);
 const back = ref(props.card.fields.back);
-const images = ref(props.card.fields.images);
+const images = ref({ ...props.card.fields.images });
 const model = ref(props.card.model);
 
 const reset = () => {
     isStoring.value = false;
     front.value = props.card.fields.front;
     back.value = props.card.fields.back;
-    images.value = props.card.fields.images;
-    model.value = props.card.mode;
+    images.value = { ...props.card.fields.images };
+    model.value = props.card.model;
 };
 
 const onStore = () => {
@@ -42,7 +42,7 @@ const onStore = () => {
 const onCancel = () => emit('update:mode', 'show');
 
 const setImage = (base64, fileid) => {
-    images.value.values[fileid] = base64;
+    images.value[fileid] = base64;
 };
 
 watch(

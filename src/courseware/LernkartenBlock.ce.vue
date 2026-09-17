@@ -30,7 +30,7 @@ onMounted(() => {
 const externalCss = computed(() => {
     return (
         window.STUDIP.ABSOLUTE_URI_STUDIP +
-        'plugins_packages/elan-ev/LernkartenPlugin/dist/style.css'
+        'plugins_packages/elan-ev/LernkartenPlugin/dist/lernkarten.css'
     );
 });
 

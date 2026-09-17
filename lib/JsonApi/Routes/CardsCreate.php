@@ -39,13 +39,15 @@ class CardsCreate extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        if ($this->cannot($request, 'create', Card::class)) {
+        $json = $this->validate($request);
+
+        $deck = $this->getDeckFromJson($json);
+
+        if ($this->cannot($request, 'create', Card::class, $deck)) {
             throw new AuthorizationFailedException();
         }
 
-        $json = $this->validate($request);
-
-        $resource = $this->create($json);
+        $resource = $this->create($deck, $json);
 
         return $this->getCreatedResponse($resource);
     }
@@ -100,10 +102,8 @@ class CardsCreate extends JsonApiController
         }
     }
 
-    private function create(array $json): Card
+    private function create(Deck $deck, array $json): Card
     {
-        /** @var Course|User */
-        $deck = $this->getDeckFromJson($json);
         $model = self::arrayGet($json, 'data.attributes.model');
         $fields = json_encode($this->purifyHTML(self::arrayGet($json, 'data.attributes.fields')));
 

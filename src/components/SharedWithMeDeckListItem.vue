@@ -17,7 +17,7 @@ const formattedName = computed(() => props.sharedDeck.sharer.data['formatted-nam
 const colearnDeck = computed(() => props.sharedDeck['colearning-deck']?.data ?? null);
 const hasColearn = computed(() => !!colearnDeck.value);
 const copies = computed(() => props.sharedDeck['copied-decks'].data ?? []);
-const isUsed = computed(() => hasColearn.value || copies.value.lenght > 0);
+const isUsed = computed(() => hasColearn.value || copies.value.length > 0);
 </script>
 
 <template>

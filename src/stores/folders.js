@@ -5,7 +5,6 @@ import { useContextStore } from './context.js';
 
 export const useFoldersStore = defineStore('folders', () => {
     const contextStore = useContextStore();
-    const context = contextStore.id;
 
     const records = ref(new Map());
     const isLoading = ref(false);
@@ -27,7 +26,7 @@ export const useFoldersStore = defineStore('folders', () => {
     });
 
     const byContext = computed(() => {
-        return all.value.filter((folder) => folder.context.data.id === context);
+        return all.value.filter((folder) => folder.context.data.id === contextStore.id);
     });
 
     async function fetch() {

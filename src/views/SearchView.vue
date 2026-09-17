@@ -26,7 +26,13 @@ const doSearch = () => {
         allDecks.value.filter((el) => {
             let found = false;
 
-            if (el.name.search(query.value) != -1 || el.description.search(query.value) != -1) {
+            const needle = query.value?.toLowerCase() ?? '';
+
+            if (
+                needle === '' ||
+                el.name.toLowerCase().includes(needle) ||
+                el.description.toLowerCase().includes(needle)
+            ) {
                 found = true;
             }
 

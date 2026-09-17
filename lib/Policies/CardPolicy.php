@@ -35,15 +35,15 @@ class CardPolicy
      */
     public function view(User $user, Card $card): bool
     {
-        return true;
+        return $card->deck->owner_id === $user->id || $card->deck->isSharedWith($user);
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, Deck $deck): bool
     {
-        return true;
+        return $deck->owner_id === $user->id;
     }
 
     /**
@@ -51,7 +51,7 @@ class CardPolicy
      */
     public function update(User $user, Card $card): bool
     {
-        return true;
+        return $card->deck->owner_id === $user->id;
     }
 
     /**
@@ -59,6 +59,6 @@ class CardPolicy
      */
     public function delete(User $user, Card $card): bool
     {
-        return true;
+        return $this->update($user, $card);
     }
 }

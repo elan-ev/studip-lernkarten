@@ -15,7 +15,6 @@ const sharer = computed(() => props.sharedDeck.sharer.data);
 <template>
     <section
         class="tw-flex tw-gap-2 tw-h-24 tw-py-2 tw-border tw-border-solid tw-border-[var(--light-gray-color-20)]"
-        @click="onSelect"
     >
         <div class="tw-flex tw-items-center tw-justify-center tw-w-24 tw-aspect-square">
             <StudipIcon shape="share" role="info" :size="32" />

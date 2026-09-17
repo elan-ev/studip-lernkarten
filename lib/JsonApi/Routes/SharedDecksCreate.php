@@ -37,13 +37,15 @@ class SharedDecksCreate extends JsonApiController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        if ($this->cannot($request, 'create', SharedDeck::class)) {
+        $json = $this->validate($request);
+
+        $deck = $this->getDeckFromJson($json);
+
+        if ($this->cannot($request, 'create', SharedDeck::class, $deck)) {
             throw new AuthorizationFailedException();
         }
 
-        $json = $this->validate($request);
-
-        $resource = $this->create($this->getUser($request), $json);
+        $resource = $this->create($this->getUser($request), $deck, $json);
 
         return $this->getCreatedResponse($resource);
     }
@@ -85,11 +87,9 @@ class SharedDecksCreate extends JsonApiController
         }
     }
 
-    private function create(User $user, array $json): SharedDeck
+    private function create(User $user, Deck $deck, array $json): SharedDeck
     {
-        /** @var Course|User */
         $recipient = $this->getRecipientFromJson($json);
-        $deck = $this->getDeckFromJson($json);
 
         if (SharedDeck::isShared($deck, $recipient)) {
             throw new RuntimeException('Deck already shared.');

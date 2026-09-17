@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import DeckSelector from '../components/DeckSelector.vue';
 import StudipCompanion from '../components/base/StudipCompanion.vue';
 import StudipProgressIndicator from '../components/base/StudipProgressIndicator.vue';
@@ -26,8 +26,11 @@ foldersStore.fetchWorkplace().then(() => {
 const props = defineProps(['deck']);
 defineEmits(['change']);
 
+onMounted(() => {
+    console.debug('Inside LernkartenDeckSelector');
+});
+
 // custom elements specifics
-const externalCss = window.STUDIP.ASSETS_URL + 'stylesheets/studip-base.css';
 const emitChange = (root, callback) => {
     root.$emit('change', callback);
 };
@@ -54,6 +57,7 @@ const onSelectDeck = async (root) => {
             );
             if (alreadyShared) {
                 resolve(alreadyShared);
+                return;
             }
 
             sharedDecksStore
@@ -69,7 +73,6 @@ const onSelectDeck = async (root) => {
 </script>
 
 <template>
-    <link media="screen" rel="stylesheet" :href="externalCss" />
     <StudipProgressIndicator
         :description="$gettext('Lade Kartensätze …')"
         v-if="decksStore.isLoading"
