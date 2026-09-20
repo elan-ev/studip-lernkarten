@@ -2,7 +2,7 @@
 export default {
     plugins: [],
     prefix: 'tw-',
-    content: ['./src/**/*.{vue,js,ts}'],
+    content: ['./src/**/*.{vue,js,ts}', './courseware/src/**/*.{vue,js,ts}'],
     theme: {
         extend: {},
     },

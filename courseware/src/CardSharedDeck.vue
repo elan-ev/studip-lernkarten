@@ -1,8 +1,11 @@
 <script setup>
-import { computed } from 'vue';
-import IconButton from '../components/IconButton.vue';
-import StudipAvatar from '../components/base/StudipAvatar.vue';
-import StudipIcon from '../components/base/StudipIcon.vue';
+import { computed, inject } from 'vue';
+import IconButton from '@/components/IconButton.vue';
+import StudipAvatar from '@/components/base/StudipAvatar.vue';
+import StudipIcon from '@/components/base/StudipIcon.vue';
+import { GETTEXT_KEY } from './gettext-key';
+
+const $gettext = inject(GETTEXT_KEY).$gettext;
 
 const props = defineProps(['sharedDeck']);
 defineEmits(['colearn']);

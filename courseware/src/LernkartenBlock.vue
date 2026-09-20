@@ -1,123 +1,60 @@
-<template>
-    <div class="cw-block cw-block-lernkarten">
-        <component
-            :is="coursewarePluginComponents.CoursewareDefaultBlock"
-            ref="defaultBlock"
-            :block="block"
-            :canEdit="canEdit"
-            :isTeacher="isTeacher"
-            :preview="true"
-            :defaultGrade="false"
-            @storeEdit="storeBlock"
-            @closeEdit="initCurrentData"
-        >
-            <template #content>
-                <span v-if="!isBlockInitialized" class="sr-only">
-                    {{
-                        $gettext(
-                            'Die Lernkarten werden angezeigt, nachdem der Block gespeichert wurde.'
-                        )
-                    }}
-                </span>
-                <div v-else>
-                    <lernkarten-block :deck="sharedDeckId"></lernkarten-block>
-                </div>
-            </template>
+<script setup>
+import { computed, inject, nextTick, onMounted, ref } from 'vue';
+import CardSharedDeck from './CardSharedDeck.vue';
+import { GETTEXT_KEY } from './gettext-key';
+import StudipCompanion from '@/components/base/StudipCompanion.vue';
+import StudipProgressIndicator from '@/components/base/StudipProgressIndicator.vue';
+import { useSharedDecksStore } from '@/stores/shared-decks.js';
+import StudyView from '@/components/StudyView.vue';
 
-            <template v-if="canEdit" #edit>
-                <form class="default" @submit.prevent="onSubmit">
-                    <lernkarten-deck-selector
-                        :deck="sharedDeckId"
-                        @change="onSelectDeck"
-                    ></lernkarten-deck-selector>
-                </form>
-            </template>
+const $gettext = inject(GETTEXT_KEY).$gettext;
 
-            <template #info>
-                {{ $gettext('Informationen zum Lernkartenblock') }}
-            </template>
-        </component>
-    </div>
-</template>
+const props = defineProps(['deck']);
 
-<script>
-import { mapActions, mapGetters } from 'vuex';
+const sharedDecksStore = useSharedDecksStore();
 
-export default {
-    components: {},
-    name: 'courseware-lernkarten-block',
-    props: {
-        block: Object,
-        canEdit: Boolean,
-        isTeacher: Boolean,
-    },
-    data() {
-        return {
-            callback: null,
-            sharedDeckId: null,
-        };
-    },
-    computed: {
-        ...mapGetters({
-            context: 'context',
-        }),
-        isBlockInitialized: function () {
-            return this.block.attributes.payload.initialized;
-        },
-    },
-    methods: {
-        ...mapActions({
-            updateBlock: 'updateBlockInContainer',
-        }),
-        initCurrentData() {
-            this.sharedDeckId = this.block.attributes.payload.shareddeck || null;
-        },
-        onSelectDeck({ detail: [callback = null] }) {
-            this.callback = callback;
-        },
-        storeBlock() {
-            if (!this.callback) {
-                return;
-            }
-            this.callback()
-                .then((sharedDeck) => (this.sharedDeckId = sharedDeck.id))
-                .then(() =>
-                    this.updateBlock({
-                        attributes: {
-                            ...this.block.attributes,
-                            payload: {
-                                ...this.block.attributes.payload,
-                                initialized: true,
-                                shareddeck: this.sharedDeckId,
-                            },
-                        },
-                        blockId: this.block.id,
-                        containerId: this.block.relationships.container.data.id,
-                    })
-                )
-                .then(() => this.$refs.defaultBlock.displayFeature(false))
-                .catch((error) => {
-                    console.debug('Error selecting deck', error);
-                });
-        },
-    },
-    watch: {
-        $props: {
-            handler() {
-                console.warn('props watcher', JSON.parse(JSON.stringify(this.$props)));
-            },
-            deep: true,
-            immediate: true,
-        },
-    },
-    async mounted() {
-        this.initCurrentData();
-        if (!this.block.attributes.payload.initialized) {
-            this.storeBlock();
+const initialized = ref(false);
+const showColearn = ref(false);
+
+const colearningDeck = computed(() => sharedDeck.value?.['colearning-deck'].data ?? null);
+const sharedDeck = computed(() => (props.deck ? sharedDecksStore.byId(props.deck) : null));
+const deckIds = computed(() => '' + (colearningDeck.value?.id ?? ''));
+
+onMounted(() => {
+    nextTick(() => {
+        if (!props.deck) {
+            initialized.value = true;
+            return;
         }
-    },
-    inject: ['coursewarePluginComponents'],
+        sharedDecksStore.fetchById(props.deck).finally(() => (initialized.value = true));
+    });
+});
+
+const onColearn = () => {
+    if (colearningDeck.value) {
+        showColearn.value = true;
+        return;
+    }
+
+    sharedDecksStore.colearn(sharedDeck.value).then(() => (showColearn.value = true));
 };
 </script>
 
-<style></style>
+<template>
+    <StudipProgressIndicator
+        v-if="!initialized"
+        :description="$gettext('Initialisiere Lernkarten-Block …')"
+    />
+
+    <StudipCompanion
+        v-else-if="!sharedDeck"
+        :msg-companion="$gettext('Es wurden bisher noch keine Inhalte eingepflegt.')"
+    />
+
+    <template v-else>
+        <div v-if="!showColearn">
+            <CardSharedDeck :shared-deck="sharedDeck" @colearn="onColearn" />
+        </div>
+        <StudyView v-else :decks="deckIds" order="progress" :standalone="true" />
+    </template>
+</template>

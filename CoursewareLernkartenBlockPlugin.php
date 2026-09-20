@@ -22,12 +22,9 @@ class CoursewareLernkartenBlockPlugin extends StudIPPlugin implements SystemPlug
 
     private function addJavascript(): void
     {
-        PageLayout::addScript($this->getPluginUrl() . '/courseware/dist/lernkarten-courseware.js', [
-            'type' => 'module',
-        ]);
-        PageLayout::addScript($this->getPluginUrl() . '/dist/register.js', [
-            'type' => 'module',
-        ]);
+        PageLayout::addScript(
+            $this->getPluginUrl() . '/courseware/dist/lernkarten-courseware.umd.js'
+        );
     }
 
     private function addStyles(): void
@@ -40,6 +37,8 @@ class CoursewareLernkartenBlockPlugin extends StudIPPlugin implements SystemPlug
                 ')
              }'
         );
+        PageLayout::addStylesheet($this->getPluginUrl() . '/dist/lernkarten.css');
+        PageLayout::addStylesheet($this->getPluginUrl() . '/courseware/dist/lernkarten-courseware.css');
     }
 
     /**

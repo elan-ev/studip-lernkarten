@@ -15,14 +15,16 @@
     },
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "vite build && vite build --config courseware/vite.config.js",
         "preview": "vite preview",
         "watch": "vite build --watch --mode=development",
+        "build:courseware": "vite build --config courseware/vite.config.js",
+        "watch:courseware": "vite build --watch --mode=development --config courseware/vite.config.js",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
         "format": "prettier --write src/",
         "gettext:compile": "vue-gettext-compile",
         "gettext:extract": "vue-gettext-extract",
-        "prezip": "npm i && npm run build && composer install --no-dev && cd courseware && npm i && npm run build",
+        "prezip": "npm i && npm run build && composer install --no-dev",
         "zip": "zip -r Stud.IP-Lernkarten-v$npm_package_version.zip lib locale migrations vendor dist courseware/dist plugin.manifest LernkartenPlugin.php CoursewareLernkartenBlockPlugin.php LICENSE README"
     },
     "dependencies": {
