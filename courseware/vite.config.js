@@ -22,6 +22,13 @@ export default defineConfig(({ mode }) => {
                         vuex: 'Vuex',
                     },
                     assetFileNames: 'lernkarten-courseware.[ext]',
+                    banner: `if (typeof globalThis.require === 'undefined') {
+                                 globalThis.require = function (name) {
+                                     if (name === 'vue') return globalThis.Vue;
+                                     if (name === 'vuex') return globalThis.Vuex;
+                                     throw new Error('Cannot find module "' + name + '"');
+                                 };
+                             }`,
                 },
             },
             sourcemap: mode === 'development' ? 'inline' : false,
