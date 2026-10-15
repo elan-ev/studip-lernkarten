@@ -1,13 +1,11 @@
 <script setup>
-import { computed, inject, nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import CardSharedDeck from './CardSharedDeck.vue';
-import { GETTEXT_KEY } from './gettext-key';
+import { $gettext } from '@/gettext.js';
 import StudipCompanion from '@/components/base/StudipCompanion.vue';
 import StudipProgressIndicator from '@/components/base/StudipProgressIndicator.vue';
 import { useSharedDecksStore } from '@/stores/shared-decks.js';
 import StudyView from '@/components/StudyView.vue';
-
-const $gettext = inject(GETTEXT_KEY).$gettext;
 
 const props = defineProps(['deck']);
 

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import CourseAvatar from './CourseAvatar.vue';
 import DialogConfirmUnshare from './DialogConfirmUnshare.vue';
 import StudipActionMenu from './base/StudipActionMenu.vue';
@@ -12,7 +12,6 @@ import { useDecksStore } from '../stores/decks.js';
 
 const contextStore = useContextStore();
 const decksStore = useDecksStore();
-const { $gettext } = useGettext();
 
 const props = defineProps(['deck']);
 

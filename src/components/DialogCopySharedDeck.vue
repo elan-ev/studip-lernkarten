@@ -1,9 +1,8 @@
 <script setup>
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import StudipDialog from './base/StudipDialog.vue';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 
-const { $gettext } = useGettext();
 const sharedDecksStore = useSharedDecksStore();
 
 const props = defineProps(['open', 'sharedDeck']);

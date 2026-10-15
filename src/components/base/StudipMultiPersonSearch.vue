@@ -1,9 +1,7 @@
 <script setup>
 import { computed, ref, nextTick, onMounted } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../../gettext.js';
 import StudipIcon from './StudipIcon.vue';
-
-const { $gettext } = useGettext();
 
 const props = defineProps({
     disabledIds: {

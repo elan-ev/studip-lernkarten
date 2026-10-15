@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipWysiwyg from './base/StudipWysiwyg.vue';
 import FileDropzone from './FileDropzone.vue';
@@ -8,7 +8,6 @@ import CardImage from './CardImage.vue';
 import { useCardsStore } from '../stores/cards.js';
 
 const cardsStore = useCardsStore();
-const { $gettext } = useGettext();
 
 const props = defineProps(['open', 'deck']);
 const emit = defineEmits(['update:open']);

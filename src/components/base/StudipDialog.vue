@@ -1,10 +1,9 @@
 <script setup>
 import { Dialog, DialogTitle, DialogPanel } from '@headlessui/vue';
 import { computed, nextTick, ref } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../../gettext.js';
 import VueResizable from 'vue-resizable';
 
-const { $gettext } = useGettext();
 const dialogPadding = 3;
 
 const props = defineProps({

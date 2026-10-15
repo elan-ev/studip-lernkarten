@@ -41,11 +41,9 @@
 </template>
 
 <script setup>
-import { computed, inject, onMounted, provide, ref, watch } from 'vue';
+import { computed, inject, onMounted, ref, watch } from 'vue';
 import { useStore } from 'vuex';
-import { createGettext } from 'vue3-gettext';
-import translations from '@/locales/translations.json';
-import { GETTEXT_KEY } from './gettext-key';
+import { $gettext } from '@/gettext.js';
 import LernkartenBlock from './LernkartenBlock.vue';
 import LernkartenDeckSelector from './LernkartenDeckSelector.vue';
 
@@ -56,10 +54,6 @@ const props = defineProps({
     canEdit: Boolean,
     isTeacher: Boolean,
 });
-
-const gettext = createGettext({ translations, silent: true });
-provide(GETTEXT_KEY, gettext);
-const $gettext = gettext.$gettext;
 
 const coursewarePluginComponents = inject('coursewarePluginComponents');
 

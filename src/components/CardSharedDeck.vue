@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import DialogColearnSharedDeck from './DialogColearnSharedDeck.vue';
 import DialogConfirmUnshare from './DialogConfirmUnshare.vue';
 import IconButton from './IconButton.vue';
@@ -8,7 +8,6 @@ import StudipAvatar from './base/StudipAvatar.vue';
 import StudipIcon from './base/StudipIcon.vue';
 import { useContextStore } from '../stores/context.js';
 
-const { $gettext } = useGettext();
 const contextStore = useContextStore();
 
 const props = defineProps(['sharedDeck']);

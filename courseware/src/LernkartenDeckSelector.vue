@@ -1,15 +1,13 @@
 <script setup>
-import { computed, ref, onMounted, inject } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import DeckSelector from '@/components/DeckSelector.vue';
-import { GETTEXT_KEY } from './gettext-key';
+import { $gettext } from '@/gettext.js';
 import StudipCompanion from '@/components/base/StudipCompanion.vue';
 import StudipProgressIndicator from '@/components/base/StudipProgressIndicator.vue';
 import { useContextStore } from '@/stores/context.js';
 import { useDecksStore } from '@/stores/decks.js';
 import { useFoldersStore } from '@/stores/folders.js';
 import { useSharedDecksStore } from '@/stores/shared-decks.js';
-
-const $gettext = inject(GETTEXT_KEY).$gettext;
 
 const selectedDeck = ref(null);
 

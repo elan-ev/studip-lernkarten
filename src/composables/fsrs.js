@@ -1,5 +1,5 @@
 import { State, Rating, Card, FSRS } from 'fsrs.js';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 
 export function useFsrs() {
     const fromFlashcard = (flashCard) => {
@@ -48,8 +48,6 @@ export function useFsrs() {
 
         return toFlashcard(schedulingInfos[rating].card);
     };
-
-    const { $gettext } = useGettext();
 
     const translatedStates = {
         [State.New]: $gettext('Neue Karte'),

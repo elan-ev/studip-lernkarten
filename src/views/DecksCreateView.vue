@@ -1,12 +1,11 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import FolderSelector from '../components/FolderSelector.vue';
 import { useDecksStore } from '../stores/decks.js';
 import { useFoldersStore } from '../stores/folders.js';
 
-const { $gettext } = useGettext();
 const router = useRouter();
 const decksStore = useDecksStore();
 const foldersStore = useFoldersStore();

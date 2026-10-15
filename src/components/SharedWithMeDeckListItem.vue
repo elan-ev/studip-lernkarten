@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import IconButton from './IconButton.vue';
 import StudipAvatar from './base/StudipAvatar.vue';
 import StudipDate from '../components/base/StudipDate.vue';
@@ -9,8 +9,6 @@ import StudipIcon from './base/StudipIcon.vue';
 
 const props = defineProps(['sharedDeck']);
 defineEmits(['colearn', 'select']);
-
-const { $gettext } = useGettext();
 
 const avatarUrl = computed(() => props.sharedDeck.sharer.data.meta.avatar.small);
 const formattedName = computed(() => props.sharedDeck.sharer.data['formatted-name']);

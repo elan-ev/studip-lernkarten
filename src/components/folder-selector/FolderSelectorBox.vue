@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../../gettext.js';
 import FolderSelectorBreadcrumb from './FolderSelectorBreadcrumb.vue';
 import FolderSelectorTable from './FolderSelectorTable.vue';
 import FolderSelectorToolbar from './FolderSelectorToolbar.vue';
@@ -8,8 +8,6 @@ import StudipMessageBox from '../base/StudipMessageBox.vue';
 
 defineProps(['selected']);
 const emit = defineEmits(['select']);
-
-const { $gettext } = useGettext();
 
 const showMessageBox = ref(false);
 const successMessage = ref('');

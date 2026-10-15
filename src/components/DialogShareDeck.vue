@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipMultiPersonSearch from './base/StudipMultiPersonSearch.vue';
 import RangeTypeSelector from './RangeTypeSelector.vue';
@@ -12,7 +12,6 @@ import { useInstancesStore } from '../stores/instances.js';
 import { useSemestersStore } from '../stores/semesters.js';
 import { useSharedDecksStore } from '../stores/shared-decks.js';
 
-const { $gettext } = useGettext();
 const contextStore = useContextStore();
 const courseMembershipsStore = useCourseMembershipsStore();
 const decksStore = useDecksStore();

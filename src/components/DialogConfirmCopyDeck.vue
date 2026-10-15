@@ -1,9 +1,8 @@
 <script setup>
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import StudipDialog from './base/StudipDialog.vue';
 import { useDecksStore } from '../stores/decks.js';
 
-const { $gettext } = useGettext();
 const decksStore = useDecksStore();
 
 const props = defineProps(['open', 'deck']);

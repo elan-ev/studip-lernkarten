@@ -1,11 +1,10 @@
 import { computed, ref } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import { useFsrs } from './fsrs.js';
 import { useCardsStore } from '../stores/cards.js';
 import { useDecksStore } from '../stores/decks.js';
 
 export function useSchedulerOptions() {
-    const { $gettext } = useGettext();
 
     const sortBasic = (cards) =>
         _.sortBy(cards, [(card) => card.deck.data.id, (card) => new Date(card.mkdate)]);

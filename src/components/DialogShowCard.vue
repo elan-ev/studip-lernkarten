@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import CardBasicEdit from './cards/BasicEdit.vue';
 import CardBasicShow from './cards/BasicShow.vue';
 import IconButton from './IconButton.vue';
@@ -13,7 +13,6 @@ import DialogConfirmDeleteCard from './DialogConfirmDeleteCard.vue';
 
 const cardsStore = useCardsStore();
 const contextStore = useContextStore();
-const { $gettext } = useGettext();
 const { translatedStates } = useFsrs();
 
 const cardViews = {

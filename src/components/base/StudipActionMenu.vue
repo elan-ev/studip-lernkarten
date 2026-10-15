@@ -1,11 +1,9 @@
 <script setup>
 import { computed } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../../gettext.js';
 import StudipIcon from './StudipIcon.vue';
 
 const ACTIONMENU_THRESHOLD = 1;
-
-const { $gettext } = useGettext();
 
 const props = defineProps({
     items: Array,

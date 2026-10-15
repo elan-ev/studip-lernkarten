@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import IconButton from './IconButton.vue';
 import RadialProgress from './RadialProgress.vue';
 import StudipActionMenu from './base/StudipActionMenu.vue';
@@ -12,7 +12,6 @@ import DialogConfirmDeleteDeck from './DialogConfirmDeleteDeck.vue';
 import DialogShareDeck from './DialogShareDeck.vue';
 import { useDecksStore } from '../stores/decks.js';
 
-const { $gettext } = useGettext();
 const decksStore = useDecksStore();
 
 const props = defineProps(['deck']);

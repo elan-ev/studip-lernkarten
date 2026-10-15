@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { useGettext } from 'vue3-gettext';
+import { $gettext } from '../gettext.js';
 import BasicBack from './cards/BasicBack.vue';
 import BasicFront from './cards/BasicFront.vue';
 import ImageBack from './cards/ImageBack.vue';
@@ -24,7 +24,6 @@ const props = defineProps({
 });
 const emit = defineEmits(['cancel']);
 
-const { $gettext } = useGettext();
 const {
     cardStates,
     cards,
