@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import Papa from 'papaparse';
 import { computed, ref } from 'vue';
 import StudipCompanion from './base/StudipCompanion.vue';

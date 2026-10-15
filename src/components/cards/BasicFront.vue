@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../../gettext.js';
 import { ref, watch } from 'vue';
 
 const props = defineProps(['card']);

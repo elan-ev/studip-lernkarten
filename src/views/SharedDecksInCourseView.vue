@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed, ref } from 'vue';
 import DialogColearnSharedDeck from '../components/DialogColearnSharedDeck.vue';
 import DialogShareDeckHere from '../components/DialogShareDeckHere.vue';

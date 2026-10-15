@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import StudipIcon from '../components/base/StudipIcon.vue';

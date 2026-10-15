@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { toRaw, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import IconButton from '../components/IconButton.vue';

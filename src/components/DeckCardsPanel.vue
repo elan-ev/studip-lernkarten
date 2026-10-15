@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed, ref } from 'vue';
 import CardList from './CardList.vue';
 import DialogAddCard from './DialogAddCard.vue';

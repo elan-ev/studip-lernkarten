@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../../gettext.js';
 import { useCompanionOverlay } from '../../composables/companion-overlay.js';
 
 const { show, message, mood, hideCompanionOverlay } = useCompanionOverlay();

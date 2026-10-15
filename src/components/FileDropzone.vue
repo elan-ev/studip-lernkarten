@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { ref } from 'vue';
 import { useDropzone } from 'vue3-dropzone';
 

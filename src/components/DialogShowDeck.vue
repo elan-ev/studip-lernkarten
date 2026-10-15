@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { ref } from 'vue';
 import DeckDetails from './DeckDetails.vue';
 import StudipDialog from './base/StudipDialog.vue';

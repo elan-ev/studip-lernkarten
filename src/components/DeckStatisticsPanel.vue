@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed } from 'vue';
 import BarChart from './BarChart.vue';
 import StudipIcon from '../components/base/StudipIcon.vue';

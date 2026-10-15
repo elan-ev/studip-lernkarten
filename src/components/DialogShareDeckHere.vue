@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed, ref } from 'vue';
 import DeckSelector from './DeckSelector.vue';
 import StudipCompanion from './base/StudipCompanion.vue';

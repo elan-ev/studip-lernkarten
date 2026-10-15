@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed } from 'vue';
 import StudipIcon from './base/StudipIcon.vue';
 import { useSidebar } from '../composables/sidebar.js';

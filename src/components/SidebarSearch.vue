@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import StudipIcon from './base/StudipIcon.vue';

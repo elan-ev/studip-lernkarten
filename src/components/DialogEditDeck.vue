@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { ref, watch } from 'vue';
 import StudipDialog from './base/StudipDialog.vue';
 import FolderSelector from '../components/FolderSelector.vue';

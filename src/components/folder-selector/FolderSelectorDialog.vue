@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../../gettext.js';
 import { ref } from 'vue';
 import { useDecksStore } from '../../stores/decks.js';
 import { useFoldersStore } from '../../stores/folders.js';

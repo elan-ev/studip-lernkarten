@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import StudipIcon from './base/StudipIcon.vue';
 
 defineEmits('update:modelValue');

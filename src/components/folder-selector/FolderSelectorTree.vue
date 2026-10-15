@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../../gettext.js';
 import { computed, ref } from 'vue';
 import FolderSelectorTree from './FolderSelectorTree.vue';
 import StudipIcon from '../base/StudipIcon.vue';

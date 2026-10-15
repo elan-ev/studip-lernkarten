@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import Button from './IconButton.vue';
 
 const props = defineProps({ image: String, fileid: { default: null }, edit: { default: false } });

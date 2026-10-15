@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed } from 'vue';
 import { useContextStore } from '../stores/context.js';
 import { RouterLink, useRoute } from 'vue-router';

@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../../gettext.js';
 import { ref, watch } from 'vue';
 import IconButton from '../IconButton.vue';
 import CardImage from '../CardImage.vue';

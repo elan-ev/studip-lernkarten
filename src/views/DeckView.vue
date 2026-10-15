@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import DeckDetails from '../components/DeckDetails.vue';

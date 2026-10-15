@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed } from 'vue';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
 import DeckCardsPanel from '../components/DeckCardsPanel.vue';

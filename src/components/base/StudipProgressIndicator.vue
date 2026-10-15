@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../../gettext.js';
 import { computed } from 'vue';
 const props = defineProps({
     description: {

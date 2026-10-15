@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed, ref, onUpdated } from 'vue';
 import StudipDialog from './base/StudipDialog.vue';
 import StudipMessageBox from './base/StudipMessageBox.vue';

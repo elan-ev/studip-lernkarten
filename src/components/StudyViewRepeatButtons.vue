@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import IconButton from '../components/IconButton.vue';
 import { useFsrs } from '../composables/fsrs.js';
 

@@ -1,4 +1,5 @@
 <script setup>
+import { $gettext } from '../gettext.js';
 import { computed } from 'vue';
 import IconButton from './IconButton.vue';
 import RadialProgress from './RadialProgress.vue';
