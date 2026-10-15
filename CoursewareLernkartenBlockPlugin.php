@@ -29,14 +29,6 @@ class CoursewareLernkartenBlockPlugin extends StudIPPlugin implements SystemPlug
 
     private function addStyles(): void
     {
-        // Add CSS to set the correct icon for the block in the block adder
-        PageLayout::addStyle(
-            '.cw-blockadder-item.cw-blockadder-item-lernkarten {
-                 background-image:url(' .
-                Icon::create('dialog-cards')->asImagePath() .
-                ')
-             }'
-        );
         PageLayout::addStylesheet($this->getPluginUrl() . '/dist/lernkarten.css');
         PageLayout::addStylesheet($this->getPluginUrl() . '/courseware/dist/lernkarten-courseware.css');
     }
